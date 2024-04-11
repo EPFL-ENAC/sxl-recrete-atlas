@@ -1,4 +1,4 @@
-import type { IControl } from 'maplibre-gl'
+import type { ControlPosition, IControl, Map } from 'maplibre-gl'
 
 /**
  * https://maplibre.org/maplibre-gl-js-docs/api/markers/#icontrol
