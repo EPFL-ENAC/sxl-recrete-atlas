@@ -1,12 +1,19 @@
 <script setup lang="ts">
-import { RouterView } from 'vue-router'
-import epflLogoUrl from '/EPFL_Logo_184X53.svg'
-import { mdiInformation, mdiPlayBox } from '@mdi/js'
-import { useI18n } from 'vue-i18n'
-import { useLocale } from 'vuetify'
-import { useCookies } from 'vue3-cookies'
-import { ref, computed } from 'vue'
 import MarkdownDialog from '@/components/MarkdownDialog.vue'
+import {
+  mdiBagPersonalTagOutline,
+  mdiFileDocument,
+  mdiInformation,
+  mdiLibraryOutline,
+  mdiMapOutline,
+  mdiPlayBox
+} from '@mdi/js'
+import { computed, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { RouterView } from 'vue-router'
+import { useCookies } from 'vue3-cookies'
+import { useLocale } from 'vuetify'
+import epflLogoUrl from '/EPFL_Logo_184X53.svg'
 
 // const showHome = ref<boolean>(false)
 // const secret = ref<string>()
@@ -26,7 +33,7 @@ function onLocale(lang: string) {
 }
 
 function welcomeClosed() {
-  cookies.set('welcome','1', '365d');
+  cookies.set('welcome', '1', '365d')
   showWelcome.value = false
 }
 
@@ -37,12 +44,6 @@ function welcomeOpen() {
 function getCurrentLocaleOrFallback() {
   return ['en', 'fr'].includes(current.value) ? current.value : 'en'
 }
-
-// function onSecretChange() {
-//   if (secret.value === 'urbs2023') {
-//     showHome.value = true
-//   }
-// }
 </script>
 
 <template>
@@ -53,25 +54,43 @@ function getCurrentLocaleOrFallback() {
         <div class="text-subtitle-2">{{ $t('app_subtitle') }}</div>
       </v-app-bar-title>
 
-      <v-btn
-        id="locales-activator"
-        color="primary"
-        class="mr-2"
-      >
+      <v-btn id="locales-activator" color="primary" class="mr-2">
         {{ getCurrentLocaleOrFallback() }}
       </v-btn>
 
-    <v-menu activator="#locales-activator">
-      <v-list>
-        <v-list-item
-          v-for="(lang, index) in $i18n.availableLocales"
-          :key="index"
-        >
-          <v-list-item-title @click="onLocale(lang)">{{ $t(lang) }}</v-list-item-title>
-        </v-list-item>
-      </v-list>
-    </v-menu>
-      <v-btn :icon="mdiPlayBox" class="mr-3" @click="welcomeOpen()" :title="$t('introduction')"></v-btn>
+      <v-menu activator="#locales-activator">
+        <v-list>
+          <v-list-item v-for="(lang, index) in $i18n.availableLocales" :key="index">
+            <v-list-item-title @click="onLocale(lang)">{{ $t(lang) }}</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
+      <v-btn
+        :to="{ name: `list` }"
+        :icon="mdiLibraryOutline"
+        class="mr-3"
+        :title="$t('list')"
+      ></v-btn>
+      <v-btn :to="{ name: `home` }" :icon="mdiMapOutline" class="mr-3" :title="$t('home')"></v-btn>
+      <v-btn
+        :to="{ name: `specialized-documentation` }"
+        :icon="mdiFileDocument"
+        class="mr-3"
+        :title="$t('specialized-documentation')"
+      ></v-btn>
+      <v-btn
+        :to="{ name: `concrete-reuse-in-short` }"
+        :icon="mdiBagPersonalTagOutline"
+        class="mr-3"
+        :title="$t('concrete-reuse-in-short')"
+      ></v-btn>
+
+      <v-btn
+        :icon="mdiPlayBox"
+        class="mr-3"
+        :title="$t('introduction')"
+        @click="welcomeOpen()"
+      ></v-btn>
       <v-btn to="/about" :icon="mdiInformation" class="mr-3" :title="$t('about')"></v-btn>
       <template #append>
         <a href="https://epfl.ch" target="_blank">
@@ -80,13 +99,18 @@ function getCurrentLocaleOrFallback() {
       </template>
     </v-app-bar>
     <v-main>
-      <RouterView/>
-      <markdown-dialog :button-text="$t('start')" :content-url="`welcome_${locale}.md`" :open="welcomeOpened" width="800px" @dialog-close="welcomeClosed">
+      <RouterView />
+      <markdown-dialog
+        :button-text="$t('start')"
+        :content-url="`welcome_${locale}.md`"
+        :open="welcomeOpened"
+        width="800px"
+        @dialog-close="welcomeClosed"
+      >
       </markdown-dialog>
     </v-main>
   </v-app>
 </template>
-
 
 <style lang="scss" scoped>
 .v-app-bar {
