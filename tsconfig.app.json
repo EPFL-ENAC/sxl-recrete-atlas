@@ -11,6 +11,7 @@
   ],
   "compilerOptions": {
     "composite": true,
+    "ignoreDeprecations": "5.0",
     "baseUrl": ".",
     "paths": {
       "@/*": [

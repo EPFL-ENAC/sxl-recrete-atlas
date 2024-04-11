@@ -3,16 +3,22 @@
     "definitions": {
         "SelectableGroupItem": {
             "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "label": {
+                    "type": "string"
+                },
+                "selected": {
+                    "type": "boolean"
+                },
                 "children": {
                     "items": {
                         "$ref": "#/definitions/SelectableSingleItem"
                     },
                     "type": "array"
                 },
-                "label": {
-                    "type": "string"
-                },
-                "selected": {
+                "tab": {
                     "type": "boolean"
                 }
             },
@@ -28,22 +34,101 @@
                 }
             ]
         },
+        "ScaleEntry": {
+            "properties": {
+                "color": {
+                    "type": "string"
+                },
+                "label": {
+                    "type": "string"
+                },
+                "value": {
+                    "type": "number"
+                },
+                "min": {
+                    "type": "number"
+                },
+                "max": {
+                    "type": "number"
+                },
+                "unit": {
+                    "type": "string"
+                },
+                "range": {
+                    "type": "array",
+                    "maxItems": 2,
+                    "items": {
+                        "type": "number"
+                    }
+                }
+            },
+            "type": "object"
+        },
+        "LegendScale": {
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "titleStart": {
+                    "type": "string"
+                },
+                "titleEnd": {
+                    "type": "string"
+                },
+                "unit": {
+                    "type": "string"
+                },
+                "scale": {
+                    "items": {
+                        "$ref": "#/definitions/ScaleEntry"
+                    },
+                    "type": "array"
+                }
+            },
+            "type": "object"
+        },
         "SelectableSingleItem": {
             "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "label": {
+                    "type": "string"
+                },
+                "label_en": {
+                    "type": "string"
+                },
+                "label_fr": {
+                    "type": "string"
+                },
+                "selected": {
+                    "type": "boolean"
+                },
                 "ids": {
                     "items": {
                         "type": "string"
                     },
                     "type": "array"
                 },
-                "label": {
+                "measures": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                },
+                "genre": {
+                    "type": "string"
+                },"legend": {
                     "type": "string"
                 },
-                "legend": {
+                "legendImage": {
                     "type": "string"
                 },
-                "selected": {
-                    "type": "boolean"
+                "legendScaleId": {
+                    "type": "string"
                 }
             },
             "type": "object"
@@ -132,6 +217,12 @@
         "zoom": {
             "description": "Map default zoom level",
             "type": "number"
+        },
+        "legendScales": {
+            "items": {
+                "$ref": "#/definitions/LegendScale"
+            },
+            "type": "array"
         }
     },
     "type": "object"
