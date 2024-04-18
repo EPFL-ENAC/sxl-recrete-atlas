@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import LayerSelector from '@/components/LayerSelector.vue'
 import MapLibreMap from '@/components/MapLibreMap.vue'
+import ProjectFilters from '@/components/ProjectFilters.vue'
 import type { Parameters, LegendScale } from '@/utils/jsonWebMap'
 import { mdiChevronLeft, mdiChevronRight, mdiClose, mdiLayers, mdiMapLegend, mdiRuler, mdiCircle, mdiCircleOutline, mdiOpenInNew, mdiInformation } from '@mdi/js'
 import type { SelectableGroupItem, SelectableItem, SelectableSingleItem, SpeciesItem } from '@/utils/layerSelector'
@@ -400,141 +401,8 @@ function getSpecieMeasureSumLabel(sel: SpeciesItem, measure: string) {
           <v-btn :icon="mdiChevronLeft" variant="flat" @click.stop="drawerRail = true" />
         </template>
       </v-list-item>
-      <v-list-item :prepend-icon="mdiLayers">
-        <v-list-item-title>
-          <span :class="mobile ? 'text-subtitle-1' : 'text-h6'">{{ $t('layers') }}</span>
-        </v-list-item-title>
-      </v-list-item>
-      <v-list-item v-show="!drawerRail">
-        <LayerSelector
-          ref="selector"
-          v-model="selectedLayerIds"
-          :items="parameters?.selectableItems"
-          :species="species"
-          @documentation="(type) => showDocumentation(type)"
-        />
-        <v-checkbox
-          v-if="selectedLayerIds.length === 1"
-          v-model="showAllSpecies"
-          density="compact"
-          :label="$t('show_all_species')">
-        </v-checkbox>
-      </v-list-item>
-      <v-list-item v-if="selectedItemWithLegend" :prepend-icon="mdiRuler">
-        <v-list-item-title>
-          <span :class="mobile ? 'text-subtitle-1' : 'text-h6'">{{ $t('measures') }}</span>
-        </v-list-item-title>
-      </v-list-item>
-      <v-list-item v-if="!drawerRail && selectedItemWithLegend">
-        <v-card>
-          <v-card-text class="pa-0">
-            <v-row>
-              <v-col cols="12">
-                <v-select
-                  v-model="scale"
-                  :label="$t('measure')"
-                  :items="scaleItems"
-                  item-title="title"
-                  item-value="id"
-                  density="compact"
-                  class="mt-2"
-                ></v-select>
-
-                <div v-if="selectedSpecie">
-                  <v-responsive>
-                    <v-table density="compact" class="mb-2">
-                      <thead>
-                        <tr>
-                          <th></th>
-                          <th></th>
-                          <th>{{ $t('mean') }}</th>
-                          <th>{{ $t('sum') }}</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <template v-for="measure in selectedSpecie.measures" :key="measure">
-                          <tr>
-                            <td class="text-caption pr-0">
-                              {{ getLegendTitle(measure, false) }}
-                            </td>
-                            <td class="pa-0">
-                              <v-btn :icon="mdiInformation" flat size="small" @click="showDocumentation(measure)"></v-btn>
-                            </td>
-                            <td class="text-no-wrap pr-0" :class="isMeasurePositive(measure) ? 'text-red' : 'text-green'">
-                              {{ getSpecieMeasureMeanLabel(selectedSpecie, measure) }} kg
-                            </td>
-                            <td class="text-no-wrap" :class="isMeasurePositive(measure) ? 'text-red' : 'text-green'">
-                              {{ getSpecieMeasureSumLabel(selectedSpecie, measure) }} kg
-                            </td>
-                          </tr>
-                        </template>
-                      </tbody>
-                    </v-table>
-                  </v-responsive>
-                  <div class="mb-5 text-caption text-grey-darken-1">{{ $t('annual_contrib') }}</div>
-                </div>
-
-                <div v-if="selectedItemWithLegend.legend" class="mb-5 text-caption">{{ selectedItemWithLegend.legend }}</div>
-                <div v-if="selectedItemWithLegend.legendImage" class="mb-5">
-                  <v-hover v-slot="{ isHovering, props }">
-                    <v-card
-                      elevation="0"
-                      class="v-card-image mb-2"
-                      :class="{ 'on-hover': isHovering }"
-                      v-bind="props"
-                    >
-                    <v-img :src="selectedItemWithLegend.legendImage" @click="onOpenLegendDialog(selectedItemWithLegend)">
-                      <v-card-title class="d-flex justify-center align-self-auto" primary-title>
-                          <v-btn
-                            color="primary"
-                            class="mt-4"
-                            :prepend-icon="mdiOpenInNew"
-                            style="z-index: 9999"
-                            @click.stop="onOpenLegendDialog(selectedItemWithLegend)">
-                            {{ $t('view') }}
-                          </v-btn>
-                      </v-card-title>
-                    </v-img>
-                    </v-card>
-                  </v-hover>
-                  <div>
-                    <span class="text-caption text-grey-darken-1">{{ $t('graph_caption') }}</span>
-                    <v-btn :icon="mdiInformation" flat size="small" @click="showDocumentation('graph')"></v-btn>
-                  </div>
-                </div>
-              </v-col>
-            </v-row>
-          </v-card-text>
-        </v-card>
-      </v-list-item>
-      <v-list-item :prepend-icon="mdiMapLegend">
-        <v-list-item-title>
-          <span :class="mobile ? 'text-subtitle-1' : 'text-h6'">{{ $t('legend') }}</span>
-        </v-list-item-title>
-      </v-list-item>
-      <v-list-item v-if="!drawerRail">
-        <v-row>
-          <v-col cols="2">
-            <v-icon :icon="mdiCircle" color="#482878" size="50"></v-icon>
-            <v-icon :icon="mdiCircle" color="#1f9e89" size="40" class="mt-1 ml-1 mr-1"></v-icon>
-            <v-icon :icon="mdiCircle" color="#fde725" size="30" class="mt-1 ml-2 mr-2"></v-icon>
-            <v-icon :icon="mdiCircleOutline" color="grey" size="30" class="mt-1 ml-2 mr-2"></v-icon>
-          </v-col>
-          <v-col cols="10" class="text-caption text-grey-darken-1">
-            <div>{{ $t('tree_legend') }}</div>
-            <div>{{ $t('tree_legend_considered') }}</div>
-            <div>{{ $t('tree_legend_not_considered') }}</div>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col cols="2" class="text-center">
-            <v-icon :icon="mdiCircle" color="grey" size="30"></v-icon>
-          </v-col>
-          <v-col cols="10">
-            <span class="text-caption text-grey-darken-1">{{ $t('tree_considered') }}</span>
-          </v-col>
-        </v-row>
-      </v-list-item>
+     
+      <project-filters />
     </v-list>
   </v-navigation-drawer>
   <v-navigation-drawer v-if="drawerRight" permanent location="right" :width="mobile ? 200 : 400">

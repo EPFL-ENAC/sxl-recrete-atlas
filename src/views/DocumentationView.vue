@@ -2,7 +2,14 @@
 </script>
 
 <template>
-  <div>
-    <h1>Documentation View</h1>
+  <div class="reuse">
+    <h1>{{ $t('brief_title') }} </h1>
+    <p>{{  $t('brief_description') }}</p>
   </div>
 </template>
+
+<style>
+ .reuse {
+   margin: 20px;
+ }
+</style>

@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/EPFL-ENAC/alice-perl-eerl-urbtrees/main/schema/parameters.schema.json",
-  "center": { "lat": 46.2046, "lng": 6.14 },
-  "zoom": 13,
+  "center": { "lat": 48.3246, "lng": 10 },
+  "zoom": 4,
   "legendScales": [
     {
       "id": "voc",
@@ -235,6 +235,6 @@
       "children": []
     }
   ],
-  "title": "SXL Atlas RE:CRETE",
+  "title": "app_title",
   "subtitle": "app_subtitle"
 }

@@ -54,10 +54,6 @@ function getCurrentLocaleOrFallback() {
         <div class="text-subtitle-2">{{ $t('app_subtitle') }}</div>
       </v-app-bar-title>
 
-      <v-btn id="locales-activator" color="primary" class="mr-2">
-        {{ getCurrentLocaleOrFallback() }}
-      </v-btn>
-
       <v-menu activator="#locales-activator">
         <v-list>
           <v-list-item v-for="(lang, index) in $i18n.availableLocales" :key="index">
@@ -72,7 +68,7 @@ function getCurrentLocaleOrFallback() {
         :title="$t('list')"
       ></v-btn>
       <v-btn :to="{ name: `home` }" :icon="mdiMapOutline" class="mr-3" :title="$t('home')"></v-btn>
-      <v-btn
+      <!-- <v-btn
         :to="{ name: `specialized-documentation` }"
         :icon="mdiFileDocument"
         class="mr-3"
@@ -83,15 +79,20 @@ function getCurrentLocaleOrFallback() {
         :icon="mdiBagPersonalTagOutline"
         class="mr-3"
         :title="$t('concrete-reuse-in-short')"
-      ></v-btn>
+      ></v-btn> -->
 
-      <v-btn
+      <!-- <v-btn
         :icon="mdiPlayBox"
         class="mr-3"
         :title="$t('introduction')"
         @click="welcomeOpen()"
-      ></v-btn>
+      ></v-btn> -->
       <v-btn to="/about" :icon="mdiInformation" class="mr-3" :title="$t('about')"></v-btn>
+
+      <v-btn id="locales-activator" color="primary" class="mr-2">
+        {{ getCurrentLocaleOrFallback() }}
+      </v-btn>
+
       <template #append>
         <a href="https://epfl.ch" target="_blank">
           <v-img :src="epflLogoUrl" width="100px" />

@@ -1,5 +1,5 @@
 import type { LngLatLike } from 'maplibre-gl'
-import type { SelectableItem } from './layerSelector'
+import type { SelectableItem } from '@/utils/layerSelector'
 
 export interface ScaleEntry {
   color: string

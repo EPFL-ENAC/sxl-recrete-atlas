@@ -1,11 +1,14 @@
 // TODO have it in the parameters
 const countryCode = 'ch'
-const viewBox = '5.80,46.40,6.25,46.10'
+// const viewBox = '5.80,46.40,6.25,46.10' // ch
+const viewBox = '-14.412689,35.294952,28.302155,64.308967' // europe
 
 function handleNominatimResponse(geojson: any): any[] {
   const features = []
   const place_names: string[] = []
-  for (const feature of geojson.features.filter((f: any) => f.properties.address.country_code === countryCode)) {
+  for (const feature of geojson.features
+    // .filter((f: any) => f.properties.address.country_code === countryCode)
+  ) {
     if (!place_names.includes(feature.properties.display_name)) {
       const center = [
         feature.bbox[0] + (feature.bbox[2] - feature.bbox[0]) / 2,
@@ -42,7 +45,8 @@ export const geocoderApi = {
   forwardGeocode: async (config: { query: string; limit: number; countries: string[] }) => {
     let features = []
     try {
-      let countrycodes = countryCode
+      // let countrycodes = countryCode
+      let countrycodes = "fr,ch,de,it";
       if (config.countries && config.countries.length > 0)
         countrycodes = config.countries.join(',')
       const request = `https://nominatim.openstreetmap.org/search?q=${config.query}&limit=${config.limit}&format=geojson&polygon_geojson=1&addressdetails=1&countrycodes=${countrycodes}&bounded=1&viewbox=${viewBox}`
