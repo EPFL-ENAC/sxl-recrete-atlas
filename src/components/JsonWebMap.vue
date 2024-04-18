@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import LayerSelector from '@/components/LayerSelector.vue'
+import type LayerSelector from '@/components/LayerSelector.vue'
 import MapLibreMap from '@/components/MapLibreMap.vue'
 import ProjectFilters from '@/components/ProjectFilters.vue'
 import type { Parameters, LegendScale } from '@/utils/jsonWebMap'
@@ -7,13 +7,11 @@ import { mdiChevronLeft, mdiChevronRight, mdiClose, mdiLayers, mdiMapLegend, mdi
 import type { SelectableGroupItem, SelectableItem, SelectableSingleItem, SpeciesItem } from '@/utils/layerSelector'
 import axios from 'axios'
 import { marked } from 'marked'
-import DOMPurify from 'dompurify'
 import { useDisplay } from 'vuetify'
 import { computed, onMounted, ref, shallowRef, triggerRef, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import type { StyleSpecification } from 'maplibre-gl'
 // @ts-ignore
-import Papa from 'papaparse'
 import { useCookies } from 'vue3-cookies'
 
 const props = defineProps<{
@@ -23,8 +21,6 @@ const props = defineProps<{
   martinUrl: string
 }>()
 
-const CDN_DATA_URL = `${props.cdnUrl}/data`
-const MARTIN_URL = props.martinUrl
 
 const { t, locale } = useI18n({ useScope: 'global' })
 const { cookies } = useCookies()
@@ -46,188 +42,13 @@ const { mobile } = useDisplay()
 const scale = ref<string>()
 const showAllSpecies = ref<boolean>(true)
 
-const allMeasures: string[] = [
-  'voc', 'pm10', 'ofp', 'o3'
-]
-const documentationIds: string[] = [
-  "genus", "specie", "graph", "leaf_type", "crown_area", "leaf_area", ...allMeasures
-]
-
-const genusPaint = {
-  'circle-radius': [
-    'interpolate',
-    ['linear'],
-    ['zoom'],
-    14, 1,
-    15, ['*', 0.125, ['number', ['get', 'D_COUR_M'], 5]],
-    16, ['*', 0.25, ['number', ['get', 'D_COUR_M'], 5]],
-    17, ['*', 0.5, ['number', ['get', 'D_COUR_M'], 5]],
-    18, ['number', ['get', 'D_COUR_M'], 5],
-    19, ['*', 2, ['number', ['get', 'D_COUR_M'], 5]]
-  ],
-  'circle-color': '#aaaaaa',
-  'circle-opacity': 0.5,
-  'circle-stroke-color': '#888888',
-  'circle-stroke-width': 1,
-  'circle-stroke-opacity': 0.5
-}
-
-const measurePaint = (measure: string) => {
-  return {
-    'circle-radius': [
-      'interpolate',
-      ['linear'],
-      ['zoom'],
-      13, 2,
-      // @ts-ignore
-      14, ['*', 0.125, ['number', ['get', 'radius'], 5]],
-      // @ts-ignore
-      15, ['*', 0.25, ['number', ['get', 'radius'], 5]],
-      // @ts-ignore
-      16, ['*', 0.5, ['number', ['get', 'radius'], 5]],
-      // @ts-ignore
-      17, ['number', ['get', 'radius'], 5],
-      // @ts-ignore
-      18, ['*', 2, ['number', ['get', 'radius'], 5]],
-      // @ts-ignore
-      19, ['*', 4, ['number', ['get', 'radius'], 5]]
-    ],
-    'circle-color': ['string', ['get', `color_${measure}`], '#000000'],
-    'circle-opacity': [
-      'case',
-      ['==', '#000000', ['get', `color_${measure}`]], 0,
-      0.7
-    ],
-    'circle-stroke-color': '#888888',
-    'circle-stroke-width': 1,
-    'circle-stroke-opacity': 0.3
-  }
-}
-
 const species = ref<SpeciesItem[]>([])
 
 onMounted(() => {
-  documentationIds.forEach((id: string) => {
-    ["en", "fr"].forEach((lang) => {
-      const lid = `${id}_${lang}`
-      axios
-        .get<string>(`${lid}.md`)
-        .then((response) => response.data)
-        .then((data) => {
-          docHtml.value[lid] = DOMPurify.sanitize(marked.parse(data, {headerIds: false, mangle: false}))
-      })
-    })
-  })
-
-  axios
-    .get(`${CDN_DATA_URL}/urbtrees_species_mean_sum_full.csv`)
-    .then((response) => response.data)
-    .then((data) => {
-      Papa.parse(data, {
-        delimiter: ',',
-        header: true,
-        dynamicTyping: true,
-        complete: function(results: any) {
-          species.value = results.data
-            .filter((row: SpeciesItem) => row['GENRE_lat'] !== null)
-            .map((row: SpeciesItem) => {
-              row.id = row.NOM_COMPLET_lat.toLowerCase().replace(' ', '_')
-              row.genus = row.GENRE_lat.toLowerCase().replace(' ', '_')
-              row.measures = []
-              // normalize locales
-              row.GENRE_en = row.GENRE_eng
-              row.NOM_COMPLET_en = row.NOM_COMPLET_eng
-              if (row.mean_BVOC_kg) {
-                row.measures.push('voc')
-              }
-              if (row.mean_PM10_kg) {
-                row.measures.push('pm10')
-              }
-              if (row.mean_OFP_kg) {
-                row.measures.push('ofp')
-              }
-              if (row.mean_O3_kg) {
-                row.measures.push('o3')
-              }
-              return row
-            })
-        }
-      })
-    })  
-});
-
-watch(species, () => {
   axios
     .get<StyleSpecification>(props.styleUrl)
     .then((response) => response.data)
     .then((data) => {
-      // deviceRatio == 1 then tileSize 256
-      // deviceRatio === 2 then tileSize 128
-      const newTileSize = 256 / (window.devicePixelRatio || 1)
-      data.sources = Object.keys(data.sources).reduce((acc: any, key: string) => { acc[key] = {...data.sources[key], tileSize: newTileSize}; return acc;}, {})
-      // append source/layer for each species read from the csv
-      species.value.forEach((item) => {
-        if (!data.sources[item.genus]) {
-          
-          // one source and layer for each genus (known specie)
-          data.sources[item.genus] = {
-            type: 'vector',
-            url: `${MARTIN_URL}/genus_${item.genus}_true`
-          }
-          data.layers.push({
-            id: item.genus,
-            source: item.genus,
-            'source-layer': `genus_${item.genus}_true`,            
-            type: 'circle',
-            // @ts-ignore
-            paint: genusPaint,
-            layout: { visibility: 'none' }
-          })
-          // one source and layer for each genus (unknown specie)
-          data.sources[`${item.genus}_alt`] = {
-            type: 'vector',
-            url: `${MARTIN_URL}/genus_${item.genus}_false`
-          }
-          data.layers.push({
-            id: `${item.genus}_alt`,
-            source: `${item.genus}_alt`,
-            'source-layer': `genus_${item.genus}_false`,
-            type: 'circle',
-            // @ts-ignore
-            paint: genusPaint,
-            layout: { visibility: 'none' }
-          })
-          // one layer per measure for the unkown species in the genus
-          allMeasures.forEach((measure) => {
-            data.layers.push({
-              id: `${item.genus}_other_${measure}`,
-              source: `${item.genus}_alt`,
-              'source-layer': `genus_${item.genus}_false`,
-              type: 'circle',
-              // @ts-ignore
-              paint: measurePaint(measure),
-              layout: { visibility: 'none' }
-            })
-          })
-        }
-        // one source for the specie
-        data.sources[item.id] = {
-          type: 'vector',
-          url: `${MARTIN_URL}/${item.id}`
-        }
-        // one layer per measure for the specie
-        item.measures.forEach((measure) => {
-          data.layers.push({
-            id: `${item.id}_${measure}`,
-            source: item.id,
-            'source-layer': item.id,
-            type: 'circle',
-            // @ts-ignore
-            paint: measurePaint(measure),
-            layout: { visibility: 'none' }
-          })
-        })
-      })
       style.value = data
     })
     .then(() => {
@@ -235,51 +56,14 @@ watch(species, () => {
         .get<Parameters>(props.parametersUrl)
         .then((response) => response.data)
         .then((data) => {
-          // append selectable for each species read from the csv
-          const speciesItem = data.selectableItems?.find((item) => item.id === 'species') as SelectableGroupItem
-          const allGenus: string[] = []
-          species.value.forEach((item) => {
-            speciesItem.children.push({
-              id: item.id,
-              ids: [item.genus, `${item.genus}_alt`],
-              label: item.NOM_COMPLET_lat,
-              label_en: item.NOM_COMPLET_en,
-              label_fr: item.NOM_COMPLET_fr,
-              legendImage: item.mean_PM10_kg && item.Net_O3 ? `${CDN_DATA_URL}/specie_${item.id}_graph.png` : undefined,
-              measures: item.measures,
-              genre: item.genus,
-              selected: false
-            })
-            data.popupLayerIds?.push(item.id)
-            if (data.popupLayerIds && !data.popupLayerIds.includes(item.genus)) {
-              data.popupLayerIds.push(item.genus)
-              data.popupLayerIds.push(`${item.genus}_alt`)
-              allGenus.push(item.genus)
-            }
-            item.measures.forEach((measure) => data.popupLayerIds?.push(`${item.id}_${measure}`))
-          })
-          // add a layer for other species of each genus
-          allGenus.forEach((genus) => {
-            speciesItem.children.push({
-              id: `${genus}_other`,
-              ids: [genus, `${genus}_alt`],
-              label: '',
-              label_en: 'Unknown',
-              label_fr: 'Inconnue',
-              measures: allMeasures,
-              genre: genus,
-              selected: false
-            })
-            data.popupLayerIds?.push(`${genus}_other`)
-            allMeasures.forEach((measure) => data.popupLayerIds?.push(`${genus}_other_${measure}`))
-          })
           parameters.value = data
           triggerRef(parameters)
           triggerRef(style)
           map.value?.update(data.center, data.zoom)
         })
     })
-})
+});
+
 
 const singleItems = computed<SelectableSingleItem[]>(() =>
   (parameters.value?.selectableItems ?? [])
