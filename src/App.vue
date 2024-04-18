@@ -5,6 +5,9 @@ import {
   mdiFileDocument,
   mdiInformation,
   mdiLibraryOutline,
+  mdiPlusBox,
+  mdiListBox,
+  mdiGrid,
   mdiMapOutline,
   mdiPlayBox
 } from '@mdi/js'
@@ -22,9 +25,8 @@ const { current } = useLocale()
 const { locale } = useI18n({ useScope: 'global' })
 const { cookies } = useCookies()
 
-const openWelcome = computed<boolean>(() => cookies.get('welcome') !== '1')
-const showWelcome = ref<boolean>(false)
-const welcomeOpened = computed<boolean>(() => openWelcome.value || showWelcome.value)
+const showProjectOpen =  ref<boolean>(false)
+const addProjectOpened = computed<boolean>(() => showProjectOpen.value)
 
 function onLocale(lang: string) {
   locale.value = lang
@@ -32,13 +34,12 @@ function onLocale(lang: string) {
   cookies.set('locale', lang, '365d')
 }
 
-function welcomeClosed() {
-  cookies.set('welcome', '1', '365d')
-  showWelcome.value = false
+function addProjectClosed() {
+  showProjectOpen.value = false
 }
 
-function welcomeOpen() {
-  showWelcome.value = true
+function addProjectOpen() {
+  showProjectOpen.value = true
 }
 
 function getCurrentLocaleOrFallback() {
@@ -62,10 +63,18 @@ function getCurrentLocaleOrFallback() {
         </v-list>
       </v-menu>
       <v-btn
-        :to="{ name: `list` }"
-        :icon="mdiLibraryOutline"
+        :to="{ name: `list`, query: { view: 'list' }}"
+        :active="$route.query.view === 'list'"
+        :icon="mdiListBox"
         class="mr-3"
         :title="$t('list')"
+      ></v-btn>
+      <v-btn
+        :to="{ name: `list` , query: { view: 'grid' }}"
+        :active="$route.query.view === 'grid'"
+        :icon="mdiGrid"
+        class="mr-3"
+        :title="$t('grid')"
       ></v-btn>
       <v-btn :to="{ name: `home` }" :icon="mdiMapOutline" class="mr-3" :title="$t('home')"></v-btn>
       <!-- <v-btn
@@ -81,12 +90,12 @@ function getCurrentLocaleOrFallback() {
         :title="$t('concrete-reuse-in-short')"
       ></v-btn> -->
 
-      <!-- <v-btn
-        :icon="mdiPlayBox"
+      <v-btn
+        :icon="mdiPlusBox"
         class="mr-3"
-        :title="$t('introduction')"
-        @click="welcomeOpen()"
-      ></v-btn> -->
+        :title="$t('add_project')"
+        @click="addProjectOpen()"
+      ></v-btn>
       <v-btn to="/about" :icon="mdiInformation" class="mr-3" :title="$t('about')"></v-btn>
 
       <v-btn id="locales-activator" color="primary" class="mr-2">
@@ -102,11 +111,11 @@ function getCurrentLocaleOrFallback() {
     <v-main>
       <RouterView />
       <markdown-dialog
-        :button-text="$t('start')"
-        :content-url="`welcome_${locale}.md`"
-        :open="welcomeOpened"
+        :button-text="$t('close')"
+        :content-url="`add_project_${locale}.md`"
+        :open="addProjectOpened"
         width="800px"
-        @dialog-close="welcomeClosed"
+        @dialog-close="addProjectClosed"
       >
       </markdown-dialog>
     </v-main>

@@ -1,5 +1,5 @@
 // TODO have it in the parameters
-const countryCode = 'ch'
+// const countryCode = 'ch'
 // const viewBox = '5.80,46.40,6.25,46.10' // ch
 const viewBox = '-14.412689,35.294952,28.302155,64.308967' // europe
 
