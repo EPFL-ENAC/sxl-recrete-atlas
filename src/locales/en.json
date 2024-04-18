@@ -1,6 +1,10 @@
 {
   "app_title": "SXL Atlas RE:CRETE",
   "app_subtitle": "Atlas of reused conncrete",
+  "reuse_title": "Reuse of concrete",
+  "reuse_description": "The re-use of concrete - Documentation for the curious and the experts",
+  "brief_title": "Concrete reuse in brief",
+  "brief_description": "The re-use of concrete - A brief overview",
   "introduction": "Introduction",
   "about": "About",
   "view": "View",

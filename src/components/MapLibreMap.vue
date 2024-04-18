@@ -50,9 +50,9 @@ const props = withDefaults(
   }>(),
   {
     center: undefined,
-    zoom: 12,
+    zoom: 4,
     aspectRatio: undefined,
-    minZoom: 10,
+    minZoom: 4,
     maxZoom: undefined,
     selectableLayerIds: () => [],
     selectedLayerIds: () => [],
@@ -91,15 +91,15 @@ onMounted(() => {
   map.addControl(new FullscreenControl({}))
   map.addControl(new AttributionControl({
       compact: false,
-      customAttribution: '© <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>, <a href="https://www.epfl.ch/labs/perl/" target="_blank">PERL</a>, <a href="https://www.epfl.ch/labs/alice/" target="_blank">ALICE</a>, <a href="https://www.epfl.ch/labs/eerl/" target="_blank">EERL</a>'
+      customAttribution: '© <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>, <a href="https://www.epfl.ch/labs/sxl/" target="_blank">SXL</a>'
   }));
   map.addControl(
     new MaplibreGeocoder(geocoderApi, {
       maplibregl: { Marker },
       showResultsWhileTyping: true,
-      language: locale.value
+      language: locale.value,
     }),
-    'top-left'
+    'top-left',
   )
   const positionControl = new DivControl({ id: 'map-position' })
   map.addControl(positionControl, 'bottom-left')
