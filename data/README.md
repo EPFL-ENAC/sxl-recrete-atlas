@@ -1,34 +1,35 @@
 # DATA
 
-In the input folder:
-* copy the geojson + png files provided by the researcher on ENAC drive
-* run the tranform script with `make transform`
-* run `make cdn` to upload data on the CDN
-* update the `VITE_CDN_URL` variable in the `.env` file with the new CDN folder
-* run `make martin` to upload data to the Martin tile server
-* update the `VITE_MARTIN_URL` variable in the `.env` file with the Martin tile server URL
-
-
-The data looks like this: 
-
 ```json
 [
   {
-    "name": "",
-    "description": "",
-    "receiver_location": "",
-    "main_concrete_type": "",
+  "_id": 1,
+    "description": "Reuse of floor slabs from a 6-story reinforced-concrete skeleton building for floor stabilization in a new plant",
+    "name": "Leipzig plant",
+    "main_concrete_type": "PC",
+    "main_concrete_type_uncertainty": 1,
+    "receiver_location_coordinates": "51.340199,12.360103",
+    "receiver_location_country": "Germany",
+    "receiver_location_city": "Leipzig",
     "distance_km": "",
-    "start_date_precs": "",
-    "component_age_at_start_date": "",
-    "design_solution_status": "",
-    "reference": "",
+    "precs_start_date_year": 1967,
+    "component_age_at_start_date": 37,
+    "quantity_reclaimed_ton": "",
+    "source_nb_floor": 6,
+    "source_use": "",
+    "source_element_type": "slab",
+    "receiver_nb_floor": 1,
+    "receiver_use_type": "industry",
+    "receiver_element_type": "floor stabilization?",
+    "design_solution_status": "Built",
+    "reference": "Mettke (1995)",
     "impact_design_alternative": "",
     "impact_difference": "",
     "impact_source": "",
     "cost_design_alternative": "",
-    "cost_difference": "",
+    "cost_difference_min_percent": "",
+    "cost_difference_max_percent": "",
     "cost_source": ""
-  }
+    }
 ]
 ```
