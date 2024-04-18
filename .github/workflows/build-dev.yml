@@ -49,8 +49,6 @@ jobs:
           file: ${{ matrix.dockerfile }}
           tags: ${{ steps.meta.outputs.tags }},${{ matrix.image }}:${{ github.sha }},${{ matrix.image }}:latest
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
   deploy:
     needs: build-and-push-image
     runs-on: ubuntu-latest
