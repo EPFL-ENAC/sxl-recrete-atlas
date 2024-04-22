@@ -1,3 +1,0 @@
-## Contributions relatives de l’espèce pour l’amélioration de la qualité de l’air (en rouge)
-
-Filtration annuelle totale de particules fines (PM10) vs. filtration annuelle totale nette d’ozone (O₃) (càd. O₃ filtration – PFO) pour les 51 essences d’arbres les plus abondantes dans le canton de Genève. La taille du point correspond au nombre d’arbres de l’espèce dans l’inventaire comme indiqué dans le légende. La couleur rose indique une espèce à feuillage persistant et le gris une espèce caduque (perdant ses feuilles chaque année).

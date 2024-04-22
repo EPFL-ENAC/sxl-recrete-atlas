@@ -8,7 +8,7 @@ import type { SelectableGroupItem, SelectableItem, SelectableSingleItem, Species
 import axios from 'axios'
 import { marked } from 'marked'
 import { useDisplay } from 'vuetify'
-import { computed, onMounted, ref, shallowRef, triggerRef, watch } from 'vue'
+import { computed, onMounted, ref, shallowRef, triggerRef, watch, defineModel } from 'vue'
 import { useI18n } from 'vue-i18n'
 import type { StyleSpecification } from 'maplibre-gl'
 // @ts-ignore
@@ -43,6 +43,17 @@ const scale = ref<string>()
 const showAllSpecies = ref<boolean>(true)
 
 const species = ref<SpeciesItem[]>([])
+
+const isProjectDialogOpen = defineModel('isProjectDialogOpen',{
+  type: Boolean,
+  default: false,
+})
+
+const project = defineModel('project',{
+  type: Boolean,
+  default: false,
+})
+
 
 onMounted(() => {
   axios
@@ -222,6 +233,8 @@ function getSpecieMeasureSumLabel(sel: SpeciesItem, measure: string) {
           :selected-scale-id="scale"
           @documentation="(type) => showDocumentation(type)"
           @specie="(specie) => selectSpecie(specie)"
+          v-model:isProjectDialogOpen="isProjectDialogOpen"
+          v-model:project="project"
         />
       </v-col>
     </v-row>

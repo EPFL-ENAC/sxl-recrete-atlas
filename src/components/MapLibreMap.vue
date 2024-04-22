@@ -24,10 +24,14 @@ import {
   type LngLatLike,
   type StyleSpecification
 } from 'maplibre-gl'
-import { onMounted, ref, watch } from 'vue'
+import { onMounted, ref, watch, defineModel } from 'vue'
 import { useI18n } from 'vue-i18n'
 import type { SelectableSingleItem, SpeciesProps } from '@/utils/layerSelector'
 import type { LegendScale, ScaleEntry } from '@/utils/jsonWebMap'
+import projects from "@/assets/data.json";
+const projectsData = ref<any[]>([])
+projectsData.value = projects
+
 
 defineExpose({
   update
@@ -72,6 +76,15 @@ const { t, locale } = useI18n({ useScope: 'global' })
 const loading = ref(true)
 let map: Map | undefined = undefined
 const scaleControl = ref<ScaleLegendControl>()
+const isProjectDialogOpen = defineModel('isProjectDialogOpen',{
+  type: Boolean,
+  default: false,
+})
+
+const project = defineModel('project',{
+  type: Object,
+  default: undefined,
+})
 
 onMounted(() => {
   map = new Map({
@@ -90,8 +103,8 @@ onMounted(() => {
   map.addControl(new ScaleControl({}))
   map.addControl(new FullscreenControl({}))
   map.addControl(new AttributionControl({
-      compact: false,
-      customAttribution: '© <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>, <a href="https://www.epfl.ch/labs/sxl/" target="_blank">SXL</a>'
+    compact: false,
+    customAttribution: '© <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>, <a href="https://www.epfl.ch/labs/sxl/" target="_blank">SXL</a>'
   }));
   map.addControl(
     new MaplibreGeocoder(geocoderApi, {
@@ -103,7 +116,7 @@ onMounted(() => {
   )
   const positionControl = new DivControl({ id: 'map-position' })
   map.addControl(positionControl, 'bottom-left')
- 
+
 
   map.on('mousemove', function (event: MapMouseEvent) {
     if (positionControl.container) {
@@ -115,9 +128,13 @@ onMounted(() => {
       positionControl.container.innerHTML = ''
     }
   })
+  map.on('load', () => {
+    // addProjects()
+  })
 
   map.once('load', () => {
     filterLayers()
+    addProjects();
     loading.value = false
   })
 })
@@ -163,9 +180,9 @@ watch(
           titleEnd: item.titleEnd ? t(item.titleEnd) : undefined,
           scale: item.scale.map((entry: ScaleEntry) => {
             const range: string[] | undefined = entry.range ? [
-                formatNumber(entry.range[0], "") ?? "",
-                formatNumber(entry.range[1], "") ?? ""
-              ] : undefined
+              formatNumber(entry.range[0], "") ?? "",
+              formatNumber(entry.range[1], "") ?? ""
+            ] : undefined
             return {
               label: entry.label ? t(entry.label) : undefined,
               color: entry.color,
@@ -210,10 +227,10 @@ watch(
           if (fprops) {
             const genus = fprops.GENRE_lat.toLowerCase().replace(' ', '_')
             const specie = layerId.endsWith('_alt') ? `${genus}_other` : fprops.NOM_COMPLET_lat.toLowerCase().replace(' ', '_')
-            
+
             let label = locale.value === 'en' ? fprops.NOM_COMPLET_eng : (fprops as any)[`NOM_COMPLET_${locale.value}`]
             if (!label) {
-              label = locale.value === 'en' ? fprops.GENRE_eng : (fprops as any)[`GENRE_${locale.value}`] 
+              label = locale.value === 'en' ? fprops.GENRE_eng : (fprops as any)[`GENRE_${locale.value}`]
             }
             let labelLat = fprops.NOM_COMPLET_lat
             if (!labelLat) {
@@ -228,7 +245,7 @@ watch(
               aContainer.innerText = "i"
               return aContainer;
             }
-            
+
             const makeSelectSpecieLink = (text: string) => {
               const aContainer = document.createElement("a");
               aContainer.href = "#";
@@ -258,13 +275,13 @@ watch(
 
             const divContainer = document.createElement("div");
             divContainer.classList.add("marked")
-            
+
             const pContainer = document.createElement("p");
             pContainer.classList.add("text-overline");
             pContainer.innerText = label
             pContainer.appendChild(makeSelectSpecieLink(labelLat));
             divContainer.appendChild(pContainer);
-            
+
             const tableContainer = document.createElement("table");
             divContainer.appendChild(tableContainer);
             const tbodyContainer = document.createElement("tbody");
@@ -369,7 +386,6 @@ watch(
             tdContainer.appendChild(makeColorSquare(fprops.color_o3))
             tdContainer.appendChild(makeMeasureText(fprops.O3_rm_gy / 1000))
             trContainer.appendChild(tdContainer);
-            
             popup
               .setLngLat(e.lngLat)
               //.setHTML(html)
@@ -419,6 +435,68 @@ function filterLayers() {
         )
       })
   }
+}
+
+function addProjects() {
+  const features = projectsData.value.filter(x => x.name).map((project: any) => ({
+    "type": "Feature",
+    "geometry": {
+      "type": "Point",
+      "coordinates": project.receiver_location_coordinates.split(',').map(Number).reverse()
+    },
+    "properties": {
+      "name": project.name
+    }
+  }));
+
+  if (map !== undefined) {
+    map.addSource('buildings', {
+      type: 'geojson',
+      data: {
+        "type": "FeatureCollection",
+        "features": features
+      }
+    });
+    // Now that we've added the source, we can create a layer that uses the 'buildings' source.
+    map.addLayer({
+      id: 'buildings-layer',
+      type: 'circle',
+      source: 'buildings',
+      paint: {
+        'circle-radius': 6,
+        'circle-color': '#B42222'
+      }
+    });
+
+    map.on('click', 'buildings-layer', function (e) {
+      isProjectDialogOpen.value = true;
+      project.value = projectsData.value.find(x => x.name === e.features[0].properties.name);
+    });
+    const popups: any[] = [];
+    map.on('mouseenter', 'buildings-layer', function (e) {
+      if (map !== undefined) {
+        const a = new Popup({
+          closeButton: false,
+          closeOnClick: false,
+          anchor: 'bottom'
+        })
+        .setLngLat(e.features[0].geometry.coordinates)
+        .setHTML('<h3>' + e.features[0].properties.name + '</h3>')
+        .addTo(map);
+        popups.push(a);
+        map.getCanvas().style.cursor = 'pointer';
+      }
+    });
+
+    map.on('mouseleave', 'buildings-layer', function () {
+      if (map !== undefined) {
+        popups.forEach(p => p.remove());
+        map.getCanvas().style.cursor = '';
+      }
+    });
+}
+
+
 }
 
 function formatNumber(nb: number, unit: string) {
