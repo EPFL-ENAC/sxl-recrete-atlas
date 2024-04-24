@@ -14,6 +14,7 @@ import MaplibreGeocoder from '@maplibre/maplibre-gl-geocoder'
 import {
   AttributionControl,
   FullscreenControl,
+  GeoJSONSource,
   GeolocateControl,
   Map,
   MapMouseEvent,
@@ -467,7 +468,8 @@ function computeData() {
 
 function updateLayerData(newData:any): void {
   if (map !== undefined && newData !== undefined) {
-    map.getSource('buildings').setData(newData);
+    const source: GeoJSONSource = map.getSource('buildings') as GeoJSONSource;
+    source?.setData(newData);
   }
 }
 
@@ -492,7 +494,7 @@ function addProjects() {
 
     map.on('click', 'buildings-layer', function (e) {
       isProjectDialogOpen.value = true;
-      project.value = projects.value.find(x => x.name === e.features[0].properties.name);
+      project.value = projects.value.find(x => x.name === e.features?.[0].properties.name);
     });
     const popups: any[] = [];
     map.on('mouseenter', 'buildings-layer', function (e) {
@@ -502,8 +504,8 @@ function addProjects() {
           closeOnClick: false,
           anchor: 'bottom'
         })
-        .setLngLat(e.features[0].geometry.coordinates)
-        .setHTML('<h3>' + e.features[0].properties.name + '</h3>')
+        .setLngLat((e.features?.[0].geometry as any)?.coordinates as LngLatLike)
+        .setHTML('<h3>' + e.features?.[0].properties.name + '</h3>')
         .addTo(map);
         popups.push(a);
         map.getCanvas().style.cursor = 'pointer';
