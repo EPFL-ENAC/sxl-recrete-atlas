@@ -27,7 +27,7 @@
       <v-row>
         <v-col :cols="3">
           <v-row>
-            <h3>{{ $t("about-the-donor-site") }}</h3>
+            <h3>{{ $t("about_the_donor_site") }}</h3>
           </v-row>
         </v-col>
         <v-col :cols="3">
@@ -59,7 +59,7 @@
 import { mdiBullseyeArrow } from '@mdi/js';
 import { defineModel } from 'vue';
 import { defaultImage } from '@/utils/default';
-import { Project } from '@/types/Project';
+import type { Project } from '@/types/Project';
 
 
 const isDialogActive = defineModel({
@@ -75,13 +75,13 @@ const props = defineProps<{
 
 <style scoped></style>
 
-<i18n>
+<i18n lang="json">
 {
   "en": {
-    "about-the-donor-site": "About the donor site"
+    "about_the_donor_site": "About the donor site"
   },
   "fr": {
-    "about-the-donor-site": "à propos du site du donneur"
+    "about_the_donor_site": "à propos du site du donneur"
   }
 }
 </i18n>

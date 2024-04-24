@@ -3,8 +3,9 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import type { ProjectKey } from '@/types/Project'
 
-export interface Filters extends Record<ProjectKey, string|null|undefined|boolean> {
-}
+
+export type Filters = Record<ProjectKey, string | null | undefined | boolean | (string | number)[]>;
+
 
 export const useFiltersStore = defineStore('filters', () => {
   function valueToLocalStorage(value: any): void{

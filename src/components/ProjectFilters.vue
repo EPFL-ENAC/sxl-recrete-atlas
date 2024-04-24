@@ -5,11 +5,16 @@ import { useI18n } from 'vue-i18n'
 import { useDisplay } from 'vuetify'
 import { useFiltersStore } from '@/stores/filters';
 import { storeToRefs } from 'pinia';
+import type { ProjectKey } from '@/types/Project';
 
 const { t, locale } = useI18n({ useScope: 'global' })
 const { mobile } = useDisplay()
 
-const filtersSelect = [
+interface FilterSelect {
+  key: ProjectKey
+  values: string[]
+}
+const filtersSelect: FilterSelect[] = [
   { key: 'main_concrete_type', values: ['PC', 'CIP'] },
   { key: 'receiver_location_country', values: ['DE', 'SE', 'FR', 'IT'] },
   { key: 'source_use', values: ['Bridge', 'Building', 'Tunnel', 'Other'] },
@@ -18,7 +23,11 @@ const filtersSelect = [
   { key: 'receiver_element_type', values: ['Beam', 'Column', 'Slab', 'Wall'] }
 ]
 
-const filtersRange = [
+interface FilterRange {
+  key: ProjectKey
+  values: number[]
+}
+const filtersRange: FilterRange[] = [
   { key: 'distance_km', values: [0, 100] },
   { key: 'precs_start_date_year', values: [0, 100] },
   { key: 'component_age_at_start_date', values: [0, 100] },
@@ -62,30 +71,34 @@ const props = withDefaults(
         {{ $t('search') }}
       </v-col>
       <v-col cols="6">
-        <v-text-field v-model:model-value="filters.name" @update:model-value="() => setFilters(filters)"
-          :clearable="true" />
+        <v-text-field
+v-model:model-value="filters.name" :clearable="true"
+          @update:model-value="() => setFilters(filters)" />
       </v-col>
     </v-row>
   </v-list-item>
-  <v-list-item v-for="(filter, $key) in filtersSelect" :key="$key" v-show="props.isVisible">
+  <v-list-item v-for="(filter, $key) in filtersSelect" v-show="props.isVisible" :key="$key">
     <v-row>
       <v-col cols="6">
         {{ $t(`project_${filter.key}`) }}
       </v-col>
       <v-col cols="6">
-        <v-select v-model="filters[filter.key]" @update:model-value="() => setFilters(filters)" :clearable="true"
-          multiple chips :items="filter.values" />
+        <v-select
+          :model-value="filters[filter.key] as any"
+          :clearable="true" multiple
+          chips :items="filter.values" @update:model-value="() => setFilters(filters)" />
       </v-col>
     </v-row>
   </v-list-item>
-  <v-list-item v-for="(filter, $key) in filtersRange" :key="$key" v-show="props.isVisible">
+  <v-list-item v-for="(filter, $key) in filtersRange" v-show="props.isVisible" :key="$key">
     <v-row>
       <v-col cols="6">
         {{ $t(`project_${filter.key}`) }}
       </v-col>
       <v-col cols="6">
-        <v-range-slider v-model="filters[filter.key]" @update:model-value="() => setFilters(filters)" clearable multiple
-          chips :items="filter.values" />
+        <v-range-slider
+          :model-value="filters[filter.key] as any" clearable multiple chips
+          :items="filter.values" @update:model-value="() => setFilters(filters)" />
       </v-col>
     </v-row>
   </v-list-item>
