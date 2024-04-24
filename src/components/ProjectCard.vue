@@ -1,0 +1,42 @@
+<template>
+  <v-card
+    class="mx-auto"
+    min-width="400"
+    max-width="400"
+    max-height="400"
+    :min-height="400"
+    outlined
+    tile
+  >
+    <v-img class="align-end text-white" height="200" :src="`${item.images?.[0] ?? defaultImage}`" cover>
+      <v-card-title>{{ item.name }}</v-card-title>
+    </v-img>
+
+    <v-card-subtitle class="pt-4">
+      {{ item._id }}
+    </v-card-subtitle>
+
+    <v-card-text>
+      {{ item.description }}
+    </v-card-text>
+
+    <v-card-actions>
+      <v-btn color="orange" text="Share"></v-btn>
+
+      <v-btn color="orange" text="Explore"></v-btn>
+    </v-card-actions>
+  </v-card>
+</template>
+
+<script setup lang="ts">
+import { defaultImage } from '@/utils/default';
+defineProps({
+  item: {
+    type: Object,
+    required: true
+  }
+})
+
+</script>
+
+<style scoped></style>

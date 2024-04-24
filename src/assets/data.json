@@ -26,7 +26,14 @@
     "cost_design_alternative": "",
     "cost_difference_min_percent": "",
     "cost_difference_max_percent": "",
-    "cost_source": ""
+    "cost_source": "",
+    "images": [
+      "https://enacit4r-cdn.epfl.ch/sxl-recrete-atlas/2024-04-23/a.png",
+      "https://enacit4r-cdn.epfl.ch/sxl-recrete-atlas/2024-04-23/b.png",
+      "https://enacit4r-cdn.epfl.ch/sxl-recrete-atlas/2024-04-23/c.png",
+      "https://enacit4r-cdn.epfl.ch/sxl-recrete-atlas/2024-04-23/d.png",
+      "https://enacit4r-cdn.epfl.ch/sxl-recrete-atlas/2024-04-23/abc.png"
+    ]
   },
   {
     "_id": 2,
@@ -1998,7 +2005,12 @@
     "cost_design_alternative": "Recycled-concrete monolithic arch",
     "cost_difference_min_percent": 54,
     "cost_difference_max_percent": 54,
-    "cost_source": "Küpfer et al. (2022)"
+    "cost_source": "Küpfer et al. (2022)",
+    "images": [
+      "https://enacit4r-cdn.epfl.ch/sxl-recrete-atlas/2024-04-23/recrete-2.png",
+      "https://enacit4r-cdn.epfl.ch/sxl-recrete-atlas/2024-04-23/recrete-3.png",
+      "https://enacit4r-cdn.epfl.ch/sxl-recrete-atlas/2024-04-23/recrete-4.png"
+    ]
   },
   {
     "_id": 70,
