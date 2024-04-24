@@ -1,11 +1,53 @@
 <template>
-  <v-card :prepend-icon="mdiBullseyeArrow" title="Target Activator">
+  <v-card :prepend-icon="mdiBullseyeArrow" :title="props.project.name">
+
     <v-card-text>
-      Pass any valid querySelector to the activator prop to bind the dialog to the target element.
-      {{ project }}
-      <v-img class="align-end text-white" height="200" :src="`${project.images?.[0] ?? defaultImage}`" cover>
-        <v-card-title>{{ project.name }}</v-card-title>
-      </v-img>
+      <v-row>
+        <v-col :cols="6">
+          <v-row>
+            <b>{{ $t("project_description") }}:</b> {{ props.project.description }}
+          </v-row>
+          <v-row>
+            <b>{{ $t("project_receiver_location_country") }}({{ $t("project_receiver_location_city") }}):</b> {{
+              props.project.receiver_location_country }} ({{ props.project.receiver_location_city }})
+          </v-row>
+          <v-row>
+            <b>{{ $t("project_precs_start_date_year") }}:</b> {{ props.project.precs_start_date_year }}
+          </v-row>
+          <v-row>
+            <b>{{ $t("project_design_solution_status") }}:</b> {{ props.project.design_solution_status }}
+          </v-row>
+        </v-col>
+        <v-col :cols="6">
+          <v-img class="align-end text-white" height="200" :src="`${props.project.images?.[0] ?? defaultImage}`" cover>
+            <v-card-title>{{ props.project.name }}</v-card-title>
+          </v-img>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col :cols="3">
+          <v-row>
+            <h3>{{ $t("about-the-donor-site") }}</h3>
+          </v-row>
+        </v-col>
+        <v-col :cols="3">
+          <v-row>
+            <h3>About the</h3>
+          </v-row>
+        </v-col>
+        <v-col :cols="3">
+          <v-row>
+            <h3>About the</h3>
+          </v-row>
+        </v-col>
+        <v-col :cols="3">
+          <v-row>
+            <h3>About the</h3>
+          </v-row>
+        </v-col>
+      </v-row>
+
+
     </v-card-text>
     <template v-slot:actions>
       <v-btn class="ml-auto" text="Close" @click="isDialogActive = false"></v-btn>
@@ -17,6 +59,7 @@
 import { mdiBullseyeArrow } from '@mdi/js';
 import { defineModel } from 'vue';
 import { defaultImage } from '@/utils/default';
+import { Project } from '@/types/Project';
 
 
 const isDialogActive = defineModel({
@@ -24,10 +67,21 @@ const isDialogActive = defineModel({
   default: false,
 })
 
-const project = defineProps<{
-  project: any
+const props = defineProps<{
+  project: Project
 }>()
 
 </script>
 
 <style scoped></style>
+
+<i18n>
+{
+  "en": {
+    "about-the-donor-site": "About the donor site"
+  },
+  "fr": {
+    "about-the-donor-site": "à propos du site du donneur"
+  }
+}
+</i18n>
