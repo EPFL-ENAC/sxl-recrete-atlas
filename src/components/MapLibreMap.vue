@@ -28,9 +28,11 @@ import { onMounted, ref, watch, defineModel } from 'vue'
 import { useI18n } from 'vue-i18n'
 import type { SelectableSingleItem, SpeciesProps } from '@/utils/layerSelector'
 import type { LegendScale, ScaleEntry } from '@/utils/jsonWebMap'
-import projects from "@/assets/data.json";
-const projectsData = ref<any[]>([])
-projectsData.value = projects
+import { storeToRefs } from 'pinia'
+
+import { useProjectsStore } from '@/stores/projects'
+
+const projects = storeToRefs(useProjectsStore()).projects
 
 
 defineExpose({
@@ -437,8 +439,16 @@ function filterLayers() {
   }
 }
 
-function addProjects() {
-  const features = projectsData.value.filter(x => x.name).map((project: any) => ({
+watch(() => projects,
+  () => {
+    // all selected by default
+    updateLayerData(computeData())
+  },
+  { immediate: true, deep:true }
+)
+
+function computeData() {
+  const features = projects.value.map((project: any) => ({
     "type": "Feature",
     "geometry": {
       "type": "Point",
@@ -449,13 +459,25 @@ function addProjects() {
     }
   }));
 
+  return {
+        "type": "FeatureCollection",
+        "features": features
+      };
+}
+
+function updateLayerData(newData:any): void {
+  if (map !== undefined && newData !== undefined) {
+    map.getSource('buildings').setData(newData);
+  }
+}
+
+
+function addProjects() {
+
   if (map !== undefined) {
     map.addSource('buildings', {
       type: 'geojson',
-      data: {
-        "type": "FeatureCollection",
-        "features": features
-      }
+      data: computeData()
     });
     // Now that we've added the source, we can create a layer that uses the 'buildings' source.
     map.addLayer({
@@ -470,7 +492,7 @@ function addProjects() {
 
     map.on('click', 'buildings-layer', function (e) {
       isProjectDialogOpen.value = true;
-      project.value = projectsData.value.find(x => x.name === e.features[0].properties.name);
+      project.value = projects.value.find(x => x.name === e.features[0].properties.name);
     });
     const popups: any[] = [];
     map.on('mouseenter', 'buildings-layer', function (e) {

@@ -1,0 +1,157 @@
+[
+  {
+    "key": "_id",
+    "Filtres": "",
+    "english": "Case-study number",
+    "french\r": "\r"
+  },
+  {
+    "key": "description",
+    "Filtres": "",
+    "english": "Case-study description",
+    "french\r": "\r"
+  },
+  {
+    "key": "name",
+    "Filtres": "",
+    "english": "Receiver-project name",
+    "french\r": "\r"
+  },
+  {
+    "key": "main_concrete_type",
+    "Filtres": "oui",
+    "english": "Main concrete type",
+    "french\r": "\r"
+  },
+  {
+    "key": "main_concrete_type_uncertainty",
+    "Filtres": "",
+    "english": "Main concrete type_Uncertainty",
+    "french\r": "\r"
+  },
+  {
+    "key": "receiver_location_country",
+    "Filtres": "oui",
+    "english": "Receiver-project Country",
+    "french\r": "\r"
+  },
+  {
+    "key": "receiver_location_city",
+    "Filtres": "",
+    "english": "Receiver-project City",
+    "french\r": "\r"
+  },
+  {
+    "key": "distance_km",
+    "Filtres": "range",
+    "english": "Approx. Distance from donor building in [km]",
+    "french\r": "\r"
+  },
+  {
+    "key": "precs_start_date_year",
+    "Filtres": "range",
+    "english": "PRECS case-study date (start)",
+    "french\r": "\r"
+  },
+  {
+    "key": "component_age_at_start_date",
+    "Filtres": "range",
+    "english": "Component age at receiver construction start (approx.)",
+    "french\r": "\r"
+  },
+  {
+    "key": "quantity_reclaimed_ton",
+    "Filtres": "range?",
+    "english": "Quantity of of reclaimed elements [units]",
+    "french\r": "\r"
+  },
+  {
+    "key": "source_nb_floor",
+    "Filtres": "range",
+    "english": "Source-project - number of floors",
+    "french\r": "\r"
+  },
+  {
+    "key": "source_use",
+    "Filtres": "oui",
+    "english": "Source-project - use",
+    "french\r": "\r"
+  },
+  {
+    "key": "source_element_type",
+    "Filtres": "oui",
+    "english": "Source-project - element type/use",
+    "french\r": "\r"
+  },
+  {
+    "key": "receiver_nb_floor",
+    "Filtres": "range",
+    "english": "Receiver-project - number of floors",
+    "french\r": "\r"
+  },
+  {
+    "key": "receiver_use_type",
+    "Filtres": "oui",
+    "english": "Receiver-project - use",
+    "french\r": "\r"
+  },
+  {
+    "key": "receiver_element_type",
+    "Filtres": "oui",
+    "english": "Receiver-project - element type/use",
+    "french\r": "\r"
+  },
+  {
+    "key": "design_solution_status",
+    "Filtres": "enlever les projets d'�tude!!",
+    "english": "Design solution status",
+    "french\r": "\r"
+  },
+  {
+    "key": "reference",
+    "Filtres": "Compl�ter avec full reference",
+    "english": "Reference",
+    "french\r": "\r"
+  },
+  {
+    "key": "impact_design_alternative",
+    "Filtres": "",
+    "english": "Compared design alternative",
+    "french\r": "\r"
+  },
+  {
+    "key": "impact_difference",
+    "Filtres": "with/without",
+    "english": "Environment-impact difference [unit]",
+    "french\r": "\r"
+  },
+  {
+    "key": "impact_source",
+    "Filtres": "",
+    "english": "Source of EI",
+    "french\r": "\r"
+  },
+  {
+    "key": "cost_design_alternative",
+    "Filtres": "",
+    "english": "Compared design alternative",
+    "french\r": "\r"
+  },
+  {
+    "key": "cost_difference_min_percent",
+    "Filtres": "with/without",
+    "english": "Min cost difference [%]",
+    "french\r": "\r"
+  },
+  {
+    "key": "cost_difference_max_percent",
+    "Filtres": "",
+    "english": "Max cost difference [%]",
+    "french\r": "\r"
+  },
+  {
+    "key": "cost_source",
+    "Filtres": "",
+    "english": "Source of cost,"
+  }
+]

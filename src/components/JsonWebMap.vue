@@ -2,15 +2,19 @@
 import type LayerSelector from '@/components/LayerSelector.vue'
 import MapLibreMap from '@/components/MapLibreMap.vue'
 import ProjectFilters from '@/components/ProjectFilters.vue'
-import type { Parameters, LegendScale } from '@/utils/jsonWebMap'
-import { mdiChevronLeft, mdiChevronRight, mdiClose, mdiLayers, mdiMapLegend, mdiRuler, mdiCircle, mdiCircleOutline, mdiOpenInNew, mdiInformation } from '@mdi/js'
-import type { SelectableGroupItem, SelectableItem, SelectableSingleItem, SpeciesItem } from '@/utils/layerSelector'
+import type { LegendScale, Parameters } from '@/utils/jsonWebMap'
+import type {
+  SelectableGroupItem,
+  SelectableItem,
+  SelectableSingleItem,
+  SpeciesItem
+} from '@/utils/layerSelector'
+import { mdiChevronLeft, mdiChevronRight, mdiClose } from '@mdi/js'
 import axios from 'axios'
-import { marked } from 'marked'
-import { useDisplay } from 'vuetify'
-import { computed, onMounted, ref, shallowRef, triggerRef, watch, defineModel } from 'vue'
-import { useI18n } from 'vue-i18n'
 import type { StyleSpecification } from 'maplibre-gl'
+import { computed, defineModel, onMounted, ref, shallowRef, triggerRef, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { useDisplay } from 'vuetify'
 // @ts-ignore
 import { useCookies } from 'vue3-cookies'
 
@@ -20,7 +24,6 @@ const props = defineProps<{
   cdnUrl: string
   martinUrl: string
 }>()
-
 
 const { t, locale } = useI18n({ useScope: 'global' })
 const { cookies } = useCookies()
@@ -44,16 +47,15 @@ const showAllSpecies = ref<boolean>(true)
 
 const species = ref<SpeciesItem[]>([])
 
-const isProjectDialogOpen = defineModel('isProjectDialogOpen',{
+const isProjectDialogOpen = defineModel('isProjectDialogOpen', {
   type: Boolean,
-  default: false,
+  default: false
 })
 
-const project = defineModel('project',{
+const project = defineModel('project', {
   type: Boolean,
-  default: false,
+  default: false
 })
-
 
 onMounted(() => {
   axios
@@ -73,78 +75,83 @@ onMounted(() => {
           map.value?.update(data.center, data.zoom)
         })
     })
-});
-
+})
 
 const singleItems = computed<SelectableSingleItem[]>(() =>
   (parameters.value?.selectableItems ?? [])
     .filter((item: SelectableItem) => item.id !== 'theme')
-    .flatMap((item: SelectableItem) =>
-      'children' in item ? item.children : [item]
-    )
+    .flatMap((item: SelectableItem) => ('children' in item ? item.children : [item]))
 )
 
 const themeItems = computed<SelectableSingleItem[]>(() => {
-  const themeGroup = parameters.value?.selectableItems?.find((item: SelectableItem) => item.id === 'theme') as SelectableGroupItem
+  const themeGroup = parameters.value?.selectableItems?.find(
+    (item: SelectableItem) => item.id === 'theme'
+  ) as SelectableGroupItem
   return themeGroup ? themeGroup.children : []
 })
 
 const selectableLayerIds = computed<string[]>(() => singleItems.value.map((item) => item.id))
 const selectedItemWithLegend = computed(() =>
   singleItems.value
-    .filter((item: SelectableSingleItem) => selectedLayerIds.value.some((id: string) => item.id === id))
-    .filter((item: SelectableSingleItem) => item.legend !== undefined || item.legendImage !== undefined || item.legendScaleId !== undefined || item.measures)
+    .filter((item: SelectableSingleItem) =>
+      selectedLayerIds.value.some((id: string) => item.id === id)
+    )
+    .filter(
+      (item: SelectableSingleItem) =>
+        item.legend !== undefined ||
+        item.legendImage !== undefined ||
+        item.legendScaleId !== undefined ||
+        item.measures
+    )
     .pop()
 )
-const selectedSpecie = computed(() => getSpecie(selectedItemWithLegend.value))
-
 const extendedSelectedLayerIds = computed<string[]>(() => {
-  const addtionalIds: string[] = showAllSpecies.value ? singleItems.value
-    .filter((item: SelectableSingleItem) => item.ids && selectedLayerIds.value.includes(item.id))
-    .flatMap((item: SelectableSingleItem) => item.ids) : []
+  const addtionalIds: string[] = showAllSpecies.value
+    ? singleItems.value
+        .filter(
+          (item: SelectableSingleItem) => item.ids && selectedLayerIds.value.includes(item.id)
+        )
+        .flatMap((item: SelectableSingleItem) => item.ids)
+    : []
   const measureLayerIds: string[] = selectedLayerIds.value.map((id) => `${id}_${scale.value}`)
-  const ids: string[] = [selectedLayerIds.value, measureLayerIds, addtionalIds].flat().filter((value, index, array) => array.indexOf(value) === index)
+  const ids: string[] = [selectedLayerIds.value, measureLayerIds, addtionalIds]
+    .flat()
+    .filter((value, index, array) => array.indexOf(value) === index)
   return ids
 })
 
-const scaleItems = computed<{ id: string; title: string }[] | undefined>(() => parameters.value?.legendScales?.
-  filter((scl) => selectedItemWithLegend.value && selectedItemWithLegend.value.measures.includes(scl.id))
-  .map((scl) => {
-    return {
-      id: scl.id,
-      title: t(scl.id)
-    }
-  }))
+const scaleItems = computed<{ id: string; title: string }[] | undefined>(() =>
+  parameters.value?.legendScales
+    ?.filter(
+      (scl) =>
+        selectedItemWithLegend.value && selectedItemWithLegend.value.measures.includes(scl.id)
+    )
+    .map((scl) => {
+      return {
+        id: scl.id,
+        title: t(scl.id)
+      }
+    })
+)
 
-watch(() => selectedLayerIds.value, () => {
-  if (scale.value === undefined || !scaleItems.value?.map(scl => scl.id).includes(scale.value)) {
-    if (scaleItems.value && scaleItems.value.length > 0) {
-      scale.value = scaleItems.value?.[0].id
+watch(
+  () => selectedLayerIds.value,
+  () => {
+    if (
+      scale.value === undefined ||
+      !scaleItems.value?.map((scl) => scl.id).includes(scale.value)
+    ) {
+      if (scaleItems.value && scaleItems.value.length > 0) {
+        scale.value = scaleItems.value?.[0].id
+      }
     }
   }
-})
+)
 
 function getSpecie(sel: SelectableSingleItem | undefined) {
   return sel ? species.value.filter((item) => item.id === sel.id).pop() : undefined
 }
 
-function onOpenLegendDialog(item: SelectableSingleItem) {
-  const label = (item as any)['label_' + locale.value]
-  legendDialogTitle.value = `${item.label} (${label})`
-  legendDialogImageSrc.value = item.legendImage
-  legendDialog.value = true
-}
-
-function getLegendTitle(id: string, withUnit: boolean): string | undefined {
-  const scale = parameters.value?.legendScales?.find((scale: LegendScale) => scale.id === id)
-  if (scale) { 
-    if (withUnit && scale.unit) {
-      return `${t(scale.id)} (${t(scale.unit)})`
-    }
-    return t(scale.id)
-  }
-  return undefined
-}
 
 function showDocumentation(id: string) {
   const lid = `${id}_${locale.value}`
@@ -166,38 +173,35 @@ function selectSpecie(id: string) {
   selector.value?.update(tokens[0], tokens[1])
 }
 
-function formatNumber(nb: number) {
-  return new Intl.NumberFormat(`${locale.value}`).format(Math.round(nb * 100) / 100)
-}
-
-function isMeasurePositive(measure: string) {
-  return ['voc', 'ofp'].includes(measure)
-}
-
-function getSpecieMeasureMeanLabel(sel: SpeciesItem, measure: string) {
-  const field = `mean_${measure === 'voc' ? 'BVOC' : measure.toUpperCase()}_kg`
-  const val = formatNumber((sel as any)[field])
-  return val
-}
-
-function getSpecieMeasureSumLabel(sel: SpeciesItem, measure: string) {
-  const field = `sum_${measure === 'voc' ? 'BVOC' : measure.toUpperCase()}_kg`
-  const val = formatNumber((sel as any)[field])
-  return val
-}
-
 </script>
 
 <template>
-  <v-navigation-drawer :rail="drawerRail" permanent :width="mobile ? 300 : 450" @click="drawerRail = false">
+  <v-navigation-drawer
+    :rail="drawerRail"
+    permanent
+    :width="mobile ? 300 : 450"
+    @click="drawerRail = false"
+  >
     <v-list density="compact" nav>
-      <v-list-item :prepend-icon="drawerRail ? mdiChevronRight : undefined">
-        <template #append>
-          <v-btn :icon="mdiChevronLeft" variant="flat" @click.stop="drawerRail = true" />
+      <v-list-item>
+        <template v-if="!drawerRail" #append>
+          <v-btn
+            :icon="mdiChevronLeft"
+            variant="flat"
+            density="compact"
+            @click.stop="drawerRail = true"
+          />
+        </template>
+        <template v-if="drawerRail" #prepend >
+          <v-btn
+            :icon="mdiChevronRight"
+            variant="flat"
+            density="compact"
+            @click.stop="drawerRail = false"
+          />
         </template>
       </v-list-item>
-     
-      <project-filters />
+      <project-filters :is-visible="!drawerRail" />
     </v-list>
   </v-navigation-drawer>
   <v-navigation-drawer v-if="drawerRight" permanent location="right" :width="mobile ? 200 : 400">
@@ -209,8 +213,7 @@ function getSpecieMeasureSumLabel(sel: SpeciesItem, measure: string) {
       </v-list-item>
       <v-list-item>
         <v-card>
-          <v-card-text v-html="drawerHtml" class="marked">
-          </v-card-text>
+          <v-card-text v-html="drawerHtml" class="marked"> </v-card-text>
         </v-card>
       </v-list-item>
     </v-list>
@@ -239,29 +242,19 @@ function getSpecieMeasureSumLabel(sel: SpeciesItem, measure: string) {
       </v-col>
     </v-row>
 
-    <v-dialog
-      v-model="legendDialog"
-      fullscreen
-    >
+    <v-dialog v-model="legendDialog" fullscreen>
       <v-card>
-        <v-toolbar
-          color="grey-lighten-4"
-        >
-          <v-btn
-            :icon="mdiClose"
-            @click="legendDialog = false"
-          >
-          </v-btn>
+        <v-toolbar color="grey-lighten-4">
+          <v-btn :icon="mdiClose" @click="legendDialog = false"> </v-btn>
           <v-toolbar-title>
             {{ legendDialogTitle }}
           </v-toolbar-title>
         </v-toolbar>
         <v-card-text>
-          <v-img :src="legendDialogImageSrc"/>
+          <v-img :src="legendDialogImageSrc" />
         </v-card-text>
       </v-card>
     </v-dialog>
-
   </v-container>
 </template>
 
