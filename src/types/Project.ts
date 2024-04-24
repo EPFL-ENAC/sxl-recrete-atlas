@@ -26,7 +26,7 @@ export interface Project {
   cost_difference_min_percent: number;
   cost_difference_max_percent: number;
   cost_source: string;
-  images: string[];
+  images?: string[];
 }
 
 export type ProjectKey = keyof Project;
