@@ -1,7 +1,7 @@
 <template>
   <v-dialog v-model="isDialogActive" max-width="800">
     <template #default="{ isActive }">
-      <project-detail v-if="isActive" v-model="isDialogActive" :project="project"/>
+      <project-detail v-if="isActive" v-model="isDialogActive" :project="props.project"/>
     </template>
   </v-dialog>
 
@@ -16,7 +16,7 @@ const isDialogActive = defineModel({
   default: false,
 })
 
-const project = defineProps<{
+const props = defineProps<{
   project: any
 }>()
 
