@@ -26,7 +26,7 @@ jobs:
     outputs:
         github_sha: ${{ github.sha  }}
         tags: ${{ steps.meta.outputs.tags  }}
-        labels: ${{ steps.meta.outputs.labels  }}
+        labels${{matrix.shardIndex}}: ${{ steps.meta.outputs.labels  }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -44,14 +44,8 @@ jobs:
         with:
           images: ${{ matrix.image }}
 
-      - name: Setup output
-        id: output
-        run: echo "{name}={value}" >> $GITHUB_OUTPUT \
-            && echo "digest=${{ github.sha }}" >> $GITHUB_OUTPUT \
-            && echo "digest-${{matrix.shardIndex}}=${{ github.sha }}" >> $GITHUB_OUTPUT \
-            && echo "tags=${{ steps.meta.outputs.tags }}" >> $GITHUB_OUTPUT \
-            && echo "labels=${{ steps.meta.outputs.labels }}" >> $GITHUB_OUTPUT
       - name: Build and push Docker image EPFL-ENAC.Agent.Service
+        id: build-docker-push
         uses: docker/build-push-action@v5
         with:
           context: ${{ matrix.context }}
@@ -59,6 +53,14 @@ jobs:
           file: ${{ matrix.dockerfile }}
           tags: ${{ steps.meta.outputs.tags }},${{ matrix.image }}:${{ github.sha }},${{ matrix.image }}:latest
           labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Setup output
+        id: output
+        run: echo "{name}={value}" >> $GITHUB_OUTPUT \
+              && echo "github_sha=${{ github.sha }}" >> $GITHUB_OUTPUT \
+              && echo "digest=${{ steps.build-docker-push.outputs.digest }}" >> $GITHUB_OUTPUT \
+              && echo "digest-${{matrix.shardIndex}}=${{ github.sha }}" >> $GITHUB_OUTPUT \
+              && echo "tags=${{ steps.build-docker-push.outputs.tags }}" >> $GITHUB_OUTPUT
   deploy:
     needs: build-and-push-image
     runs-on: ubuntu-latest
