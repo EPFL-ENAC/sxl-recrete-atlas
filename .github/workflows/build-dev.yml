@@ -59,13 +59,15 @@ jobs:
       - name: Deploy application to dev
         if: ${{ github.ref }} == "refs/heads/dev"
         run: |
+          echo "Deploying to prod" && \
+          echo "Digest: ${{ toJson(needs.build-and-push-image.outputs) }}" && \
           curl -X POST \
           -H "Authorization: Bearer ${{ secrets.CD_TOKEN }}" \
           ${{ secrets.CD_URI }} \
           -d '{
             "event_type": "update-manifest",
             "client_payload": {
-              "digest": "${{ needs.build-and-push-image.outputs }}",
+              "digest": "${{ needs.build-and-push-image.outputs.digest }}",
               "repo_name": "${{ secrets.CD_REPO }}",
               "repo_org": "${{ secrets.CD_ORG }}",
               "branch": "dev"
@@ -80,7 +82,7 @@ jobs:
           -d '{
             "event_type": "update-manifest",
             "client_payload": {
-              "digest": "${{ toJson(needs.build.outputs.digest) }}",
+              "digest": "${{ toJson(needs.build-and-push-image.outputs.digest) }}",
               "repo_name": "${{ secrets.CD_REPO }}",
               "repo_org": "${{ secrets.CD_ORG }}",
               "branch": "prod"
