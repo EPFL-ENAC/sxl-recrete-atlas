@@ -26,7 +26,6 @@ jobs:
     outputs:
         github_sha: ${{ github.sha  }}
         tags: ${{ steps.meta.outputs.tags  }}
-        labels${{matrix.shardIndex}}: ${{ steps.meta.outputs.labels  }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
