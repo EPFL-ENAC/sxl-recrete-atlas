@@ -212,9 +212,14 @@
           "selected": false
         },
         {
+          "id": "arcgis",
+          "label": "ArcGIS",
+          "selected": true
+        },
+        {
           "id": "light",
           "label": "Light",
-          "selected": true
+          "selected": false
         },
         {
           "id": "dark",
@@ -229,8 +234,8 @@
       ]
     },
     {
-      "id": "species",
-      "label": "Species",
+      "id": "projects",
+      "label": "projects",
       "tab": true,
       "children": []
     }
