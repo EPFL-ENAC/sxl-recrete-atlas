@@ -1,5 +1,5 @@
 # https://github.com/EPFL-ENAC/epfl-enac-deploy-action#readme
-name: build-push-dev
+name: build-push-deploy
 
 "on":
   push:
