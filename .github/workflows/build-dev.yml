@@ -45,7 +45,10 @@ jobs:
 
       - name: Setup output
         id: output
-        run: echo "::set-output name=digest::${{ steps.meta.outputs.digest }}"
+        run: echo "::set-output name=digest::${{ steps.meta.outputs.digest }}" \
+              && echo "::set-output name=digeset-${{matrix.shardIndex}}::${{ steps.meta.outputs.digest }}" \
+              && echo "::set-output name=tags::${{ steps.meta.outputs.tags }}" \
+              && echo "::set-output name=labels::${{ steps.meta.outputs.labels }}"
       - name: Build and push Docker image EPFL-ENAC.Agent.Service
         uses: docker/build-push-action@v5
         with:
