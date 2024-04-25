@@ -131,9 +131,6 @@ onMounted(() => {
       positionControl.container.innerHTML = ''
     }
   })
-  map.on('load', () => {
-    // addProjects()
-  })
 
   map.once('load', () => {
     filterLayers()
