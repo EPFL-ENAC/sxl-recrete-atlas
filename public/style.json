@@ -7,26 +7,68 @@
       "tiles": ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
       "tileSize": 256,
       "minzoom": 0,
-      "maxzoom": 19
+      "maxzoom": 20
     },
-    "pneuma": {
-      "type": "vector",
-      "tiles": ["https://enacit4r-cdn.epfl.ch/pneuma/2023-04-24/tiles/{z}/{x}/{y}.pbf"],
-      "minZoom": 16,
-      "maxZoom": 24
+    "arcgis": {
+      "type": "raster",
+      "tiles": ["https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}"],
+      "tileSize": 256,
+      "minzoom": 0,
+      "maxzoom": 20
+    },
+    "stadiamaps": {
+      "type": "raster",
+      "tiles": ["https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.{ext}"],
+      "tileSize": 256,
+      "minzoom": 0,
+      "maxzoom": 20
+    },
+    "jawg": {
+      "type": "raster",
+      "tiles": ["https://tile.jawg.io/jawg-light/{z}/{x}/{y}{r}.png?access-token={accessToken}"],
+      "tileSize": 256,
+      "minzoom": 0,
+      "maxzoom": 20
+    },
+    "swissimage": {
+      "type": "raster",
+      "tileSize": 256,
+      "minzoom": 0,
+      "maxzoom": 20,
+      "tiles": ["https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.swissimage-product/default/current/3857/{z}/{x}/{y}.jpeg"]
     }
   },
   "layers": [
-    { "id": "osm", "type": "raster", "source": "osm" },
-    {
-      "id": "pneuma",
-      "type": "circle",
-      "source": "pneuma",
-      "source-layer": "data",
+    { "id": "classic",
+      "type": "raster",
+      "source": "osm",
+      "layout": { "visibility": "none" }
+    },
+    { "id": "arcgis",
+      "type": "raster",
+      "source": "arcgis"
+    },
+    { "id": "light",
+      "type": "raster",
+      "source": "osm",
       "paint": {
-        "circle-color": "rgba(57, 157, 50, 1)",
-        "circle-radius": 2
+        "raster-saturation": -0.9,
+        "raster-brightness-min": 0.7
       }
+    },
+    { "id": "dark",
+      "type": "raster",
+      "source": "osm",
+      "paint": {
+        "raster-saturation": -1,
+        "raster-brightness-max": 0.2
+      },
+      "layout": { "visibility": "none" }
+    },
+    { "id": "swissimage",
+      "type": "raster",
+      "source": "swissimage",
+      "layout": { "visibility": "none" }
     }
   ]
 }

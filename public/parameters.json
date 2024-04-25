@@ -1,21 +1,245 @@
 {
-  "$schema": "https://raw.githubusercontent.com/EPFL-ENAC/it4r-webmap/main/schema/parameters.schema.json",
-  "center": { "lat": 37.991496, "lng": 23.732299 },
-  "zoom": 12,
-  "selectableItems": [
+  "$schema": "https://raw.githubusercontent.com/EPFL-ENAC/alice-perl-eerl-urbtrees/main/schema/parameters.schema.json",
+  "center": { "lat": 48.3246, "lng": 10 },
+  "zoom": 4,
+  "legendScales": [
     {
-      "label": "OSM",
-      "legend": "Open Street Map",
-      "ids": ["osm"],
-      "selected": true
+      "id": "voc",
+      "title": "Volatile organic compounds",
+      "titleStart": "more emissions",
+      "titleEnd": "less emissions",
+      "unit": "g/year",
+      "scale": [
+        {
+          "range": [2784.4, 100000.0],
+          "color": "#440154"
+        },
+        {
+            "range": [807.3, 2784.4],
+            "color": "#482878"
+        },
+        {
+            "range": [538.2, 807.3],
+            "color": "#3e4989"
+        },
+        {
+            "range": [198.5, 538.2],
+            "color": "#31688e"
+        },
+        {
+            "range": [116.8, 198.5],
+            "color": "#26828e"
+        },
+        {
+            "range": [87.2, 116.8],
+            "color": "#1f9e89"
+        },
+        {
+            "range": [51.9, 87.2],
+            "color": "#35b779"
+        },
+        {
+            "range": [23.1, 51.9],
+            "color": "#6ece58"
+        },
+        {
+            "range": [5.1, 23.1],
+            "color": "#b5de2b"
+        },
+        {
+            "range": [0, 5.1],
+            "color": "#fde725"
+        }
+      ]
     },
     {
-      "label": "Pneuma",
-      "ids": ["pneuma"],
-      "selected": true,
-      "legendImage": "https://ge.ch/sitgags1/services/VECTOR/SITG_OPENDATA_04/MapServer/WmsServer?request=GetLegendGraphic%26version=1.3.0%26format=image/png%26layer=46"
+      "id": "pm10",
+      "title": "PM10 particules deposition",
+      "titleStart": "less deposition",
+      "titleEnd": "more deposition",
+      "unit": "g/year",
+      "scale": [
+        {
+          "range": [0, 23],
+          "color": "#440154"
+        },
+        {
+            "range": [23, 100],
+            "color": "#482878"
+        },
+        {
+            "range": [100, 180],
+            "color": "#3e4989"
+        },
+        {
+            "range": [180, 206],
+            "color": "#31688e"
+        },
+        {
+            "range": [206, 299],
+            "color": "#26828e"
+        },
+        {
+            "range": [299, 371],
+            "color": "#1f9e89"
+        },
+        {
+            "range": [371, 430],
+            "color": "#35b779"
+        },
+        {
+            "range": [430, 505],
+            "color": "#6ece58"
+        },
+        {
+            "range": [505, 628],
+            "color": "#b5de2b"
+        },
+        {
+            "range": [628, 8225],
+            "color": "#fde725"
+        }
+      ]
+    },
+    {
+      "id": "ofp",
+      "title": "Ozone formation potential",
+      "titleStart": "more ozone formed",
+      "titleEnd": "less ozone formed",
+      "unit": "kg/year",
+      "scale": [
+        {
+          "range": [28.197, 471.189],
+          "color": "#440154"
+        },
+        {
+            "range": [4.883, 28.197],
+            "color": "#482878"
+        },
+        {
+            "range": [3.237, 4.883],
+            "color": "#3e4989"
+        },
+        {
+            "range": [1.128, 3.237],
+            "color": "#31688e"
+        },
+        {
+            "range": [0.537, 1.128],
+            "color": "#26828e"
+        },
+        {
+            "range": [0.34, 0.537],
+            "color": "#1f9e89"
+        },
+        {
+            "range": [0.256, 0.34],
+            "color": "#35b779"
+        },
+        {
+            "range": [0.093, 0.256],
+            "color": "#6ece58"
+        },
+        {
+            "range": [0.021, 0.093],
+            "color": "#b5de2b"
+        },
+        {
+            "range": [0, 0.021],
+            "color": "#fde725"
+        }
+      ]
+    },
+    {
+      "id": "o3",
+      "title": "Ozone absorption",
+      "titleStart": "less deposition",
+      "titleEnd": "more deposition",
+      "unit": "g/year",
+      "scale": [
+        {
+          "range": [0, 31],
+          "color": "#440154"
+        },
+        {
+            "range": [31, 110],
+            "color": "#482878"
+        },
+        {
+            "range": [110, 153],
+            "color": "#3e4989"
+        },
+        {
+            "range": [153, 228],
+            "color": "#31688e"
+        },
+        {
+            "range": [228, 269],
+            "color": "#26828e"
+        },
+        {
+            "range": [269, 441],
+            "color": "#1f9e89"
+        },
+        {
+            "range": [441, 717],
+            "color": "#35b779"
+        },
+        {
+            "range": [717, 1049],
+            "color": "#6ece58"
+        },
+        {
+            "range": [1049, 2235],
+            "color": "#b5de2b"
+        },
+        {
+            "range": [2235, 50000],
+            "color": "#fde725"
+        }
+      ]
     }
   ],
-  "title": "Map Title",
-  "subtitle": "Map Subtitle"
+  "popupLayerIds": [],
+  "selectableItems": [
+    {
+      "id": "theme",
+      "label": "Theme",
+      "children": [
+        {
+          "id": "classic",
+          "label": "Classic",
+          "selected": false
+        },
+        {
+          "id": "arcgis",
+          "label": "ArcGIS",
+          "selected": true
+        },
+        {
+          "id": "light",
+          "label": "Light",
+          "selected": false
+        },
+        {
+          "id": "dark",
+          "label": "Dark",
+          "selected": false
+        },
+        {
+          "id": "swissimage",
+          "label": "Aerial",
+          "selected": false
+        }
+      ]
+    },
+    {
+      "id": "projects",
+      "label": "projects",
+      "tab": true,
+      "children": []
+    }
+  ],
+  "title": "app_title",
+  "subtitle": "app_subtitle"
 }
