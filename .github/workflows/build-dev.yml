@@ -24,8 +24,7 @@ jobs:
       contents: read
       packages: write
     outputs:
-        output1: ${{ steps.step1.outputs.test }}
-        output2: ${{ steps.step2.outputs.test }}
+        output1: ${{ github.sha  }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -69,7 +68,7 @@ jobs:
         if: ${{ github.ref }} == "refs/heads/dev"
         run: |
           echo "Deploying to prod" && \
-          echo "Digest: ${{ toJson(needs.build-and-push-image.outputs) }}" && \
+          echo "Digest: ${{ toJson(needs.build-and-push-image) }}" && \
           curl -X POST \
           -H "Authorization: Bearer ${{ secrets.CD_TOKEN }}" \
           ${{ secrets.CD_URI }} \
