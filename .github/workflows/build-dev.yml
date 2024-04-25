@@ -75,7 +75,7 @@ jobs:
           -d '{
             "event_type": "update-manifest",
             "client_payload": {
-              "digest": "${{ toJson(needs.build-and-push-image.outputs) }}",
+              "digest": "dev",
               "repo_name": "${{ secrets.CD_REPO }}",
               "repo_org": "${{ secrets.CD_ORG }}",
               "branch": "dev"
