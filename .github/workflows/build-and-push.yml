@@ -25,6 +25,7 @@ jobs:
       packages: write
     outputs:
         github_sha: ${{ github.sha  }}
+        digest: ${{ steps.build-docker-push.outputs.digest}}
         tags: ${{ steps.meta.outputs.tags  }}
     steps:
       - name: Checkout repository
