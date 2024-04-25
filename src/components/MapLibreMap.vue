@@ -109,14 +109,14 @@ onMounted(() => {
     compact: false,
     customAttribution: '© <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>, <a href="https://www.epfl.ch/labs/sxl/" target="_blank">SXL</a>'
   }));
-  map.addControl(
-    new MaplibreGeocoder(geocoderApi, {
-      maplibregl: { Marker },
-      showResultsWhileTyping: true,
-      language: locale.value,
-    }),
-    'top-left',
-  )
+  // map.addControl(
+  //   new MaplibreGeocoder(geocoderApi, {
+  //     maplibregl: { Marker },
+  //     showResultsWhileTyping: true,
+  //     language: locale.value,
+  //   }),
+  //   'top-left',
+  // )
   const positionControl = new DivControl({ id: 'map-position' })
   map.addControl(positionControl, 'bottom-left')
 
