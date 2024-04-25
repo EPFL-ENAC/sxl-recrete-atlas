@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.2](https://github.com/EPFL-ENAC/sxl-recrete-atlas/compare/v1.0.1...v1.0.2) (2024-04-25)
+
+
+### Bug Fixes
+
+* **github:** add better tags 'on' rule ([c418768](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/c4187688fd3e6ac90d94678dc3971c0703a3b404))
+
 ## [1.0.1](https://github.com/EPFL-ENAC/sxl-recrete-atlas/compare/v1.0.0...v1.0.1) (2024-04-25)
 
 
