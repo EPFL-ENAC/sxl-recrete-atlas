@@ -1,105 +1,221 @@
 <script setup lang="ts">
-import ConfigurationForm from '@/components/ConfigurationForm.vue'
-import LayerSelector from '@/components/LayerSelector.vue'
+import type LayerSelector from '@/components/LayerSelector.vue'
 import MapLibreMap from '@/components/MapLibreMap.vue'
-import { useTitleStore } from '@/stores/title'
-import type { Parameters } from '@/utils/jsonWebMap'
-import type { SelectableSingleItem } from '@/utils/layerSelector'
-import { mdiChevronLeft, mdiChevronRight, mdiCog, mdiLayers, mdiMapLegend } from '@mdi/js'
+import ProjectFilters from '@/components/ProjectFilters.vue'
+import type { LegendScale, Parameters } from '@/utils/jsonWebMap'
+import type {
+  SelectableGroupItem,
+  SelectableItem,
+  SelectableSingleItem,
+  SpeciesItem
+} from '@/utils/layerSelector'
+import { mdiChevronLeft, mdiChevronRight, mdiClose } from '@mdi/js'
 import axios from 'axios'
-import { storeToRefs } from 'pinia'
-import { computed, ref, shallowRef, triggerRef, watch } from 'vue'
+import type { StyleSpecification } from 'maplibre-gl'
+import { computed, defineModel, onMounted, ref, shallowRef, triggerRef, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { useDisplay } from 'vuetify'
+// @ts-ignore
+import { useCookies } from 'vue3-cookies'
 
 const props = defineProps<{
   styleUrl: string
   parametersUrl: string
+  cdnUrl: string
+  martinUrl: string
 }>()
 
-const map = ref<InstanceType<typeof MapLibreMap>>()
-const selectedLayerIds = ref<string[]>([])
-const parameters = shallowRef<Parameters>({})
-const drawerRail = ref(false)
+const { t, locale } = useI18n({ useScope: 'global' })
+const { cookies } = useCookies()
 
-const { title, subtitle } = storeToRefs(useTitleStore())
+const map = ref<InstanceType<typeof MapLibreMap>>()
+const selector = ref<InstanceType<typeof LayerSelector>>()
+const selectedLayerIds = ref<string[]>([])
+const style = shallowRef<StyleSpecification>()
+const parameters = shallowRef<Parameters>()
+const legendDialog = ref(false)
+const legendDialogTitle = ref<string>()
+const legendDialogImageSrc = ref<string>()
+const drawerRail = ref(false)
+const drawerRight = ref(false)
+const drawerHtml = ref('')
+const docId = ref<string>()
+const docHtml = ref<any>({})
+const { mobile } = useDisplay()
+const scale = ref<string>()
+const showAllSpecies = ref<boolean>(true)
+
+const species = ref<SpeciesItem[]>([])
+
+const isProjectDialogOpen = defineModel('isProjectDialogOpen', {
+  type: Boolean,
+  default: false
+})
+
+const project = defineModel('project', {
+  type: Boolean,
+  default: false
+})
+
+onMounted(() => {
+  axios
+    .get<StyleSpecification>(props.styleUrl)
+    .then((response) => response.data)
+    .then((data) => {
+      style.value = data
+    })
+    .then(() => {
+      axios
+        .get<Parameters>(props.parametersUrl)
+        .then((response) => response.data)
+        .then((data) => {
+          parameters.value = data
+          triggerRef(parameters)
+          triggerRef(style)
+          map.value?.update(data.center, data.zoom)
+        })
+    })
+})
 
 const singleItems = computed<SelectableSingleItem[]>(() =>
-  (parameters.value.selectableItems ?? []).flatMap((item) =>
-    'children' in item ? item.children : [item]
-  )
+  (parameters.value?.selectableItems ?? [])
+    .filter((item: SelectableItem) => item.id !== 'theme')
+    .flatMap((item: SelectableItem) => ('children' in item ? item.children : [item]))
 )
-const selectableLayerIds = computed<string[]>(() => singleItems.value.flatMap((item) => item.ids))
-const legendItems = computed(() =>
+
+const themeItems = computed<SelectableSingleItem[]>(() => {
+  const themeGroup = parameters.value?.selectableItems?.find(
+    (item: SelectableItem) => item.id === 'theme'
+  ) as SelectableGroupItem
+  return themeGroup ? themeGroup.children : []
+})
+
+const selectableLayerIds = computed<string[]>(() => singleItems.value.map((item) => item.id))
+const selectedItemWithLegend = computed(() =>
   singleItems.value
-    .filter((item) => selectedLayerIds.value.some((id) => item.ids.includes(id)))
-    .filter((item) => item.legend !== undefined || item.legendImage !== undefined)
-    .map((item) => ({
-      label: item.label,
-      legend: item.legend,
-      legendImage: item.legendImage
-    }))
+    .filter((item: SelectableSingleItem) =>
+      selectedLayerIds.value.some((id: string) => item.id === id)
+    )
+    .filter(
+      (item: SelectableSingleItem) =>
+        item.legend !== undefined ||
+        item.legendImage !== undefined ||
+        item.legendScaleId !== undefined ||
+        item.measures
+    )
+    .pop()
+)
+const extendedSelectedLayerIds = computed<string[]>(() => {
+  const addtionalIds: string[] = showAllSpecies.value
+    ? singleItems.value
+        .filter(
+          (item: SelectableSingleItem) => item.ids && selectedLayerIds.value.includes(item.id)
+        )
+        .flatMap((item: SelectableSingleItem) => item.ids)
+    : []
+  const measureLayerIds: string[] = selectedLayerIds.value.map((id) => `${id}_${scale.value}`)
+  const ids: string[] = [selectedLayerIds.value, measureLayerIds, addtionalIds]
+    .flat()
+    .filter((value, index, array) => array.indexOf(value) === index)
+  return ids
+})
+
+const scaleItems = computed<{ id: string; title: string }[] | undefined>(() =>
+  parameters.value?.legendScales
+    ?.filter(
+      (scl) =>
+        selectedItemWithLegend.value && selectedItemWithLegend.value.measures.includes(scl.id)
+    )
+    .map((scl) => {
+      return {
+        id: scl.id,
+        title: t(scl.id)
+      }
+    })
 )
 
 watch(
-  () => props.parametersUrl,
-  (parametersUrl) => {
-    axios
-      .get<Parameters>(parametersUrl)
-      .then((response) => response.data)
-      .then((data) => {
-        parameters.value = data
-        triggerRef(parameters)
-        map.value?.update(data.center, data.zoom)
-        title.value = data.title
-        subtitle.value = data.subtitle
-        if (data.title) {
-          document.title = data.title
-        }
-      })
-  },
-  { immediate: true }
+  () => selectedLayerIds.value,
+  () => {
+    if (
+      scale.value === undefined ||
+      !scaleItems.value?.map((scl) => scl.id).includes(scale.value)
+    ) {
+      if (scaleItems.value && scaleItems.value.length > 0) {
+        scale.value = scaleItems.value?.[0].id
+      }
+    }
+  }
 )
+
+function getSpecie(sel: SelectableSingleItem | undefined) {
+  return sel ? species.value.filter((item) => item.id === sel.id).pop() : undefined
+}
+
+
+function showDocumentation(id: string) {
+  const lid = `${id}_${locale.value}`
+  if (docId.value === lid) {
+    drawerRight.value = !drawerRight.value
+  } else {
+    if (lid in docHtml.value) {
+      drawerHtml.value = docHtml.value[lid]
+    } else {
+      drawerHtml.value = `Ooops, there is no documentation about '${id}'`
+    }
+    docId.value = lid
+    drawerRight.value = true
+  }
+}
+
+function selectSpecie(id: string) {
+  const tokens = id.split(':')
+  selector.value?.update(tokens[0], tokens[1])
+}
+
 </script>
 
 <template>
-  <v-navigation-drawer :rail="drawerRail" @click="drawerRail = false">
+  <v-navigation-drawer
+    :rail="drawerRail"
+    permanent
+    :width="mobile ? 300 : 450"
+    @click="drawerRail = false"
+  >
     <v-list density="compact" nav>
-      <v-list-item :prepend-icon="drawerRail ? mdiChevronRight : undefined">
+      <v-list-item>
+        <template v-if="!drawerRail" #append>
+          <v-btn
+            :icon="mdiChevronLeft"
+            variant="flat"
+            density="compact"
+            @click.stop="drawerRail = true"
+          />
+        </template>
+        <template v-if="drawerRail" #prepend >
+          <v-btn
+            :icon="mdiChevronRight"
+            variant="flat"
+            density="compact"
+            @click.stop="drawerRail = false"
+          />
+        </template>
+      </v-list-item>
+      <project-filters :is-visible="!drawerRail" />
+    </v-list>
+  </v-navigation-drawer>
+  <v-navigation-drawer v-if="drawerRight" permanent location="right" :width="mobile ? 200 : 400">
+    <v-list>
+      <v-list-item>
         <template #append>
-          <v-btn :icon="mdiChevronLeft" variant="flat" @click.stop="drawerRail = true" />
+          <v-btn :icon="mdiClose" variant="flat" @click.stop="drawerRight = false" />
         </template>
       </v-list-item>
-      <v-list-item :prepend-icon="mdiLayers">
-        <LayerSelector
-          v-if="!drawerRail"
-          v-model="selectedLayerIds"
-          :items="parameters.selectableItems"
-        />
-      </v-list-item>
-      <v-list-item :prepend-icon="mdiMapLegend">
-        <v-card v-if="!drawerRail" title="Legends" flat>
-          <v-card-text>
-            <v-row>
-              <v-col v-for="(item, index) in legendItems" :key="index" cols="12">
-                <h3>{{ item.label }}</h3>
-                <div v-if="item.legend">{{ item.legend }}</div>
-                <v-img v-if="item.legendImage" :src="item.legendImage" />
-              </v-col>
-            </v-row>
-          </v-card-text>
+      <v-list-item>
+        <v-card>
+          <v-card-text v-html="drawerHtml" class="marked"> </v-card-text>
         </v-card>
       </v-list-item>
-      <v-divider class="border-opacity-100 mx-n3" />
-      <v-dialog>
-        <!-- eslint-disable-next-line vue/no-template-shadow -->
-        <template #activator="{ props }">
-          <v-list-item v-bind="props" :prepend-icon="mdiCog" title="Configuration" />
-        </template>
-        <v-card title="Configuration">
-          <v-card-text>
-            <ConfigurationForm />
-          </v-card-text>
-        </v-card>
-      </v-dialog>
     </v-list>
   </v-navigation-drawer>
   <v-container class="fill-height pa-0" fluid>
@@ -107,20 +223,46 @@ watch(
       <v-col cols="12" class="py-0">
         <MapLibreMap
           ref="map"
-          :center="parameters.center"
-          :style-spec="styleUrl"
+          :center="parameters?.center"
+          :zoom="parameters?.zoom"
+          :max-zoom="parameters?.maxZoom"
+          :min-zoom="parameters?.minZoom"
+          :style-spec="style"
+          :themes="themeItems"
+          :scales="parameters?.legendScales"
           :selectable-layer-ids="selectableLayerIds"
-          :selected-layer-ids="selectedLayerIds"
-          :popup-layer-ids="parameters.popupLayerIds"
-          :zoom="parameters.zoom"
+          :selected-layer-ids="extendedSelectedLayerIds"
+          :popup-layer-ids="parameters?.popupLayerIds"
+          :selected-scale-id="scale"
+          @documentation="(type) => showDocumentation(type)"
+          @specie="(specie) => selectSpecie(specie)"
+          v-model:isProjectDialogOpen="isProjectDialogOpen"
+          v-model:project="project"
         />
       </v-col>
     </v-row>
+
+    <v-dialog v-model="legendDialog" fullscreen>
+      <v-card>
+        <v-toolbar color="grey-lighten-4">
+          <v-btn :icon="mdiClose" @click="legendDialog = false"> </v-btn>
+          <v-toolbar-title>
+            {{ legendDialogTitle }}
+          </v-toolbar-title>
+        </v-toolbar>
+        <v-card-text>
+          <v-img :src="legendDialogImageSrc" />
+        </v-card-text>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
 <style lang="scss">
 .v-navigation-drawer {
   border-right: 1px solid rgb(var(--v-theme-primary)) !important;
+}
+.v-card-image:not(.on-hover) {
+  opacity: 0.6;
 }
 </style>

@@ -1,5 +1,24 @@
 import type { LngLatLike } from 'maplibre-gl'
-import type { SelectableItem } from './layerSelector'
+import type { SelectableItem } from '@/utils/layerSelector'
+
+export interface ScaleEntry {
+  color: string
+  label: string
+  value?: number
+  min?: number
+  max?: number
+  unit?: string
+  range?: number[]
+}
+
+export interface LegendScale {
+  id: string
+  title?: string
+  titleStart?: string
+  titleEnd?: string
+  unit?: string
+  scale: ScaleEntry[]
+}
 
 export interface Parameters {
   /**
@@ -10,6 +29,14 @@ export interface Parameters {
    * Map default zoom level
    */
   zoom?: number
+  /**
+   * Map default maxzoom level
+   */
+  maxZoom?: number
+  /**
+   * Map default minzoom level
+   */
+  minZoom?: number
   /**
    * Layers with popup
    */
@@ -26,4 +53,8 @@ export interface Parameters {
    * Subtitle of the map
    */
   subtitle?: string
+  /**
+   * Legend scales
+   */
+  legendScales: LegendScale[]
 }

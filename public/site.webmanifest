@@ -1,0 +1,15 @@
+{
+    "name": "atlas of concrete reuse",
+    "short_name": "atlas re:crete",
+    "start_url": "/",
+    "icons": [
+        {
+            "src": "/EPFL_Logo_184X53.svg",
+            "sizes": "184x53",
+            "type": "image/svg"
+        },
+    ],
+    "theme_color": "#ffffff",
+    "background_color": "#ffffff",
+    "display": "standalone"
+}
