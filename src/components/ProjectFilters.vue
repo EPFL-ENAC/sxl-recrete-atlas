@@ -97,8 +97,10 @@ v-model:model-value="filters.name" :clearable="true"
       </v-col>
       <v-col cols="6">
         <v-range-slider
-          :model-value="filters[filter.key] as any" clearable multiple chips
-          :items="filter.values" @update:model-value="() => setFilters(filters)" />
+        clearable multiple chips
+        thumb-label="always"
+        v-model="filters[filter.key] as any"
+        :items="filter.values" @update:model-value="() => setFilters(filters)" />
       </v-col>
     </v-row>
   </v-list-item>
