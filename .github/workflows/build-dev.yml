@@ -45,10 +45,11 @@ jobs:
 
       - name: Setup output
         id: output
-        run: echo "::set-output name=digest::${{ steps.meta.outputs.digest }}" \
-              && echo "::set-output name=digeset-${{matrix.shardIndex}}::${{ steps.meta.outputs.digest }}" \
-              && echo "::set-output name=tags::${{ steps.meta.outputs.tags }}" \
-              && echo "::set-output name=labels::${{ steps.meta.outputs.labels }}"
+        run: echo "{name}={value}" >> $GITHUB_OUTPUT \
+            && echo "digest=${{ github.sha }}" >> $GITHUB_OUTPUT \
+            && echo "digest-${{matrix.shardIndex}}=${{ github.sha }}" >> $GITHUB_OUTPUT \
+            && echo "tags=${{ steps.meta.outputs.tags }}" >> $GITHUB_OUTPUT \
+            && echo "labels=${{ steps.meta.outputs.labels }}" >> $GITHUB_OUTPUT
       - name: Build and push Docker image EPFL-ENAC.Agent.Service
         uses: docker/build-push-action@v5
         with:
@@ -68,7 +69,7 @@ jobs:
         if: ${{ github.ref }} == "refs/heads/dev"
         run: |
           echo "Deploying to prod" && \
-          echo "Digest: ${{ toJson(needs.build-and-push-image) }}" && \
+          echo "Digest: ${{ toJson(needs.build-and-push-image.outputs) }}" && \
           curl -X POST \
           -H "Authorization: Bearer ${{ secrets.CD_TOKEN }}" \
           ${{ secrets.CD_URI }} \
