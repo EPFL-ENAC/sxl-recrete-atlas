@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/EPFL-ENAC/sxl-recrete-atlas/compare/v1.0.0...v1.0.1) (2024-04-25)
+
+
+### Bug Fixes
+
+* remove dead code ([2caca5b](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/2caca5bf2fb7019bc7e72d808a13e1e28ac15e2c))
+
 ## 1.0.0 (2024-04-25)
 
 
