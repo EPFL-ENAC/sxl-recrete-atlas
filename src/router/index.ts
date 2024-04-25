@@ -9,9 +9,18 @@ const router = createRouter({
       component: () => import('../views/HomeView.vue')
     },
     {
-      path: '/configuration',
-      name: 'configuration',
-      component: () => import('../views/ConfigurationView.vue')
+      path: '/list',
+      name: 'list',
+      component: () => import('../views/ListView.vue')
+    },
+    {
+      path: '/specialized-documentation',
+      name: 'specialized-documentation',
+      component: () => import('../views/DocumentationView.vue')
+    },{
+      path: '/concrete-reuse-in-short',
+      name: 'concrete-reuse-in-short',
+      component: () => import('../views/ReuseView.vue')
     },
     {
       path: '/about',

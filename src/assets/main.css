@@ -1,3 +1,65 @@
 html {
   overflow-y: auto;
 }
+
+.v-input__details, .v-input__details .v-messages {
+  min-height: 0 !important;
+}
+
+.marked ul, .marked ol {
+  margin-left: 20px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.marked h1, .marked h2, .marked h3, .marked h4, .marked h5, .marked p {
+  margin-bottom: 20px;
+}
+
+.marked table {
+  border-spacing: 0;
+  border-collapse: collapse;
+}
+
+.marked table th, .marked table td {
+  padding: 6px 13px;
+  border-bottom: 1px solid #ccc;
+}
+
+.marked th {
+  background-color: #eee;
+}
+
+.marked tr:nth-child(even) {
+  background-color: #f6f8fa;
+}
+
+.marked tr:last-child td {
+  border-bottom: 0px solid white;
+}
+
+.scale-caption {
+  min-width: 200px;
+}
+
+.scale-caption-title {
+  text-wrap: nowrap;
+}
+
+
+a {
+  color: #000000;
+}
+
+a.help {
+  color: #ffffff;
+  background-color: #000000;
+  font-size: smaller;
+  width: 15px;
+  height: 15px;
+  line-height: 15px;
+  display: inline-block;
+  border-radius: 50%;
+  text-decoration: none;
+  text-align: center;
+}
