@@ -23,7 +23,9 @@ jobs:
     permissions:
       contents: read
       packages: write
-
+    outputs:
+        output1: ${{ steps.step1.outputs.test }}
+        output2: ${{ steps.step2.outputs.test }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -41,6 +43,9 @@ jobs:
         with:
           images: ${{ matrix.image }}
 
+      - name: Setup output
+        id: output
+        run: echo "::set-output name=digest::${{ steps.meta.outputs.digest }}"
       - name: Build and push Docker image EPFL-ENAC.Agent.Service
         uses: docker/build-push-action@v5
         with:
@@ -60,14 +65,14 @@ jobs:
         if: ${{ github.ref }} == "refs/heads/dev"
         run: |
           echo "Deploying to prod" && \
-          echo "Digest: ${{ toJson(needs.build-and-push-image.outputs) }}" && \
+          echo "Digest: ${{ toJson(needs.build-and-push-image) }}" && \
           curl -X POST \
           -H "Authorization: Bearer ${{ secrets.CD_TOKEN }}" \
           ${{ secrets.CD_URI }} \
           -d '{
             "event_type": "update-manifest",
             "client_payload": {
-              "digest": "${{ needs.build-and-push-image.outputs.digest }}",
+              "digest": "${{ needs.build-and-push-image. }}",
               "repo_name": "${{ secrets.CD_REPO }}",
               "repo_org": "${{ secrets.CD_ORG }}",
               "branch": "dev"
