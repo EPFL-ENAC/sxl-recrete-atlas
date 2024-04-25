@@ -6,7 +6,7 @@ name: build-push-deploy
     branches:
       - dev
       - main
-    tags: [ '*.*.*' ]
+    tags: [ 'v*.*.*' ]
 
 env:
   REGISTRY: ghcr.io
