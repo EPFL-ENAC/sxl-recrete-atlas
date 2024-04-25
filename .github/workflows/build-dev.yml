@@ -80,7 +80,7 @@ jobs:
           -d '{
             "event_type": "update-manifest",
             "client_payload": {
-              "digest": "${{ needs.build.outputs.digest }}",
+              "digest": "${{ toJson(needs.build.outputs.digest) }}",
               "repo_name": "${{ secrets.CD_REPO }}",
               "repo_org": "${{ secrets.CD_ORG }}",
               "branch": "prod"
