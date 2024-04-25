@@ -4,13 +4,13 @@ import '@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css'
 import 'maplibregl-theme-switcher/styles.css'
 import 'maplibregl-scale-legend/styles.css'
 
-import { geocoderApi } from '@/utils/geocoder'
+// import { geocoderApi } from '@/utils/geocoder'
 import { DivControl } from '@/utils/control'
 import { ThemeSwitcherControl } from 'maplibregl-theme-switcher'
 import type { ThemeDefinition } from 'maplibregl-theme-switcher'
 import { ScaleLegendControl } from 'maplibregl-scale-legend'
 import type { ScaleDefinition } from 'maplibregl-scale-legend'
-import MaplibreGeocoder from '@maplibre/maplibre-gl-geocoder'
+// import MaplibreGeocoder from '@maplibre/maplibre-gl-geocoder'
 import {
   AttributionControl,
   FullscreenControl,
@@ -18,7 +18,7 @@ import {
   GeolocateControl,
   Map,
   MapMouseEvent,
-  Marker,
+  // Marker,
   NavigationControl,
   Popup,
   ScaleControl,
