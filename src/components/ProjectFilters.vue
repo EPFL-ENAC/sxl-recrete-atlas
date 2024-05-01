@@ -19,10 +19,10 @@ interface FilterSelect {
 }
 const filtersSelect: FilterSelect[] = [
   { key: 'main_concrete_type', values: ['PC', 'CIP'] },
-  { key: 'receiver_location_country', values: ['DE', 'SE', 'FR', 'IT'] },
-  { key: 'source_use', values: ['Bridge', 'Building', 'Tunnel', 'Other'] },
-  { key: 'source_element_type', values: ['Beam', 'Column', 'Slab', 'Wall'] },
-  { key: 'receiver_use_type', values: ['Bridge', 'Building', 'Tunnel', 'Other'] },
+  { key: 'receiver_country', values: ['DE', 'SE', 'FR', 'IT'] },
+  { key: 'donor_use', values: ['Bridge', 'Building', 'Tunnel', 'Other'] },
+  { key: 'donor_element_type', values: ['Beam', 'Column', 'Slab', 'Wall'] },
+  { key: 'receiver_use', values: ['Bridge', 'Building', 'Tunnel', 'Other'] },
   { key: 'receiver_element_type', values: ['Beam', 'Column', 'Slab', 'Wall'] }
 ]
 
@@ -32,9 +32,9 @@ interface FilterRange {
 }
 const filtersRange: FilterRange[] = [
   { key: 'distance_km', values: [0, 100] },
-  { key: 'precs_start_date_year', values: [0, 100] },
-  { key: 'component_age_at_start_date', values: [0, 100] },
-  { key: 'source_nb_floor', values: [0, 100] },
+  { key: 'start_date_year', values: [0, 100] },
+  { key: 'component_age', values: [0, 100] },
+  { key: 'donor_nb_floor', values: [0, 100] },
   { key: 'receiver_nb_floor', values: [0, 100] },
 ]
 
