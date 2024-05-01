@@ -2,6 +2,10 @@
 
 ## Data source
 
+- The main data is comming from [this file](https://github.com/EPFL-ENAC/sxl-recrete-atlas/blob/main/src/assets/data/data.csv) (which is directly used by the app for the table, map)
+- The filters and their behavior is define here in [this file](https://github.com/EPFL-ENAC/sxl-recrete-atlas/blob/main/src/assets/data/keys.csv)
+
+
 ## Configuration
 
 Two external json files to load configuration in [`.env`](.env) :
