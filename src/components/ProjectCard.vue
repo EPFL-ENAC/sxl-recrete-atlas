@@ -1,10 +1,10 @@
 <template>
   <v-card
     class="mx-auto"
-    min-width="400"
-    max-width="400"
-    max-height="400"
-    :min-height="400"
+    min-width="80%"
+    max-width="80%"
+    max-height="80%"
+    min-height="80%"
     outlined
     tile
   >

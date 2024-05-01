@@ -6,6 +6,9 @@ import { useDisplay } from 'vuetify'
 import { useFiltersStore } from '@/stores/filters';
 import { storeToRefs } from 'pinia';
 import type { ProjectKey } from '@/types/Project';
+import {
+  mdiClose
+} from '@mdi/js'
 
 const { t, locale } = useI18n({ useScope: 'global' })
 const { mobile } = useDisplay()
@@ -44,6 +47,11 @@ const store = useFiltersStore()
 const { filters } = storeToRefs(store)
 const { setFilters } = store
 
+function resetFilter() {
+  setFilters({
+    name: '',
+  })
+}
 // const filters = computed({
 //   get: () => store.getFilters,
 //   set: (value) => store.setFilters(value)
@@ -61,8 +69,10 @@ const props = withDefaults(
 
 <template>
   <v-list-item :prepend-icon="mdiMapLegend">
-    <v-list-item-title v-show="props.isVisible">
+    <v-list-item-title v-show="props.isVisible" class="d-flex justify-space-between">
       <span :class="mobile ? 'text-subtitle-1' : 'text-h6'">{{ $t('filters') }}</span>
+      <v-btn class="mb-4" size="x-small" @click="resetFilter" :icon="mdiClose">
+      </v-btn>
     </v-list-item-title>
   </v-list-item>
   <v-list-item v-show="props.isVisible">
@@ -91,11 +101,11 @@ v-model:model-value="filters.name" :clearable="true"
     </v-row>
   </v-list-item>
   <v-list-item v-for="(filter, $key) in filtersRange" v-show="props.isVisible" :key="$key">
-    <v-row>
+    <v-row class="row-range">
       <v-col cols="6">
         {{ $t(`project_${filter.key}`) }}
       </v-col>
-      <v-col cols="6">
+      <v-col cols="6" class="d-flex align-end">
         <v-range-slider
         clearable multiple chips
         thumb-label="always"
@@ -106,4 +116,8 @@ v-model:model-value="filters.name" :clearable="true"
   </v-list-item>
 </template>
 
-<style lang="scss"></style>
+<style lang="scss">
+.row-range {
+  height: 91px;
+}
+</style>
