@@ -2,7 +2,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import type { ProjectKey } from '@/types/Project'
-
+// import keys from '@/assets/data/keys.json'
 
 export type Filters = Record<ProjectKey, string | null | undefined | boolean | (string | number)[]>;
 

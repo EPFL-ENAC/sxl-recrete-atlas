@@ -1,5 +1,4 @@
 <script setup lang="ts">
-// import projects from '@/assets/data.json'
 import ProjectCard from '@/components/ProjectCard.vue'
 import ProjectDialog from '@/components/ProjectDialog.vue'
 import ProjectFilters from '@/components/ProjectFilters.vue'
@@ -92,7 +91,11 @@ const headers = [
     </v-list>
   </v-navigation-drawer>
   <v-container v-if="listMode === 'list'" class="fill-height pa-0 align-baseline" fluid>
-    <v-data-table :items="data" :headers="headers" @click:row="onRowClicked"></v-data-table>
+    <v-data-table :items="data" :headers="headers" @click:row="onRowClicked"
+      :items-per-page="data.length">
+      <template v-slot:bottom>
+        </template>
+    </v-data-table>
   </v-container>
   <v-container v-if="listMode === 'grid'" class="fill-height pa-0 grid-list" fluid>
     <project-card

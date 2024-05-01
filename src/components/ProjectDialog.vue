@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="isDialogActive" max-width="800">
+  <v-dialog v-model="isDialogActive" max-width="80%" height="80%">
     <template #default="{ isActive }">
       <project-detail v-if="isActive" v-model="isDialogActive" :project="props.project"/>
     </template>
