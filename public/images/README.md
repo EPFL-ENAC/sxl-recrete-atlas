@@ -1,0 +1,1 @@
+s3cmd put --recursive --acl-public --guess-mime-type . s3://${BUCKET_NAME}/sxl-recrete-atlas/23-04-2024
