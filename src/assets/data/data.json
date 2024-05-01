@@ -69,7 +69,17 @@
     "receiver_nb_floor_uncertainty": "",
     "receiver_use": "housing",
     "receiver_element_type": "",
-    "reference": "Fischer et al., 2012; Gieselmann, 1991; Huuhka et al., 2019; Irion and Sieverts, 1984; Künzel, 2005; Mühlestein, 1987"
+    "reference": "Fischer et al., 2012; Gieselmann, 1991; Huuhka et al., 2019; Irion and Sieverts, 1984; Künzel, 2005; Mühlestein, 1987",
+    "impact_design_alternative": "",
+    "impact_difference": "",
+    "impact_unit": "",
+    "impact_source": "",
+    "cost_design_alternative": "",
+    "cost_difference_min_percent": "",
+    "cost_difference_max_percent": "",
+    "cost_source": "",
+    "images": "",
+    "images_credits": ""
   },
   {
     "_id": 3,
@@ -2201,6 +2211,6 @@
     "cost_difference_max_percent": "",
     "cost_source": "",
     "images": "",
-    "images_credits": ","
+    "images_credits": ""
   }
 ]
