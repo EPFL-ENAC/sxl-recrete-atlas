@@ -9,13 +9,10 @@
           </v-row>
           <v-row>
             <b>{{ $t("project_receiver_location_country") }}({{ $t("project_receiver_location_city") }}):</b> {{
-              props.project.receiver_location_country }} ({{ props.project.receiver_location_city }})
+              props.project.receiver_country }} ({{ props.project.receiver_city }})
           </v-row>
           <v-row>
-            <b>{{ $t("project_precs_start_date_year") }}:</b> {{ props.project.precs_start_date_year }}
-          </v-row>
-          <v-row>
-            <b>{{ $t("project_design_solution_status") }}:</b> {{ props.project.design_solution_status }}
+            <b>{{ $t("project_precs_start_date_year") }}:</b> {{ props.project.start_date_year }}
           </v-row>
         </v-col>
         <v-col :cols="6">
