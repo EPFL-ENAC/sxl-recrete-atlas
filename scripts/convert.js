@@ -9,8 +9,13 @@ csv({ checkType: true })
 
 csv({ checkType: true, ignoreEmpty: true, trim: true,
   colParser:{
+    "receiver_coordinates":function(item){
+      return item.split(",")
+        .map((coordinate) => parseFloat(coordinate.trim()))
+        .reverse();
+    },
     "images":function(item){
-        return item.split(",").map((image) => `/${image.trim()}`);
+        return item.split(",").map((image) => `/images/${image.trim()}`);
     },
     "images_credits":function(item){
           return item.split(",").map((credit) => credit.trim());
