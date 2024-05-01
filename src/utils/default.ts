@@ -1,1 +1,1 @@
-export const defaultImage = 'https://enacit4r-cdn.epfl.ch/sxl-recrete-atlas/2024-04-23/beton.png'
+export const defaultImage = '/images/default.png'

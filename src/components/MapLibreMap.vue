@@ -32,6 +32,7 @@ import type { LegendScale, ScaleEntry } from '@/utils/jsonWebMap'
 import { storeToRefs } from 'pinia'
 
 import { useProjectsStore } from '@/stores/projects'
+import type { Project } from '@/types/Project'
 
 const projects = storeToRefs(useProjectsStore()).projects
 
@@ -446,17 +447,17 @@ watch(() => projects,
 )
 
 function computeData() {
-  const features = projects.value.map((project: any) => ({
+  const features = projects.value.filter(x => x?.receiver_coordinates).map((project: Project) => ({
     "type": "Feature",
     "geometry": {
       "type": "Point",
-      "coordinates": project.receiver_location_coordinates.split(',').map(Number).reverse()
+      "coordinates": project?.receiver_coordinates ?? []
     },
     "properties": {
       "name": project.name
     }
   }));
-
+  console.log(features)
   return {
         "type": "FeatureCollection",
         "features": features
