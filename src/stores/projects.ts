@@ -2,7 +2,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import type { ProjectKey, Project } from '@/types/Project'
-import data from '@/assets/data.json'
+import data from '@/assets/data/data.json'
 import { useFiltersStore } from './filters'
 import { storeToRefs } from 'pinia'
 

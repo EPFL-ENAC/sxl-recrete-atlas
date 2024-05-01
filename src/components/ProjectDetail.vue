@@ -19,9 +19,13 @@
           </v-row>
         </v-col>
         <v-col :cols="6">
-          <v-img class="align-end text-white" height="200" :src="`${props.project.images?.[0] ?? defaultImage}`" cover>
+          <v-carousel height="100%">
+            <v-carousel-item v-for="(image, $key) in props.project.images" :key="$key" :src="image"  cover height="400px">
+            </v-carousel-item>
+          </v-carousel>
+          <!-- <v-img class="align-end text-white" height="200" :src="`${props.project.images?.[0] ?? defaultImage}`" cover>
             <v-card-title>{{ props.project.name }}</v-card-title>
-          </v-img>
+          </v-img> -->
         </v-col>
       </v-row>
       <v-row>
@@ -75,13 +79,11 @@ const props = defineProps<{
 
 <style scoped></style>
 
-<i18n lang="json">
-{
+<i18n lang="json">{
   "en": {
     "about_the_donor_site": "About the donor site"
   },
   "fr": {
     "about_the_donor_site": "à propos du site du donneur"
   }
-}
-</i18n>
+}</i18n>
