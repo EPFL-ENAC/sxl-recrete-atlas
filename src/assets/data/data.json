@@ -38,7 +38,38 @@
     "cost_difference_max_percent": "",
     "cost_source": "",
     "images": "01_img1.jpg,01_img2.jpg",
-    "images_credits": "EPFL, EPFL\"\n2,Reuse of panels of the Ingebäck PC system from a lowered mass-housing building for facade and slabs in a new 7-story housing building,Gothenburg 7-story building,PC,,Germany,Gothenburg,,,16,,1,1984,,16,,,,,,,,,7,,,housing,,\"Fischer et al., 2012; Gieselmann, 1991; Huuhka et al., 2019; Irion and Sieverts, 1984; Künzel, 2005; Mühlestein, 1987"
+    "images_credits": "EPFL, EPFL"
+  },
+  {
+    "_id": 2,
+    "description": "Reuse of panels of the Ingebäck PC system from a lowered mass-housing building for facade and slabs in a new 7-story housing building",
+    "name": "Gothenburg 7-story building",
+    "main_concrete_type": "PC",
+    "main_concrete_type_uncertainty": "",
+    "receiver_country": "Germany",
+    "receiver_city": "Gothenburg",
+    "receiver_coordinates": "",
+    "location_uncertainty": "",
+    "distance_km": 16,
+    "distance_smaller": "",
+    "distance_uncertainty": 1,
+    "start_date_year": 1984,
+    "date_uncertainty": "",
+    "component_age": 16,
+    "age_smaller": "",
+    "age_uncertainty": "",
+    "quantity_reclaimed": "",
+    "quantity_reclaimed_unit": "",
+    "donor_nb_floor": "",
+    "donor_nb_floor_smaller": "",
+    "donor_use": "",
+    "donor_element_type": "",
+    "receiver_nb_floor": 7,
+    "receiver_nb_floor_smaller": "",
+    "receiver_nb_floor_uncertainty": "",
+    "receiver_use": "housing",
+    "receiver_element_type": "",
+    "reference": "Fischer et al., 2012; Gieselmann, 1991; Huuhka et al., 2019; Irion and Sieverts, 1984; Künzel, 2005; Mühlestein, 1987"
   },
   {
     "_id": 3,
@@ -2169,7 +2200,7 @@
     "cost_difference_min_percent": "",
     "cost_difference_max_percent": "",
     "cost_source": "",
-    "images": ",",
-    "images_credits": ""
+    "images": "",
+    "images_credits": ","
   }
 ]
