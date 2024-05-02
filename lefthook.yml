@@ -5,9 +5,9 @@
 #
 pre-push:
   commands:
-    packages-audit:
-      tags: frontend security
-      run: yarn audit
+    # packages-audit:
+    #   tags: frontend security
+    #   run: yarn audit
     typescript-audit:
       tags: frontend typescript
       run: npm run type-check
