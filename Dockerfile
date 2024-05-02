@@ -6,6 +6,7 @@ COPY npm-shrinkwrap.json ./
 RUN npm ci
 COPY public ./public
 COPY src ./src
+COPY scripts ./scripts
 COPY schema ./schema
 COPY *.js ./
 COPY *.ts ./
