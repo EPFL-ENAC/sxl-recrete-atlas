@@ -22,39 +22,37 @@ interface FilterSelect {
 }
 
 const projects = (data as Project[]);
-function getValues(key: ProjectKey): (string | number)[] {
+function getSelectValues(key: ProjectKey): (string | number)[] {
     const projectValues = projects.map((project: Project) => project[key]);
     const uniqueValues = Array.from(new Set(projectValues));
     return uniqueValues.filter(value => typeof value === 'string' || typeof value === 'number') as string[] | number[];
   }
-// a.filter(x => x.Filtres === 'oui').map(x => x.key)
+
 const filterSelectKeys: ProjectKey[] = keys.filter(x => x.Filtres === 'oui').map(x => x.key as ProjectKey)
 const filtersSelect: FilterSelect[] = filterSelectKeys.map(key => ({
+  // example: { key: 'main_concrete_type', values: ['PC', 'CIP'] },
   key,
-  values: getValues(key)
+  values: getSelectValues(key)
 }))
-
-// [
-//   { key: 'main_concrete_type', values: ['PC', 'CIP'] },
-//   { key: 'receiver_country', values: ['DE', 'SE', 'FR', 'IT'] },
-//   { key: 'donor_use', values: ['Bridge', 'Building', 'Tunnel', 'Other'] },
-//   { key: 'donor_element_type', values: ['Beam', 'Column', 'Slab', 'Wall'] },
-//   { key: 'receiver_use', values: ['Bridge', 'Building', 'Tunnel', 'Other'] },
-//   { key: 'receiver_element_type', values: ['Beam', 'Column', 'Slab', 'Wall'] }
-// ]
 
 interface FilterRange {
   key: ProjectKey
   values: number[]
 }
-// a.filter(x => x.Filtres === 'range').map(x => x.key)
-const filtersRange: FilterRange[] = [
-  { key: 'distance_km', values: [0, 100] },
-  { key: 'start_date_year', values: [0, 100] },
-  { key: 'component_age', values: [0, 100] },
-  { key: 'donor_nb_floor', values: [0, 100] },
-  { key: 'receiver_nb_floor', values: [0, 100] },
-]
+
+function getRangeValues(key: ProjectKey): (string | number)[] {
+    const projectValues = projects.map((project: Project) => project[key]);
+    const uniqueValues = Array.from(new Set(projectValues));
+    // [0, 100]
+    return uniqueValues.filter(value => typeof value === 'string' || typeof value === 'number') as string[] | number[];
+  }
+
+const filtersRangeKeys: ProjectKey[] = keys.filter(x => x.Filtres === 'range').map(x => x.key as ProjectKey)
+const filtersRange: FilterSelect[] = filterSelectKeys.map(key => ({
+  // example: { key: 'distance_km', values: [0, 100] },
+  key,
+  values: getRangeValues(key)
+}))
 
 const main_concrete_type = ref<any>({
   PC: 'Precast',
