@@ -25,7 +25,7 @@ const projects = (data as Project[]);
 function getValues(key: ProjectKey): (string | number)[] {
     const projectValues = projects.map((project: Project) => project[key]);
     const uniqueValues = Array.from(new Set(projectValues));
-    return uniqueValues.filter(value => typeof value === 'string' || typeof value === 'number');
+    return uniqueValues.filter(value => typeof value === 'string' || typeof value === 'number') as string[] | number[];
   }
 // a.filter(x => x.Filtres === 'oui').map(x => x.key)
 const filterSelectKeys: ProjectKey[] = keys.filter(x => x.Filtres === 'oui').map(x => x.key as ProjectKey)
@@ -72,6 +72,13 @@ function resetFilter() {
     name: '',
   })
 }
+
+function setRangeFilters(value: number[], key: ProjectKey) {
+  setFilters({
+    ...filters.value,
+    [key]: value
+  })
+}
 // const filters = computed({
 //   get: () => store.getFilters,
 //   set: (value) => store.setFilters(value)
@@ -102,7 +109,8 @@ const props = withDefaults(
       </v-col>
       <v-col cols="6">
         <v-text-field
-v-model:model-value="filters.name" :clearable="true"
+          v-model:model-value="filters.name"
+          :clearable="true"
           @update:model-value="() => setFilters(filters)" />
       </v-col>
     </v-row>
@@ -127,10 +135,10 @@ v-model:model-value="filters.name" :clearable="true"
       </v-col>
       <v-col cols="6" class="d-flex align-end">
         <v-range-slider
+        v-model:model-value="filters[filter.key] as unknown as number[]"
         clearable multiple chips
         thumb-label="always"
-        v-model="filters[filter.key] as any"
-        :items="filter.values" @update:model-value="() => setFilters(filters)" />
+        :items="filter.values" @update:model-value="(v) => setRangeFilters(v, filter.key)" />
       </v-col>
     </v-row>
   </v-list-item>
