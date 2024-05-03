@@ -6,7 +6,7 @@ import { useDisplay } from 'vuetify'
 import { useFiltersStore } from '@/stores/filters';
 import { storeToRefs } from 'pinia';
 import type { Project, ProjectKey } from '@/types/Project';
-import type { Filter, FilterKey, RangeFilter, RangeFilterKey, SelectFilterKey } from '@/types/Filter'
+import type { BooleanFilterKey, Filter, FilterKey, RangeFilter, RangeFilterKey, SelectFilterKey } from '@/types/Filter'
 
 import {
   mdiClose
@@ -61,6 +61,8 @@ const filtersRange: FilterRangeValues[] = filtersRangeKeys.map((key: RangeFilter
   values: getRangeValues(key),
   step: stepsHash?.[key] ?? 1
 }))
+
+const filtersBoolean: BooleanFilterKey[] = keys.filter(x => x.Filtres === 'with/without').map(x => x.key as BooleanFilterKey)
 
 const store = useFiltersStore()
 const { filters } = storeToRefs(store)
@@ -130,6 +132,19 @@ watch(filters, (newVal) => {
           :min="filterRange.values[0]"
           :max="filterRange.values[1]"
         />
+      </v-col>
+    </v-row>
+  </v-list-item>
+  <v-list-item v-for="(filterBoolean, $key) in filtersBoolean" v-show="props.isVisible" :key="$key">
+    <v-row class="row-range">
+      <v-col cols="6">
+        {{ $t(filterBoolean) }}
+      </v-col>
+      <v-col cols="6" class="d-flex align-end">
+       <v-radio-group v-model="filters[filterBoolean]" @update:model-value="() => setFilters(filters)" density="compact">
+          <v-radio label="with" :value="true" />
+          <v-radio label="without" :value="false" />
+        </v-radio-group>
       </v-col>
     </v-row>
   </v-list-item>

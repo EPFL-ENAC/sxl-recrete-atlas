@@ -40,10 +40,14 @@ export const useProjectsStore = defineStore('projects', () => {
             }
           }
           
-          // if (typeof filterValue === 'boolean') {
-          //   // boolean filter
-          //   return filterValue
-          // }
+          if (typeof filterValue === 'boolean') {
+            // boolean filter
+            if (projectValue !== undefined){
+              return filterValue;
+            } else {
+              return !filterValue;
+            }
+          }
           if (projectValue === undefined || projectValue === null) {
             return true;
           }
