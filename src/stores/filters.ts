@@ -1,11 +1,6 @@
-/* eslint-disable no-debugger */
 import { defineStore } from 'pinia'
-import { computed, reactive, ref } from 'vue'
-// import type { ProjectKey } from '@/types/Project'
+import { computed, ref } from 'vue'
 import type { Filter, FilterKey, RangeFilterKey } from '@/types/Filter'
-// import keys from '@/assets/data/keys.json'
-
-// export type Filters = Record<ProjectKey, string | null | undefined | boolean | readonly (string | number)[]>;
 
 // for reactiveness we need all the fields to be ref
 function newFilter(): Filter {
