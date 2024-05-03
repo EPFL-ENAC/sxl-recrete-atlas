@@ -21,21 +21,29 @@ export const useProjectsStore = defineStore('projects', () => {
           // debugger;
           // console.log(key, filters.value[key])
           // return true;
-          const filterValue = filters.value[key]
+          const filterValue = (filters as any).value[key as ProjectKey]
           const projectValue = project[key]
-          // if (filterValue === undefined) return true
-          // if (filterValue === null) return false
-          // if (filterValue === '') return true
-          // if (typeof filterValue === 'number' && typeof projectValue === 'number')
-          //   return projectValue >= filterValue
-          // if (Array.isArray(filterValue))
-          //   return filterValue?.length === 0 || filterValue.includes(projectValue)
-          // debugger;
+          if (projectValue === undefined || projectValue === null) return true
           if (filterValue === null || filterValue === undefined) return true
           if (typeof filterValue === 'string' && typeof projectValue === 'string') {
+            // name filter
             return projectValue.toLowerCase().replace(/[\W_]+/g,"").includes(filterValue.toLowerCase().replace(/[\W_]+/g,""))
           }
-          return false;
+          if (typeof filterValue === 'boolean') {
+            // boolean filter
+            return filterValue
+          }
+          if (Array.isArray(filterValue) && typeof projectValue === 'string') {
+            // select filter
+            return filterValue.length === 0 || filterValue.includes(projectValue)
+          }
+          if (Array.isArray(filterValue) && filterValue.length == 2 && typeof projectValue === 'number') {
+            // range filter
+            return filterValue[0] <= projectValue && projectValue <= filterValue[1]
+          }
+          debugger;
+
+          return true;
         })
       })
     },

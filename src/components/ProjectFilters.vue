@@ -6,6 +6,8 @@ import { useDisplay } from 'vuetify'
 import { useFiltersStore } from '@/stores/filters';
 import { storeToRefs } from 'pinia';
 import type { Project, ProjectKey } from '@/types/Project';
+import type { Filter, FilterKey, RangeFilter, RangeFilterKey, SelectFilterKey } from '@/types/Filter'
+
 import {
   mdiClose
 } from '@mdi/js'
@@ -16,43 +18,53 @@ import data from '@/assets/data/data.json'
 const { t, locale } = useI18n({ useScope: 'global' })
 const { mobile } = useDisplay()
 
-interface FilterSelect {
-  key: ProjectKey
-  values: (string | number)[]
+interface FilterSelectValues {
+  key: SelectFilterKey
+  values: string[]
 }
 
 const projects = (data as Project[]);
-function getSelectValues(key: ProjectKey): (string | number)[] {
+function getSelectValues(key: ProjectKey): (string)[] {
     const projectValues = projects.map((project: Project) => project[key]);
     const uniqueValues = Array.from(new Set(projectValues));
-    return uniqueValues.filter(value => typeof value === 'string' || typeof value === 'number') as string[] | number[];
+    return uniqueValues.filter(value => typeof value === 'string') as string[];
   }
 
-const filterSelectKeys: ProjectKey[] = keys.filter(x => x.Filtres === 'oui').map(x => x.key as ProjectKey)
-const filtersSelect: FilterSelect[] = filterSelectKeys.map(key => ({
+const filterSelectKeys: SelectFilterKey[] = keys.filter(x => x.Filtres === 'oui').map(x => x.key as SelectFilterKey)
+const filtersSelect: FilterSelectValues[] = filterSelectKeys.map((key: SelectFilterKey) => ({
   // example: { key: 'main_concrete_type', values: ['PC', 'CIP'] },
   key,
   values: getSelectValues(key)
 }))
 
-interface FilterRange {
-  key: ProjectKey
+interface FilterRangeValues {
+  key: RangeFilterKey 
   values: number[]
 }
 
-function getRangeValues(key: ProjectKey): (string | number)[] {
+function getRangeValues(key: FilterKey): number[] {
     const projectValues = projects.map((project: Project) => project[key]);
-    const uniqueValues = Array.from(new Set(projectValues));
+    const uniqueValues: number[] = Array.from(new Set(projectValues))
+    .filter(value => typeof value === 'number') as number[];
     // [0, 100]
-    return uniqueValues.filter(value => typeof value === 'string' || typeof value === 'number') as string[] | number[];
+    console.log(Array.from(new Set(projectValues)))
+    return [Math.min(...uniqueValues), Math.max(...uniqueValues)];
   }
 
-const filtersRangeKeys: ProjectKey[] = keys.filter(x => x.Filtres === 'range').map(x => x.key as ProjectKey)
-const filtersRange: FilterSelect[] = filterSelectKeys.map(key => ({
+const filtersRangeKeys: RangeFilterKey[] = keys.filter(x => x.Filtres === 'range').map(x => x.key as RangeFilterKey)
+const filtersRange: FilterRangeValues[] = filtersRangeKeys.map((key: RangeFilterKey) => ({
   // example: { key: 'distance_km', values: [0, 100] },
   key,
   values: getRangeValues(key)
 }))
+
+
+// function isNumberArray(value: any): value is [min: number, max: number] {
+//   return Array.isArray(value) && value.length === 2 && typeof value[0] === 'number' && typeof value[1] === 'number';
+// }
+
+
+console.log(filtersRange)
 
 const main_concrete_type = ref<any>({
   PC: 'Precast',
@@ -63,24 +75,7 @@ const main_concrete_type = ref<any>({
 
 const store = useFiltersStore()
 const { filters } = storeToRefs(store)
-const { setFilters } = store
-
-function resetFilter() {
-  setFilters({
-    name: '',
-  })
-}
-
-function setRangeFilters(value: number[], key: ProjectKey) {
-  setFilters({
-    ...filters.value,
-    [key]: value
-  })
-}
-// const filters = computed({
-//   get: () => store.getFilters,
-//   set: (value) => store.setFilters(value)
-// })
+const { setFilters, resetFilter } = store
 
 const props = withDefaults(
   defineProps<{
@@ -107,36 +102,39 @@ const props = withDefaults(
       </v-col>
       <v-col cols="6">
         <v-text-field
-          v-model:model-value="filters.name"
+          :model-value="filters.name" density="compact"
           :clearable="true"
-          @update:model-value="() => setFilters(filters)" />
+          @update:model-value="() => setFilters(filters)"
+        />
       </v-col>
     </v-row>
   </v-list-item>
-  <v-list-item v-for="(filter, $key) in filtersSelect" v-show="props.isVisible" :key="$key">
+  <v-list-item v-for="(filtersSelect, $key) in filtersSelect" v-show="props.isVisible" :key="$key">
     <v-row>
       <v-col cols="6">
-        {{ $t(`project_${filter.key}`) }}
+        {{ $t(`project_${filtersSelect.key}`) }}
       </v-col>
       <v-col cols="6">
         <v-select
-          :model-value="filters[filter.key] as any"
-          :clearable="true" multiple
-          chips :items="filter.values" @update:model-value="() => setFilters(filters)" />
+          v-model="filters[filtersSelect.key]"
+          :clearable="true" multiple density="compact"
+          chips :items="filtersSelect.values" @update:model-value="() => setFilters(filters)" />
       </v-col>
     </v-row>
   </v-list-item>
-  <v-list-item v-for="(filter, $key) in filtersRange" v-show="props.isVisible" :key="$key">
+  <v-list-item v-for="(filterRange, $key) in filtersRange" v-show="props.isVisible" :key="$key">
     <v-row class="row-range">
       <v-col cols="6">
-        {{ $t(`project_${filter.key}`) }}
+        {{ $t(`project_${filterRange.key}`) }}
       </v-col>
       <v-col cols="6" class="d-flex align-end">
+        <!-- v-model="filters[filter.key]" -->
         <v-range-slider
-        v-model:model-value="filters[filter.key] as unknown as number[]"
-        clearable multiple chips
-        thumb-label="always"
-        :items="filter.values" @update:model-value="(v) => setRangeFilters(v, filter.key)" />
+          v-model="filters[filterRange.key]"
+          thumb-label="always" density="compact"
+          :min="filterRange.values[0]"
+          :max="filterRange.values[1]"
+        />
       </v-col>
     </v-row>
   </v-list-item>
