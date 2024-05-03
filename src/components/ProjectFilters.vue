@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { mdiMapLegend } from '@mdi/js'
-import { ref, computed } from 'vue'
+import { ref, computed, reactive, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useDisplay } from 'vuetify'
 import { useFiltersStore } from '@/stores/filters';
@@ -40,6 +40,7 @@ const filtersSelect: FilterSelectValues[] = filterSelectKeys.map((key: SelectFil
 interface FilterRangeValues {
   key: RangeFilterKey 
   values: number[]
+  step?: number
 }
 
 function getRangeValues(key: FilterKey): number[] {
@@ -47,31 +48,19 @@ function getRangeValues(key: FilterKey): number[] {
     const uniqueValues: number[] = Array.from(new Set(projectValues))
     .filter(value => typeof value === 'number') as number[];
     // [0, 100]
-    console.log(Array.from(new Set(projectValues)))
     return [Math.min(...uniqueValues), Math.max(...uniqueValues)];
   }
 
 const filtersRangeKeys: RangeFilterKey[] = keys.filter(x => x.Filtres === 'range').map(x => x.key as RangeFilterKey)
+const stepsHash: Partial<Record<RangeFilterKey, number>> = {
+  distance_km: 5,
+}
 const filtersRange: FilterRangeValues[] = filtersRangeKeys.map((key: RangeFilterKey) => ({
   // example: { key: 'distance_km', values: [0, 100] },
   key,
-  values: getRangeValues(key)
+  values: getRangeValues(key),
+  step: stepsHash?.[key] ?? 1
 }))
-
-
-// function isNumberArray(value: any): value is [min: number, max: number] {
-//   return Array.isArray(value) && value.length === 2 && typeof value[0] === 'number' && typeof value[1] === 'number';
-// }
-
-
-console.log(filtersRange)
-
-const main_concrete_type = ref<any>({
-  PC: 'Precast',
-  CIP: 'Cast in place'
-})
-
-// a.filter(x => x.Filtres === 'with/without').map(x => x.key)
 
 const store = useFiltersStore()
 const { filters } = storeToRefs(store)
@@ -85,13 +74,20 @@ const props = withDefaults(
     isVisible: false
   }
 )
+
+watch(filters, (newVal) => {
+  setFilters(newVal);
+}, {
+  deep: true
+});
+
 </script>
 
 <template>
   <v-list-item :prepend-icon="mdiMapLegend">
     <v-list-item-title v-show="props.isVisible" class="d-flex justify-space-between">
       <span :class="mobile ? 'text-subtitle-1' : 'text-h6'">{{ $t('filters') }}</span>
-      <v-btn class="mb-4" size="x-small" @click="resetFilter" :icon="mdiClose">
+      <v-btn class="mb-4" size="x-small" :icon="mdiClose" @click="resetFilter">
       </v-btn>
     </v-list-item-title>
   </v-list-item>
@@ -102,23 +98,22 @@ const props = withDefaults(
       </v-col>
       <v-col cols="6">
         <v-text-field
-          :model-value="filters.name" density="compact"
+          v-model="filters.name" density="compact"
           :clearable="true"
-          @update:model-value="() => setFilters(filters)"
         />
       </v-col>
     </v-row>
   </v-list-item>
-  <v-list-item v-for="(filtersSelect, $key) in filtersSelect" v-show="props.isVisible" :key="$key">
+  <v-list-item v-for="(filterSelect, $key) in filtersSelect" v-show="props.isVisible" :key="$key">
     <v-row>
       <v-col cols="6">
-        {{ $t(`project_${filtersSelect.key}`) }}
+        {{ $t(`project_${filterSelect.key}`) }}
       </v-col>
       <v-col cols="6">
         <v-select
-          v-model="filters[filtersSelect.key]"
+          v-model="filters[filterSelect.key]"
           :clearable="true" multiple density="compact"
-          chips :items="filtersSelect.values" @update:model-value="() => setFilters(filters)" />
+          chips :items="filterSelect.values" @update:model-value="() => setFilters(filters)" />
       </v-col>
     </v-row>
   </v-list-item>
@@ -132,6 +127,7 @@ const props = withDefaults(
         <v-range-slider
           v-model="filters[filterRange.key]"
           thumb-label="always" density="compact"
+          :step="filterRange.step"
           :min="filterRange.values[0]"
           :max="filterRange.values[1]"
         />

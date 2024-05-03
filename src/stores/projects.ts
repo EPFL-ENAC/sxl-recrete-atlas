@@ -23,26 +23,35 @@ export const useProjectsStore = defineStore('projects', () => {
           // return true;
           const filterValue = (filters as any).value[key as ProjectKey]
           const projectValue = project[key]
-          if (projectValue === undefined || projectValue === null) return true
-          if (filterValue === null || filterValue === undefined) return true
           if (typeof filterValue === 'string' && typeof projectValue === 'string') {
             // name filter
             return projectValue.toLowerCase().replace(/[\W_]+/g,"").includes(filterValue.toLowerCase().replace(/[\W_]+/g,""))
           }
-          if (typeof filterValue === 'boolean') {
-            // boolean filter
-            return filterValue
-          }
           if (Array.isArray(filterValue) && typeof projectValue === 'string') {
             // select filter
+            // return true;
             return filterValue.length === 0 || filterValue.includes(projectValue)
           }
           if (Array.isArray(filterValue) && filterValue.length == 2 && typeof projectValue === 'number') {
             // range filter
-            return filterValue[0] <= projectValue && projectValue <= filterValue[1]
+            return true;
+            // return filterValue[0] <= projectValue && projectValue <= filterValue[1]
           }
-          debugger;
-
+          
+          // if (typeof filterValue === 'boolean') {
+          //   // boolean filter
+          //   return true;
+          //   // return filterValue
+          // }
+          // if (projectValue === undefined || projectValue === null) {
+          //   // debugger;
+          //   return true;
+          // }
+          // if (filterValue === null || filterValue === undefined) {
+          //   // debugger;
+          //   return true;
+          // }
+          // debugger;
           return true;
         })
       })

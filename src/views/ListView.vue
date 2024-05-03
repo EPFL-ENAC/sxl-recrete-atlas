@@ -51,8 +51,8 @@ const headers = [
     value: 'receiver_location_country',
     sortable: false
   },
-  { title: t('project_receiver_location_city'), value: 'receiver_location_city', sortable: false },
   { title: t('project_distance_km'), value: 'distance_km', sortable: false },
+  { title: t('project_receiver_location_city'), value: 'receiver_location_city', sortable: false },
   { title: t('project_precs_start_date_year'), value: 'precs_start_date_year', sortable: false }
   // { title: t("project_component_age_at_start_date"), value: "component_age_at_start_date", sortable: false},
   // { title: t("project_quantity_reclaimed_ton"), value: "quantity_reclaimed_ton", sortable: false},
