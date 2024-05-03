@@ -1,8 +1,8 @@
 /* eslint-disable no-debugger */
 import { defineStore } from 'pinia'
-import { computed, reactive } from 'vue'
+import { computed, reactive, ref } from 'vue'
 // import type { ProjectKey } from '@/types/Project'
-import type { Filter, RangeFilterKey } from '@/types/Filter'
+import type { Filter, FilterKey, RangeFilterKey } from '@/types/Filter'
 // import keys from '@/assets/data/keys.json'
 
 // export type Filters = Record<ProjectKey, string | null | undefined | boolean | readonly (string | number)[]>;
@@ -21,6 +21,11 @@ function newFilter(): Filter {
     component_age: [0, 100],
     donor_nb_floor: [0, 100],
     receiver_nb_floor: [0, 100],
+    // distance_km: [0, 600],
+    // start_date_year: [],
+    // component_age: [],
+    // donor_nb_floor: [],
+    // receiver_nb_floor: [],
     impact_difference: false,
     cost_difference_min_percent: false,
     name: ""
@@ -36,22 +41,24 @@ export const useFiltersStore = defineStore('filters', () => {
     return pinia_filters ? JSON.parse(pinia_filters) : newFilter()
   }
 
-  let filters = reactive<Filter>(localStorageToValue())
+  const filters = ref<Filter>(localStorageToValue())
 
   const getFilters = computed(() => {
-    filters = localStorageToValue()
+    filters.value = localStorageToValue()
     return filters
   })
 
-  function setFilters(newFilters: any) {
-    filters = newFilters
-    valueToLocalStorage(filters)
+  function setFilters(newFilters: Filter) {
+    (Object.keys(newFilters) as FilterKey[]).forEach((key: FilterKey) => {
+      (filters.value as Filter)[key] = newFilters[key] as never;
+    })
+    valueToLocalStorage(filters.value)
   }
 
   function setRangeFilters(value: number[], key: RangeFilterKey) {
-    filters[key] = value;
+    filters.value[key] = value;
     setFilters({
-      ...filters,
+      ...filters.value,
       [key]: value
     })
   }

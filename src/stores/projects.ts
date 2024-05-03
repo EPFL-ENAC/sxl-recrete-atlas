@@ -18,9 +18,6 @@ export const useProjectsStore = defineStore('projects', () => {
       const filterKeys = Object.keys(filters.value) as ProjectKey[]
       return (data as Project[]).filter((project: Project) => {
         return filterKeys.every((key: ProjectKey) => {
-          // debugger;
-          // console.log(key, filters.value[key])
-          // return true;
           const filterValue = (filters as any).value[key as ProjectKey]
           const projectValue = project[key]
           if (typeof filterValue === 'string' && typeof projectValue === 'string') {
@@ -29,29 +26,27 @@ export const useProjectsStore = defineStore('projects', () => {
           }
           if (Array.isArray(filterValue) && typeof projectValue === 'string') {
             // select filter
-            // return true;
             return filterValue.length === 0 || filterValue.includes(projectValue)
           }
-          if (Array.isArray(filterValue) && filterValue.length == 2 && typeof projectValue === 'number') {
+          if (Array.isArray(filterValue) && filterValue.length == 2) {
             // range filter
-            return true;
-            // return filterValue[0] <= projectValue && projectValue <= filterValue[1]
+            if (typeof projectValue === 'number') {
+              return filterValue[0] <= projectValue && projectValue <= filterValue[1]
+            } else {
+              return true;
+            }
           }
           
           // if (typeof filterValue === 'boolean') {
           //   // boolean filter
-          //   return true;
-          //   // return filterValue
+          //   return filterValue
           // }
-          // if (projectValue === undefined || projectValue === null) {
-          //   // debugger;
-          //   return true;
-          // }
-          // if (filterValue === null || filterValue === undefined) {
-          //   // debugger;
-          //   return true;
-          // }
-          // debugger;
+          if (projectValue === undefined || projectValue === null) {
+            return true;
+          }
+          if (filterValue === null || filterValue === undefined) {
+            return true;
+          }
           return true;
         })
       })
