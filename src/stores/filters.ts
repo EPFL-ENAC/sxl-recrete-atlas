@@ -21,11 +21,6 @@ function newFilter(): Filter {
     component_age: [0, 100],
     donor_nb_floor: [0, 100],
     receiver_nb_floor: [0, 100],
-    // distance_km: [0, 600],
-    // start_date_year: [],
-    // component_age: [],
-    // donor_nb_floor: [],
-    // receiver_nb_floor: [],
     impact_difference: false,
     cost_difference_min_percent: false,
     name: ""

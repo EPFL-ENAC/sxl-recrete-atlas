@@ -33,6 +33,9 @@ export const useProjectsStore = defineStore('projects', () => {
             if (typeof projectValue === 'number') {
               return filterValue[0] <= projectValue && projectValue <= filterValue[1]
             } else {
+              // should probably check if the filterValue === defaultFilterValue ?
+              // if that's the case return true ?
+              // until then, we must return true, to avoid filtering out the project with undefined value
               return true;
             }
           }
