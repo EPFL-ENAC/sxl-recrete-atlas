@@ -31,3 +31,11 @@ export type BooleanFilterKey = keyof BooleanFilter;
 
 export type Filter = SelectFilter & RangeFilter & BooleanFilter & TextFilter;
 export type FilterKey = keyof Filter;
+
+export interface Key {
+  key: string;
+  english: string;
+  french: string;
+  "List View": "oui" | "";
+  "Filtres": "oui" | "with/without" | "range" | "";
+}
