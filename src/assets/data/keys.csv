@@ -1,6 +1,6 @@
 key,Filtres,List View,english,french
 _id,,,Case-study number,Numéro de l'étude de cas
-description,,oui,Case-study description,Description de l'étude de cas
+description,,non,Case-study description,Description de l'étude de cas
 name,,oui,Receiving-project name,Nom du projet receveur
 main_concrete_type,oui,oui,Main concrete type,Type de béton
 main_concrete_type_uncertainty,,main_concrete_type in itlaic if 1,Main concrete type_uncertainty,Type de béton_incertitude

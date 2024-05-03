@@ -107,7 +107,7 @@ watch(filters, (newVal) => {
   <v-list-item v-for="(filterSelect, $key) in filtersSelect" v-show="props.isVisible" :key="$key">
     <v-row>
       <v-col cols="6">
-        {{ $t(`project_${filterSelect.key}`) }}
+        {{ $t(filterSelect.key) }}
       </v-col>
       <v-col cols="6">
         <v-select
@@ -120,10 +120,9 @@ watch(filters, (newVal) => {
   <v-list-item v-for="(filterRange, $key) in filtersRange" v-show="props.isVisible" :key="$key">
     <v-row class="row-range">
       <v-col cols="6">
-        {{ $t(`project_${filterRange.key}`) }}
+        {{ $t(filterRange.key) }}
       </v-col>
       <v-col cols="6" class="d-flex align-end">
-        <!-- v-model="filters[filter.key]" -->
         <v-range-slider
           v-model="filters[filterRange.key]"
           thumb-label="always" density="compact"
