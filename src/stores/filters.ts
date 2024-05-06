@@ -2,6 +2,15 @@ import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 import type { Filter, FilterKey, RangeFilterKey } from '@/types/Filter'
 
+export const stepsHash: Partial<Record<RangeFilterKey, number>> = {
+  distance_km: 10,
+}
+const currentYear = parseInt((new Date()).toISOString().substring(0,4),10);
+export const valuesHash: Partial<Record<RangeFilterKey, number[]>> = {
+  start_date_year: [1960, currentYear],
+  distance_km: [0, 1000]
+}
+
 // for reactiveness we need all the fields to be ref
 function newFilter(): Filter {
   return {
@@ -11,8 +20,8 @@ function newFilter(): Filter {
     donor_element_type: [],
     receiver_use: [],
     receiver_element_type: [],
-    distance_km: [0, 600],
-    start_date_year: [1960, 2021],
+    distance_km: valuesHash.distance_km ?? [0, 1000],
+    start_date_year: valuesHash.start_date_year ?? [1960, currentYear],
     component_age: [0, 100],
     donor_nb_floor: [0, 100],
     receiver_nb_floor: [0, 100],
