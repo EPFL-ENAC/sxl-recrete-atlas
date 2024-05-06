@@ -12,13 +12,15 @@ const locale = cookies.get('locale')
 type LangKeys = Record<string, string>;
 const enKeys = (keys as Key[]).reduce(
   (acc: LangKeys, filter: Key) => {
-    acc[filter.key] = filter.english 
+    acc[filter.key] = filter.english
+    acc[`project_${filter.key}`] = filter.english 
     return acc;
 }, {})
 
 const frKeys = (keys as Key[]).reduce(
   (acc: LangKeys, filter: Key) => {
-    acc[filter.key] = filter.french 
+    acc[filter.key] = filter.french
+    acc[`project_${filter.key}`] = filter.french // project_ prefix for project filters
     return acc;
 }, {})
 
