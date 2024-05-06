@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { mdiMapLegend } from '@mdi/js'
-import { ref, computed, reactive, watch } from 'vue'
+import { watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useDisplay } from 'vuetify'
-import { useFiltersStore } from '@/stores/filters';
+import { useFiltersStore, stepsHash, valuesHash } from '@/stores/filters';
 import { storeToRefs } from 'pinia';
 import type { Project, ProjectKey } from '@/types/Project';
-import type { BooleanFilterKey, Filter, FilterKey, RangeFilter, RangeFilterKey, SelectFilterKey } from '@/types/Filter'
+import type { BooleanFilterKey, FilterKey, RangeFilterKey, SelectFilterKey } from '@/types/Filter'
 
 import {
   mdiClose
@@ -51,14 +51,13 @@ function getRangeValues(key: FilterKey): number[] {
     return [Math.min(...uniqueValues), Math.max(...uniqueValues)];
   }
 
+
 const filtersRangeKeys: RangeFilterKey[] = keys.filter(x => x.Filtres === 'range').map(x => x.key as RangeFilterKey)
-const stepsHash: Partial<Record<RangeFilterKey, number>> = {
-  distance_km: 5,
-}
+
 const filtersRange: FilterRangeValues[] = filtersRangeKeys.map((key: RangeFilterKey) => ({
   // example: { key: 'distance_km', values: [0, 100] },
   key,
-  values: getRangeValues(key),
+  values: valuesHash?.[key] ?? getRangeValues(key),
   step: stepsHash?.[key] ?? 1
 }))
 
@@ -152,6 +151,7 @@ watch(filters, (newVal) => {
 
 <style lang="scss">
 .row-range {
-  height: 91px;
+  min-height: 91px; // for the thumb-label
+  padding-right: 12px; // for the thumb-label
 }
 </style>
