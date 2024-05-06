@@ -10,8 +10,9 @@ import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { useDisplay } from 'vuetify'
 import keys from '@/assets/data/keys.json'
+import type { Project } from '@/types/Project'
 
-const { t, locale } = useI18n({ useScope: 'global' })
+const { t } = useI18n({ useScope: 'global' })
 const { mobile } = useDisplay()
 const router = useRouter()
 const $route = router.currentRoute
@@ -22,6 +23,9 @@ const listMode = computed({
     router.push({ query: { ...$route.value.query, view: value } })
   }
 })
+
+const currentRowIndex= ref<number|undefined>(undefined)
+const currentRowItem= ref<Project|undefined>(undefined)
 
 const projects = storeToRefs(useProjectsStore()).projects
 
@@ -45,6 +49,15 @@ const headers = keys.filter(x => x["List View"] === 'oui').map(x => ({
   value: x.key as string,
   sortable: false
 }))
+
+const mouseOverRow = (element: any, row: any) => {
+  currentRowIndex.value = row.index;
+  currentRowItem.value = row.item;
+}
+const mouseLeaveRow = () => {
+  currentRowIndex.value = undefined;
+  currentRowItem.value = undefined;
+}
 </script>
 
 <template>
@@ -64,13 +77,26 @@ const headers = keys.filter(x => x["List View"] === 'oui').map(x => ({
     </v-list>
   </v-navigation-drawer>
   <v-container v-if="listMode === 'list'" class="fill-height pa-0 align-baseline" fluid>
+
+    <v-tooltip
+        v-if="currentRowIndex !== undefined"
+        :activator="`.hovered-${currentRowIndex}`"
+        location="top"
+      >
+    {{ currentRowItem?.description }}
+  </v-tooltip>
     <v-data-table
       :items="data"
       :headers="headers"
       :items-per-page="data.length"
+      :hover="true"
+      :row-props="row => ({ class: `hovered-${row.index}` })"
       @click:row="onRowClicked"
+      @mouseover:row="mouseOverRow"
+      @mouseleave:row="mouseLeaveRow"
+
     >
-      <template v-slot:bottom> </template>
+      <template #bottom />
     </v-data-table>
   </v-container>
   <v-container v-if="listMode === 'grid'" class="fill-height pa-0 grid-list" fluid>
