@@ -11,7 +11,9 @@ import { useRouter } from 'vue-router'
 import { useDisplay } from 'vuetify'
 import keys from '@/assets/data/keys.json'
 import type { Project } from '@/types/Project'
+import { useRoute } from 'vue-router'
 
+const route = useRoute()
 const { t } = useI18n({ useScope: 'global' })
 const { mobile } = useDisplay()
 const router = useRouter()
@@ -32,13 +34,24 @@ const projects = storeToRefs(useProjectsStore()).projects
 const data = projects
 const drawerRail = ref(false)
 
-const isProjectDialogOpen = ref(false)
-const projectSelected = ref<any>(false)
+const isProjectDialogOpen = ref(route.query?.projectId !== undefined)
+const projectSelectedId = ref<number|undefined>(route?.query?.projectId ? parseInt(route.query.projectId as string, 10) : undefined)
+const projectSelected = ref<any>(projects.value?.find((x: any) => x._id === projectSelectedId.value))
 
 const selectProject = (project: any) => {
   projectSelected.value = project
   isProjectDialogOpen.value = true
+  projectId.value = project._id
 }
+
+const projectId = computed({
+  get() {
+    return route.query.projectId ?? ''
+  },
+  set(projectId) {
+    router.replace({query: {...route.query, projectId } })
+  }
+})
 
 const onRowClicked = (ref: any, row: any) => {
   selectProject(row.item)
