@@ -1,15 +1,11 @@
 <script setup lang="ts">
 import MarkdownDialog from '@/components/MarkdownDialog.vue'
 import {
-  mdiBagPersonalTagOutline,
-  mdiFileDocument,
   mdiInformation,
-  mdiLibraryOutline,
   mdiPlusBox,
   mdiListBox,
   mdiGrid,
   mdiMapOutline,
-  mdiPlayBox
 } from '@mdi/js'
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -17,9 +13,6 @@ import { RouterView } from 'vue-router'
 import { useCookies } from 'vue3-cookies'
 import { useLocale } from 'vuetify'
 import epflLogoUrl from '/EPFL_Logo_184X53.svg'
-
-// const showHome = ref<boolean>(false)
-// const secret = ref<string>()
 
 const { current } = useLocale()
 const { locale } = useI18n({ useScope: 'global' })
@@ -58,7 +51,8 @@ function getCurrentLocaleOrFallback() {
       <v-menu activator="#locales-activator">
         <v-list>
           <v-list-item v-for="(lang, index) in $i18n.availableLocales" :key="index">
-            <v-list-item-title @click="onLocale(lang)">{{ $t(lang) }}</v-list-item-title>
+            <v-list-item-title tag="button" @click="onLocale(lang)">{{ $t(lang) }}
+            </v-list-item-title>
           </v-list-item>
         </v-list>
       </v-menu>
@@ -77,18 +71,6 @@ function getCurrentLocaleOrFallback() {
         :title="$t('grid')"
       ></v-btn>
       <v-btn :to="{ name: `home` }" :icon="mdiMapOutline" class="mr-3" :title="$t('home')"></v-btn>
-      <!-- <v-btn
-        :to="{ name: `specialized-documentation` }"
-        :icon="mdiFileDocument"
-        class="mr-3"
-        :title="$t('specialized-documentation')"
-      ></v-btn>
-      <v-btn
-        :to="{ name: `concrete-reuse-in-short` }"
-        :icon="mdiBagPersonalTagOutline"
-        class="mr-3"
-        :title="$t('concrete-reuse-in-short')"
-      ></v-btn> -->
 
       <v-btn
         :icon="mdiPlusBox"
