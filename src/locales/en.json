@@ -28,5 +28,6 @@
   "fr": "Français",
   "other": "Unknown",
   "start": "Start",
-  "legend": "Legend"
+  "legend": "Legend",
+  "unknown": "Unknown"
 }
