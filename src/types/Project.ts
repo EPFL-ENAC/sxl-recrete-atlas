@@ -38,6 +38,9 @@ export interface Project {
   cost_source?: string;
   images?: string[];
   images_credits?: string[];
+  status?: string;
+  actors?: string[];
+  other?: string;
 }
 
 export type ProjectKey = keyof Project;
