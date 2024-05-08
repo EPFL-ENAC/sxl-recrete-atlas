@@ -18,24 +18,43 @@ export const useProjectsStore = defineStore('projects', () => {
       const filterKeys = Object.keys(filters.value) as ProjectKey[]
       return (data as Project[]).filter((project: Project) => {
         return filterKeys.every((key: ProjectKey) => {
-          // debugger;
-          // console.log(key, filters.value[key])
-          // return true;
-          const filterValue = filters.value[key]
+          const filterValue = (filters as any).value[key as ProjectKey]
           const projectValue = project[key]
-          // if (filterValue === undefined) return true
-          // if (filterValue === null) return false
-          // if (filterValue === '') return true
-          // if (typeof filterValue === 'number' && typeof projectValue === 'number')
-          //   return projectValue >= filterValue
-          // if (Array.isArray(filterValue))
-          //   return filterValue?.length === 0 || filterValue.includes(projectValue)
-          // debugger;
-          if (filterValue === null || filterValue === undefined) return true
           if (typeof filterValue === 'string' && typeof projectValue === 'string') {
+            // name filter
             return projectValue.toLowerCase().replace(/[\W_]+/g,"").includes(filterValue.toLowerCase().replace(/[\W_]+/g,""))
           }
-          return false;
+          if (Array.isArray(filterValue) && typeof projectValue === 'string') {
+            // select filter
+            return filterValue.length === 0 || filterValue.includes(projectValue)
+          }
+          if (Array.isArray(filterValue) && filterValue.length == 2) {
+            // range filter
+            if (typeof projectValue === 'number') {
+              return filterValue[0] <= projectValue && projectValue <= filterValue[1]
+            } else {
+              // should probably check if the filterValue === defaultFilterValue ?
+              // if that's the case return true ?
+              // until then, we must return true, to avoid filtering out the project with undefined value
+              return true;
+            }
+          }
+          
+          if (typeof filterValue === 'boolean') {
+            // boolean filter
+            if (projectValue !== undefined){
+              return filterValue;
+            } else {
+              return !filterValue;
+            }
+          }
+          if (projectValue === undefined || projectValue === null) {
+            return true;
+          }
+          if (filterValue === null || filterValue === undefined) {
+            return true;
+          }
+          return true;
         })
       })
     },

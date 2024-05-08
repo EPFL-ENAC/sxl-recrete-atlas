@@ -1,11 +1,35 @@
-/* eslint-disable no-debugger */
 import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
-import type { ProjectKey } from '@/types/Project'
-// import keys from '@/assets/data/keys.json'
+import { computed, ref } from 'vue'
+import type { Filter, FilterKey, RangeFilterKey } from '@/types/Filter'
 
-export type Filters = Record<ProjectKey, string | null | undefined | boolean | (string | number)[]>;
+export const stepsHash: Partial<Record<RangeFilterKey, number>> = {
+  distance_km: 10,
+}
+const currentYear = parseInt((new Date()).toISOString().substring(0,4),10);
+export const valuesHash: Partial<Record<RangeFilterKey, number[]>> = {
+  start_date_year: [1960, currentYear],
+  distance_km: [0, 1000]
+}
 
+// for reactiveness we need all the fields to be ref
+function newFilter(): Filter {
+  return {
+    main_concrete_type: [],
+    receiver_country: [],
+    donor_use: [],
+    donor_element_type: [],
+    receiver_use: [],
+    receiver_element_type: [],
+    distance_km: valuesHash.distance_km ?? [0, 1000],
+    start_date_year: valuesHash.start_date_year ?? [1960, currentYear],
+    component_age: [0, 100],
+    donor_nb_floor: [0, 100],
+    receiver_nb_floor: [0, 100],
+    impact_difference: false,
+    cost_difference_min_percent: false,
+    name: ""
+  }
+}
 
 export const useFiltersStore = defineStore('filters', () => {
   function valueToLocalStorage(value: any): void{
@@ -13,20 +37,35 @@ export const useFiltersStore = defineStore('filters', () => {
   }
   function localStorageToValue(): any {
     const pinia_filters = localStorage.getItem("pinia_filters")
-    return pinia_filters ? JSON.parse(pinia_filters) : {}
+    return pinia_filters ? JSON.parse(pinia_filters) : newFilter()
   }
 
-  const filters = ref<Filters>(localStorageToValue())
+  const filters = ref<Filter>(localStorageToValue())
 
   const getFilters = computed(() => {
     filters.value = localStorageToValue()
-    return filters.value
+    return filters
   })
 
-  function setFilters(newFilters: any) {
-    filters.value = newFilters
+  function setFilters(newFilters: Filter) {
+    (Object.keys(newFilters) as FilterKey[]).forEach((key: FilterKey) => {
+      (filters.value as Filter)[key] = newFilters[key] as never;
+    })
     valueToLocalStorage(filters.value)
   }
 
-  return { filters, setFilters, getFilters }
+  function setRangeFilters(value: number[], key: RangeFilterKey) {
+    filters.value[key] = value;
+    setFilters({
+      ...filters.value,
+      [key]: value
+    })
+  }
+
+  function resetFilter(): void {
+    setFilters(newFilter());
+  }
+  
+
+  return { filters, setFilters, setRangeFilters, getFilters, resetFilter }
 })
