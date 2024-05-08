@@ -1,5 +1,41 @@
 # Changelog
 
+## [1.1.0](https://github.com/EPFL-ENAC/sxl-recrete-atlas/compare/v1.0.2...v1.1.0) (2024-05-08)
+
+
+### Features
+
+* **contact:** change email contact [#13](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/13) ([a68b127](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/a68b1270cbfa0b263be7ec4fd7a837b6b932f1b8))
+* **filters:** correct default values for filters [#6](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/6) ([1b72e81](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/1b72e8161b8ce6cf6d5f1b30b4278866691219dc))
+* **list-view:** show description on hover [#12](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/12) ([c174787](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/c1747873f13612bb9d9b16fd800f4e16e1dcdf62))
+* **list:** add boolean filter ([8c5b345](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/8c5b3451860911906ecfa31e62942e7fedeee513))
+* **list:** add keys to dynamically show list ([e30069c](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/e30069c8657cf3564dbcaa41c683f01419cb18be))
+* **project-detail:** complete all field as much as possible for detail project [#7](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/7) ([96e81d9](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/96e81d9ce8b172e6338d38a22da2689e59037872))
+* **project-detail:** make detail popup persistent in url [#7](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/7) ([7b8c31c](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/7b8c31ccea6c92797fa4436eb404223ce0aea1e6))
+
+
+### Bug Fixes
+
+* **app:** remove dead code and set tag to button for lang ([1a1fe5c](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/1a1fe5ceccc1d7ea8e9fdbdf5b122352f42b27b7))
+* **build:** correct typescript errors ([6de8928](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/6de8928390b7482c18cb13e5ebf685120de8bc6a))
+* correct filters and dockerfile ([0144ccc](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/0144cccc6a21f0b1752f17dbacc5e5a5b00fb701))
+* **data:** correct data keys ([32e905b](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/32e905bae2bbd80863ebcf5c9c0bb0e24e632caa))
+* **dataset:** correct formating ([db1dcdb](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/db1dcdb127f3a718b038d0ab422666e3145a4f04))
+* **dataset:** correct formating ([d14de0c](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/d14de0c691b8784afe86ea20948a641c2d3dad96))
+* **dataset:** correct formating ([c272f08](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/c272f0857b62a2b97b7b9ed067fee84d34f35dba))
+* **filters:** clean range filter ([0a704bd](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/0a704bdab7e3a41bd4d39b007ded1bce3528f6e3))
+* **filters:** correct data.csv for distance_km ([ecc32f3](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/ecc32f3366056dda5e258400d3812cc6dff3e934))
+* **filters:** proper height for filters ([11d9305](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/11d93058c6e6ff832661becf7d09a24b3be455b5))
+* **filter:** working behavior for Range ([2fd08e2](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/2fd08e2204a6ee84c3d78a97a65226e15879f319))
+* **i18n:** add dynamic lang based on csv ([a29e4ea](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/a29e4ea8846dc7fec15153487ded1f1a60202f64))
+* **i18n:** add namespaced and non-namespaced keys for i18n ([165289b](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/165289be512163e30e2b4612d43530347a678a65))
+* **i18n:** correct local i18n sfc notation import ([6816250](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/68162504050d29a79cf2fea8de16c3c8f0bfcb38))
+* **images:** correct images path on public ([4d105a5](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/4d105a58a36cee492c086722a5d05cd41f474057))
+* **list:** proper typescript and filter for range ([e53a96b](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/e53a96b641e98d1c74f115043fcd28fb5e6aa0f5))
+* **typescript:** add git hooks to avoid error on push ([78fa504](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/78fa504c63b2edc3e0fb16cc73c46d96207ac67b))
+* **typescript:** correct typescript error ([a4a75fe](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/a4a75fe3951afa8c8f7d568d3fba06993aff8b6c))
+* **typescript:** fix lefthook ([e47ee4c](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/e47ee4c7ee95599ded3b8c23b3423db34c60267e))
+
 ## [1.0.2](https://github.com/EPFL-ENAC/sxl-recrete-atlas/compare/v1.0.1...v1.0.2) (2024-04-25)
 
 
