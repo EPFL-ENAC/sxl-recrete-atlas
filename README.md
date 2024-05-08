@@ -6,6 +6,7 @@
    - You can replace it directly on github by uploading a new data.csv file in [this directory](https://github.com/EPFL-ENAC/sxl-recrete-atlas/blob/main/src/assets/data)
 - The images defined in the data.csv should be placed in [this directory](https://github.com/EPFL-ENAC/sxl-recrete-atlas/blob/main/public/images)
 - The filters and their behavior is define here in [this file](https://github.com/EPFL-ENAC/sxl-recrete-atlas/blob/main/src/assets/data/keys.csv)
+- The references is define here in  [this file](https://github.com/EPFL-ENAC/sxl-recrete-atlas/blob/main/src/assets/data/references.csv)
 
 
 ## Configuration
