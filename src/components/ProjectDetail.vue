@@ -22,7 +22,7 @@
           </v-row>
         </v-col>
         <v-col :cols="6">
-          <v-carousel v-if="(props.project.images?.length ?? 0) > 0" height="100%" show-arrows="hover" cycle :interval="3000" hide-delimiters>
+          <v-carousel v-if="(props.project.images?.length ?? 0) > 0" height="100%" :show-arrows="false"  :interval="3000">
             <v-carousel-item v-for="(image, $key) in props.project.images" :key="$key" :src="image"  content-class="carousel-content"  cover height="300px">
 
                 <v-card-title class="image-title">{{ props.project.name }}</v-card-title>
