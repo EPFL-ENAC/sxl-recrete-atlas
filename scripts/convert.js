@@ -4,7 +4,9 @@ import { writeFileSync } from 'fs';
 csv({ checkType: true })
   .fromFile('./src/assets/data/keys.csv')
   .then((jsonObj) => {
-    writeFileSync('./src/assets/data/keys.json', JSON.stringify(jsonObj, null, 2));
+    const path = './src/assets/data/keys.json';
+    writeFileSync(path, JSON.stringify(jsonObj, null, 2));
+    console.log(`data.csv converted successfully to JSON in ${path}`)
   });
 
 csv({ checkType: true, ignoreEmpty: true, trim: true,
@@ -23,5 +25,9 @@ csv({ checkType: true, ignoreEmpty: true, trim: true,
 } })
   .fromFile('./src/assets/data/data.csv')
   .then((jsonObj) => {
-    writeFileSync('./src/assets/data/data.json', JSON.stringify(jsonObj, null, 2));
+    const path = './src/assets/data/data.json';
+    writeFileSync(path, JSON.stringify(jsonObj, null, 2));
+    console.log(`data.csv converted successfully to JSON in ${path}`)
+    console.log(`images path updated from 'image.png' to '/images/image.png`)
+    console.log(`receiver_coordinates path updated from 'lat, long' to '[long, lat]'`)
   });
