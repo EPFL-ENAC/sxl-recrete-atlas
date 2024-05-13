@@ -8,7 +8,7 @@ export interface Project {
   main_concrete_type_uncertainty?: number;
   receiver_country: string;
   receiver_city: string;
-  receiver_coordinates?: string;
+  receiver_coordinates?: number[];
   location_uncertainty?: number;
   distance_km: number;
   distance_smaller?: number;
