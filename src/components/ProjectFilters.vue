@@ -44,7 +44,12 @@ interface FilterRangeValues {
 }
 
 function getRangeValues(key: FilterKey): number[] {
-    const projectValues = projects.map((project: Project) => project[key]);
+    const projectValues = projects.map((project: Project) => {
+      if (key === 'name') {
+        return project['name_en'];
+      }
+      return project[key];
+    });
     const uniqueValues: number[] = Array.from(new Set(projectValues))
     .filter(value => typeof value === 'number') as number[];
     // [0, 100]
