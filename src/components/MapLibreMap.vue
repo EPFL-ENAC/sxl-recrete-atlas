@@ -454,7 +454,7 @@ function computeData() {
       "coordinates": project?.receiver_coordinates ?? []
     },
     "properties": {
-      "name": project.name
+      "name": project.name_en
     }
   }));
   console.log(features)
@@ -492,7 +492,7 @@ function addProjects() {
 
     map.on('click', 'buildings-layer', function (e) {
       isProjectDialogOpen.value = true;
-      project.value = projects.value.find(x => x.name === e.features?.[0].properties.name);
+      project.value = projects.value.find(x => x.name_en === e.features?.[0].properties.name_en);
     });
     const popups: any[] = [];
     map.on('mouseenter', 'buildings-layer', function (e) {
@@ -503,7 +503,7 @@ function addProjects() {
           anchor: 'bottom'
         })
         .setLngLat((e.features?.[0].geometry as any)?.coordinates as LngLatLike)
-        .setHTML('<h3>' + e.features?.[0].properties.name + '</h3>')
+        .setHTML('<h3>' + e.features?.[0].properties.name_en + '</h3>')
         .addTo(map);
         popups.push(a);
         map.getCanvas().style.cursor = 'pointer';

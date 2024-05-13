@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-card-item :prepend-icon="mdiDomain">
-      <v-card-title>{{ props.project.name }}</v-card-title>
+      <v-card-title>{{ props.project.name_en }}</v-card-title>
     </v-card-item>
     <v-card-item>
 
@@ -9,7 +9,7 @@
       <v-row>
         <v-col :cols="6">
           <v-row>
-            <b class="key">{{ $t("project_description") }}: </b> {{ props.project.description }}
+            <b class="key">{{ $t("project_description") }}: </b> {{ props.project.description_en }}
           </v-row>
           <v-row>
             <b class="key">{{ $t("project_receiver_country") }} ({{ $t("project_receiver_city") }}): </b> {{props.project.receiver_country }} ({{ props.project.receiver_city }})
@@ -25,11 +25,11 @@
           <v-carousel v-if="(props.project.images?.length ?? 0) > 0" height="100%" :show-arrows="false"  :interval="3000">
             <v-carousel-item v-for="(image, $key) in props.project.images" :key="$key" :src="image"  content-class="carousel-content"  cover height="300px">
 
-                <v-card-title class="image-title">{{ props.project.name }}</v-card-title>
+                <v-card-title class="image-title">{{ props.project.name_en }}</v-card-title>
             </v-carousel-item>
           </v-carousel>
           <v-img v-else class="align-end text-white" cover height="300px" :src="`${defaultImage}`">
-            <v-card-title class="image-title">{{ props.project.name }}</v-card-title>
+            <v-card-title class="image-title">{{ props.project.name_en }}</v-card-title>
           </v-img>
         </v-col>
       </v-row>

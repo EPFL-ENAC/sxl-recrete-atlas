@@ -96,7 +96,7 @@ const mouseLeaveRow = () => {
         :activator="`.hovered-${currentRowIndex}`"
         location="top"
       >
-    {{ currentRowItem?.description }}
+    {{ currentRowItem?.description_en }}
   </v-tooltip>
     <v-data-table
       :items="data"
