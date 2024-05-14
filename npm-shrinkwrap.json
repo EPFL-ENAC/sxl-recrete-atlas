@@ -9,7 +9,6 @@
       "version": "1.2.0",
       "license": "GPL-3.0-or-later",
       "dependencies": {
-        "@maplibre/maplibre-gl-geocoder": "^1.5.0",
         "@types/dompurify": "^3.0.2",
         "@types/marked": "^5.0.0",
         "axios": "^1.6.8",
@@ -911,23 +910,6 @@
       "integrity": "sha512-Es6WcD0nO5l+2BOQS4uLfNPYQaNDfbot3X1XUoloz+x0mPDS3eeORZJl06HXjwBG1fOGwCRnzK88LMdxKRrd6Q==",
       "engines": {
         "node": ">=6.0.0"
-      }
-    },
-    "node_modules/@maplibre/maplibre-gl-geocoder": {
-      "version": "1.5.0",
-      "resolved": "https://registry.npmjs.org/@maplibre/maplibre-gl-geocoder/-/maplibre-gl-geocoder-1.5.0.tgz",
-      "integrity": "sha512-PsAbV7WFIOu5QYZne95FiXoV7AV1/6ULMjQxgInhZ5DdB0hDLjciQPegnyDgkzI8JfeqoUMZVS/MglZnSZYhyQ==",
-      "dependencies": {
-        "lodash.debounce": "^4.0.6",
-        "subtag": "^0.5.0",
-        "suggestions-list": "^0.0.2",
-        "xtend": "^4.0.1"
-      },
-      "engines": {
-        "node": ">=6"
-      },
-      "peerDependencies": {
-        "maplibre-gl": ">=1.14.0"
       }
     },
     "node_modules/@maplibre/maplibre-gl-style-spec": {
@@ -3600,14 +3582,6 @@
         "url": "https://github.com/sponsors/ljharb"
       }
     },
-    "node_modules/fuzzy": {
-      "version": "0.1.3",
-      "resolved": "https://registry.npmjs.org/fuzzy/-/fuzzy-0.1.3.tgz",
-      "integrity": "sha512-/gZffu4ykarLrCiP3Ygsa86UAo1E5vEVlvTrpkKywXSbP9Xhln3oSp9QSV57gEq3JFFpGJ4GZ+5zdEp3FcUh4w==",
-      "engines": {
-        "node": ">= 0.6.0"
-      }
-    },
     "node_modules/geojson-vt": {
       "version": "3.2.1",
       "resolved": "https://registry.npmjs.org/geojson-vt/-/geojson-vt-3.2.1.tgz",
@@ -4842,11 +4816,6 @@
       "resolved": "https://registry.npmjs.org/lodash/-/lodash-4.17.21.tgz",
       "integrity": "sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==",
       "dev": true
-    },
-    "node_modules/lodash.debounce": {
-      "version": "4.0.8",
-      "resolved": "https://registry.npmjs.org/lodash.debounce/-/lodash.debounce-4.0.8.tgz",
-      "integrity": "sha512-FT1yDzDYEoYWhnSGnpE/4Kj1fLZkDFyqRb7fNt6FdYOSxlUWAtp42Eh6Wb0rGIv/m9Bgo7x4GhQbm5Ys4SG5ow=="
     },
     "node_modules/lodash.merge": {
       "version": "4.6.2",
@@ -6676,20 +6645,6 @@
         "url": "https://github.com/sponsors/antfu"
       }
     },
-    "node_modules/subtag": {
-      "version": "0.5.0",
-      "resolved": "https://registry.npmjs.org/subtag/-/subtag-0.5.0.tgz",
-      "integrity": "sha512-CaIBcTSb/nyk4xiiSOtZYz1B+F12ZxW8NEp54CdT+84vmh/h4sUnHGC6+KQXUfED8u22PQjCYWfZny8d2ELXwg=="
-    },
-    "node_modules/suggestions-list": {
-      "version": "0.0.2",
-      "resolved": "https://registry.npmjs.org/suggestions-list/-/suggestions-list-0.0.2.tgz",
-      "integrity": "sha512-Yw0fdq14c6RQWQIfE1/8WEi9Dp8rjyCD6FhYA/Tit2/ADbE9Y4ADG4ezlvivsa8Civ5nz++pyVVBMjOMlgIUJw==",
-      "dependencies": {
-        "fuzzy": "^0.1.1",
-        "xtend": "^4.0.0"
-      }
-    },
     "node_modules/supercluster": {
       "version": "8.0.1",
       "resolved": "https://registry.npmjs.org/supercluster/-/supercluster-8.0.1.tgz",
@@ -7790,14 +7745,6 @@
       "resolved": "https://registry.npmjs.org/xmlchars/-/xmlchars-2.2.0.tgz",
       "integrity": "sha512-JZnDKK8B0RCDw84FNdDAIpZK+JuJw+s7Lz8nksI7SIuU3UXJJslUthsi+uWBUYOwPFwW7W7PRLRfUKpxjtjFCw==",
       "dev": true
-    },
-    "node_modules/xtend": {
-      "version": "4.0.2",
-      "resolved": "https://registry.npmjs.org/xtend/-/xtend-4.0.2.tgz",
-      "integrity": "sha512-LKYU1iAXJXUgAXn9URjiu+MWhyUXHsvfp7mcuYm9dSUKK0/CjtrUwFAxD82/mCWbtLsGjFIad0wIsod4zrTAEQ==",
-      "engines": {
-        "node": ">=0.4"
-      }
     },
     "node_modules/y18n": {
       "version": "5.0.8",
