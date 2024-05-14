@@ -25,7 +25,7 @@ import {
   type LngLatLike,
   type StyleSpecification
 } from 'maplibre-gl'
-import { onMounted, ref, watch, defineModel } from 'vue'
+import { onMounted, ref, watch, defineModel, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import type { SelectableSingleItem } from '@/utils/layerSelector'
 import type { LegendScale, ScaleEntry } from '@/utils/jsonWebMap'
@@ -242,15 +242,7 @@ function filterLayers() {
   }
 }
 
-watch(() => projects,
-  () => {
-    // all selected by default
-    updateLayerData(computeData())
-  },
-  { immediate: true, deep:true }
-)
-
-function computeData() {
+const computedData = computed(() => {
   const features = projects.value.filter(x => x?.receiver_coordinates).map((project: Project) => ({
     "type": "Feature",
     "geometry": {
@@ -265,7 +257,22 @@ function computeData() {
         "type": "FeatureCollection",
         "features": features
       };
-}
+})
+
+watch(() => projects,
+  () => {
+    // all selected by default
+    updateLayerData(computedData.value)
+  },
+  { immediate: true, deep:true }
+)
+watch(() => locale.value,
+  () => {
+    // all selected by default
+    updateLayerData(computedData.value)
+  }
+)
+
 
 function updateLayerData(newData:any): void {
   if (map !== undefined && newData !== undefined) {
@@ -280,7 +287,7 @@ function addProjects() {
   if (map !== undefined) {
     map.addSource('buildings', {
       type: 'geojson',
-      data: computeData()
+      data: computedData.value
     });
     // Now that we've added the source, we can create a layer that uses the 'buildings' source.
     map.addLayer({
