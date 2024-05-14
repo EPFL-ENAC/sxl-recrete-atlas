@@ -60,7 +60,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: what's the git ref
-        run: echo ${{ github.ref }}
+        run: echo ${{ github.ref }} // ${{ github.ref_name }}
       # This is used to trigger the correct github CI pipeline:
       #   push to main: update dev deployment
       #   push a tag: update stage, trigger prod merge req.
@@ -93,6 +93,7 @@ jobs:
               "digest": "${{ needs.build-and-push-image.outputs.digest }}",
               "repo_name": "${{ secrets.CD_REPO }}",
               "repo_org": "${{ secrets.CD_ORG }}",
-              "branch": "prod"
+              "branch": "prod",
+              "ref_name": "${{ github.ref_name }}"
             }
           }'
