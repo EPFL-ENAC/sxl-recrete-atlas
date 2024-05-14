@@ -3,6 +3,8 @@
   "exclude": [],
   "compilerOptions": {
     "composite": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
     "lib": [],
     "types": [
       "node",
