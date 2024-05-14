@@ -29,35 +29,6 @@ export interface SelectableGroupItem extends SelectableParentItem {
   children: SelectableSingleItem[]
 }
 
-// from the csv
-export interface SpeciesItem {
-  GENRE_lat: string
-  GENRE_fr: string
-  GENRE_en: string
-  GENRE_eng: string
-  'GENUS TREE COUNT': number
-  'GENUS SHARE': string
-  NOM_COMPLET_lat: string
-  NOM_COMPLET_fr: string
-  NOM_COMPLET_en: string
-  NOM_COMPLET_eng: string
-  'SPECIE TREE COUNT': number
-  'SPECIE SHARE': string
-  sum_BVOC_kg: number
-  mean_BVOC_kg: number
-  sum_O3_kg: number
-  mean_O3_kg: number
-  sum_OFP_kg: number
-  mean_OFP_kg: number
-  sum_PM10_kg: number
-  mean_PM10_kg: number
-  Net_O3: number
-  // derived properties
-  id: string
-  genus: string
-  measures: string[]
-}
-
 // from geojson
 export interface SpeciesProps {
   GENRE_lat: string
