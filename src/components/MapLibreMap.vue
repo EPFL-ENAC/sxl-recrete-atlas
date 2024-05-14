@@ -251,7 +251,6 @@ watch(() => projects,
 )
 
 function computeData() {
-  console.log(locale.value)
   const features = projects.value.filter(x => x?.receiver_coordinates).map((project: Project) => ({
     "type": "Feature",
     "geometry": {
