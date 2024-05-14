@@ -40,18 +40,11 @@ const tabItems = computed<{ id: string; label: string }[]>(() => selectableTabs.
 }).sort(itemCompare))
 
 
-function updateGenus() {
-  // select the default species or the first one
-  const selected = selectableTabs.value.find((item: SelectableItem) => item.selected)
-  tab.value = selected ? selected.id : (selectableTabs.value.length > 0 ? selectableTabs.value[0].id : undefined)
-  updateLayers()
-}
 
 watch(() => props.items,
   () => {
     // all selected by default
     genre.value = 'all'
-    updateGenus()
   },
   { immediate: true }
 )
