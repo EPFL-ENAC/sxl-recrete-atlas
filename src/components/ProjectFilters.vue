@@ -5,7 +5,7 @@ import { useI18n } from 'vue-i18n'
 import { useDisplay } from 'vuetify'
 import { useFiltersStore, stepsHash, valuesHash } from '@/stores/filters';
 import { storeToRefs } from 'pinia';
-import type { Project, ProjectKey } from '@/types/Project';
+import type { Project, ProjectKey, ProjectLang } from '@/types/Project';
 import type { BooleanFilterKey, FilterKey, RangeFilterKey, SelectFilterKey } from '@/types/Filter'
 
 import {
@@ -46,7 +46,7 @@ interface FilterRangeValues {
 function getRangeValues(key: FilterKey): number[] {
     const projectValues = projects.map((project: Project) => {
       if (key === 'name') {
-        return project['name_en'];
+        return project[`name_${locale.value as ProjectLang}`];
       }
       return project[key];
     });

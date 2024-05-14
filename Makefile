@@ -14,6 +14,10 @@ prebuild:
 	@echo "converting csv to json before build"
 	npm run prebuild
 
-build: prebuild
+build:
 	@echo "Installing node dependencies (npm)"
 	npm build
+
+run:
+	@echo "Running the project"
+	npm run dev
