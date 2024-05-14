@@ -1,16 +1,13 @@
 <script setup lang="ts">
 import 'maplibre-gl/dist/maplibre-gl.css'
-import '@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css'
 import 'maplibregl-theme-switcher/styles.css'
 import 'maplibregl-scale-legend/styles.css'
 
-// import { geocoderApi } from '@/utils/geocoder'
 import { DivControl } from '@/utils/control'
 import { ThemeSwitcherControl } from 'maplibregl-theme-switcher'
 import type { ThemeDefinition } from 'maplibregl-theme-switcher'
 import { ScaleLegendControl } from 'maplibregl-scale-legend'
 import type { ScaleDefinition } from 'maplibregl-scale-legend'
-// import MaplibreGeocoder from '@maplibre/maplibre-gl-geocoder'
 import {
   AttributionControl,
   FullscreenControl,
@@ -110,14 +107,6 @@ onMounted(() => {
     compact: false,
     customAttribution: '© <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>, <a href="https://www.epfl.ch/labs/sxl/" target="_blank">SXL</a>'
   }));
-  // map.addControl(
-  //   new MaplibreGeocoder(geocoderApi, {
-  //     maplibregl: { Marker },
-  //     showResultsWhileTyping: true,
-  //     language: locale.value,
-  //   }),
-  //   'top-left',
-  // )
   const positionControl = new DivControl({ id: 'map-position' })
   map.addControl(positionControl, 'bottom-left')
 

@@ -12,4 +12,3 @@ interface ImportMeta {
 }
 
 declare module 'vuetify/lib/util/colors'
-declare module "@maplibre/maplibre-gl-geocoder"
