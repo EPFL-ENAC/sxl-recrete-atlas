@@ -21,7 +21,6 @@
     "install-hooks": "lefthook install"
   },
   "dependencies": {
-    "@maplibre/maplibre-gl-geocoder": "^1.5.0",
     "@types/dompurify": "^3.0.2",
     "@types/marked": "^5.0.0",
     "axios": "^1.6.8",
