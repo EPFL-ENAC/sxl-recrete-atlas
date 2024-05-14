@@ -29,13 +29,6 @@
       "tileSize": 256,
       "minzoom": 0,
       "maxzoom": 20
-    },
-    "swissimage": {
-      "type": "raster",
-      "tileSize": 256,
-      "minzoom": 0,
-      "maxzoom": 20,
-      "tiles": ["https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.swissimage-product/default/current/3857/{z}/{x}/{y}.jpeg"]
     }
   },
   "layers": [
@@ -63,11 +56,6 @@
         "raster-saturation": -1,
         "raster-brightness-max": 0.2
       },
-      "layout": { "visibility": "none" }
-    },
-    { "id": "swissimage",
-      "type": "raster",
-      "source": "swissimage",
       "layout": { "visibility": "none" }
     }
   ]
