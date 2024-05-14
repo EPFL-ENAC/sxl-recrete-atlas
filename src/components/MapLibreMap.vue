@@ -27,12 +27,12 @@ import {
 } from 'maplibre-gl'
 import { onMounted, ref, watch, defineModel } from 'vue'
 import { useI18n } from 'vue-i18n'
-import type { SelectableSingleItem, SpeciesProps } from '@/utils/layerSelector'
+import type { SelectableSingleItem } from '@/utils/layerSelector'
 import type { LegendScale, ScaleEntry } from '@/utils/jsonWebMap'
 import { storeToRefs } from 'pinia'
 
 import { useProjectsStore } from '@/stores/projects'
-import type { Project } from '@/types/Project'
+import type { Project, ProjectLang } from '@/types/Project'
 
 const projects = storeToRefs(useProjectsStore()).projects
 
@@ -211,205 +211,9 @@ watch(() => props.selectedScaleId, () => {
   immediate: true
 })
 
-watch(
-  () => props.popupLayerIds,
-  (popupLayerIds) => {
-    popupLayerIds.forEach((layerId) => {
-      const popup = new Popup({
-        closeButton: false,
-        closeOnClick: true,
-        maxWidth: '420px'
-      })
-      map?.on('click', layerId, function (e) {
-        if (map) {
-          map.getCanvas().style.cursor = 'pointer'
-          const fprops = e.features?.at(0)?.properties as SpeciesProps
-          // display tree attributes
-          if (fprops) {
-            const genus = fprops.GENRE_lat.toLowerCase().replace(' ', '_')
-            const specie = layerId.endsWith('_alt') ? `${genus}_other` : fprops.NOM_COMPLET_lat.toLowerCase().replace(' ', '_')
-
-            let label = locale.value === 'en' ? fprops.NOM_COMPLET_eng : (fprops as any)[`NOM_COMPLET_${locale.value}`]
-            if (!label) {
-              label = locale.value === 'en' ? fprops.GENRE_eng : (fprops as any)[`GENRE_${locale.value}`]
-            }
-            let labelLat = fprops.NOM_COMPLET_lat
-            if (!labelLat) {
-              labelLat = fprops.GENRE_lat
-            }
-
-            const makeInfoLink = (id: string) => {
-              const aContainer = document.createElement("a");
-              aContainer.href = "#";
-              aContainer.classList.add("help", "ml-1");
-              aContainer.onclick = () => showDocumentation(id);
-              aContainer.innerText = "i"
-              return aContainer;
-            }
-
-            const makeSelectSpecieLink = (text: string) => {
-              const aContainer = document.createElement("a");
-              aContainer.href = "#";
-              aContainer.classList.add("ml-2", "v-btn", "v-btn--variant-outlined", "v-theme--light", "v-btn--density-default", "v-btn--size-x-small");
-              aContainer.onclick = () => selectSpecie(`${genus}:${specie}`);
-              aContainer.innerText = `${text}`
-              return aContainer;
-            }
-
-            const makeColorSquare = (color: string) => {
-              const element = document.createElement("div");
-              if (color !== "#000000") {
-                element.style.backgroundColor = color;
-                element.style.width = "15px";
-                element.style.height = "15px";
-                element.style.marginRight = "5px";
-              }
-              element.style.display = "inline-block";
-              return element;
-            }
-
-            const makeMeasureText = (val: number) => {
-              const element = document.createElement("span")
-              element.innerText = formatNumber(val, t('kg/year')) ?? "-";
-              return element;
-            }
-
-            const divContainer = document.createElement("div");
-            divContainer.classList.add("marked")
-
-            const pContainer = document.createElement("p");
-            pContainer.classList.add("text-overline");
-            pContainer.innerText = label
-            pContainer.appendChild(makeSelectSpecieLink(labelLat));
-            divContainer.appendChild(pContainer);
-
-            const tableContainer = document.createElement("table");
-            divContainer.appendChild(tableContainer);
-            const tbodyContainer = document.createElement("tbody");
-            tableContainer.appendChild(tbodyContainer);
-
-            let trContainer = document.createElement("tr");
-            tbodyContainer.appendChild(trContainer);
-            let tdContainer = document.createElement("td");
-            tdContainer.classList.add("text-caption", "font-weight-bold", "text-left", "pl-1", "pr-0");
-            tdContainer.innerText = t('municipality');
-            trContainer.appendChild(tdContainer);
-            tdContainer = document.createElement("td");
-            tdContainer.classList.add("text-no-wrap", "pl-1", "pr-1");
-            tdContainer.innerText = fprops.COMMUNE;
-            trContainer.appendChild(tdContainer);
-
-            trContainer = document.createElement("tr");
-            tbodyContainer.appendChild(trContainer);
-            tdContainer = document.createElement("td");
-            tdContainer.classList.add("text-caption", "font-weight-bold", "text-left", "pl-1", "pr-0");
-            tdContainer.innerText = t('leaf_type');
-            tdContainer.appendChild(makeInfoLink("leaf_type"));
-            trContainer.appendChild(tdContainer);
-            tdContainer = document.createElement("td");
-            tdContainer.classList.add("text-no-wrap", "pl-1", "pr-1");
-            tdContainer.innerText = t(fprops.leaf);
-            trContainer.appendChild(tdContainer);
-
-            // D_COUR_M
-            trContainer = document.createElement("tr");
-            tbodyContainer.appendChild(trContainer);
-            tdContainer = document.createElement("td");
-            tdContainer.classList.add("text-caption", "font-weight-bold", "text-left", "pl-1", "pr-0");
-            tdContainer.innerText = t('crown_area');
-            tdContainer.appendChild(makeInfoLink("crown_area"));
-            trContainer.appendChild(tdContainer);
-            tdContainer = document.createElement("td");
-            tdContainer.classList.add("text-no-wrap", "pl-1", "pr-1");
-            tdContainer.innerText = formatNumber(Math.pow(fprops.D_COUR_M / 2, 2) * Math.PI, t('m2'));
-            trContainer.appendChild(tdContainer);
-
-            trContainer = document.createElement("tr");
-            tbodyContainer.appendChild(trContainer);
-            tdContainer = document.createElement("td");
-            tdContainer.classList.add("text-caption", "font-weight-bold", "text-left", "pl-1", "pr-0");
-            tdContainer.innerText = t('leaf_area');
-            tdContainer.appendChild(makeInfoLink("leaf_area"));
-            trContainer.appendChild(tdContainer);
-            tdContainer = document.createElement("td");
-            tdContainer.classList.add("text-no-wrap", "pl-1", "pr-1");
-            tdContainer.innerText = formatNumber(fprops.L_area, t('m2'));
-            trContainer.appendChild(tdContainer);
-
-            trContainer = document.createElement("tr");
-            tbodyContainer.appendChild(trContainer);
-            tdContainer = document.createElement("td");
-            tdContainer.classList.add("text-caption", "font-weight-bold", "text-left", "pl-1", "pr-1");
-            tdContainer.innerText = `${t('voc')} `;
-            tdContainer.appendChild(makeInfoLink("voc"));
-            trContainer.appendChild(tdContainer);
-            tdContainer = document.createElement("td");
-            tdContainer.classList.add("text-no-wrap", "pl-1", "pr-1");
-            tdContainer.appendChild(makeColorSquare(fprops.color_voc))
-            tdContainer.appendChild(makeMeasureText(fprops.VOC_g_y / 1000))
-            trContainer.appendChild(tdContainer);
-
-            trContainer = document.createElement("tr");
-            tbodyContainer.appendChild(trContainer);
-            tdContainer = document.createElement("td");
-            tdContainer.classList.add("text-caption", "font-weight-bold", "text-left", "pl-1", "pr-1");
-            tdContainer.innerText = t('pm10');
-            tdContainer.appendChild(makeInfoLink("pm10"));
-            trContainer.appendChild(tdContainer);
-            tdContainer = document.createElement("td");
-            tdContainer.classList.add("text-no-wrap", "pl-1", "pr-1");
-            tdContainer.appendChild(makeColorSquare(fprops.color_pm10))
-            tdContainer.appendChild(makeMeasureText(fprops.PM10_rm_gy / 1000))
-            trContainer.appendChild(tdContainer);
-
-            trContainer = document.createElement("tr");
-            tbodyContainer.appendChild(trContainer);
-            tdContainer = document.createElement("td");
-            tdContainer.classList.add("text-caption", "font-weight-bold", "text-left", "pl-1", "pr-1");
-            tdContainer.innerText = t('ofp');
-            tdContainer.appendChild(makeInfoLink("ofp"));
-            trContainer.appendChild(tdContainer);
-            tdContainer = document.createElement("td");
-            tdContainer.classList.add("text-no-wrap", "pl-1", "pr-1");
-            tdContainer.appendChild(makeColorSquare(fprops.color_ofp))
-            tdContainer.appendChild(makeMeasureText(fprops.OFP_kg_y))
-            trContainer.appendChild(tdContainer);
-
-            trContainer = document.createElement("tr");
-            tbodyContainer.appendChild(trContainer);
-            tdContainer = document.createElement("td");
-            tdContainer.classList.add("text-caption", "font-weight-bold", "text-left", "pl-1", "pr-1");
-            tdContainer.innerText = t('o3');
-            tdContainer.appendChild(makeInfoLink("o3"));
-            trContainer.appendChild(tdContainer);
-            tdContainer = document.createElement("td");
-            tdContainer.classList.add("text-no-wrap", "pl-1", "pr-1");
-            tdContainer.appendChild(makeColorSquare(fprops.color_o3))
-            tdContainer.appendChild(makeMeasureText(fprops.O3_rm_gy / 1000))
-            trContainer.appendChild(tdContainer);
-            popup
-              .setLngLat(e.lngLat)
-              //.setHTML(html)
-              .setDOMContent(divContainer)
-              .addTo(map)
-          }
-        }
-      })
-    })
-  },
-  { immediate: true }
-)
 watch([() => props.selectableLayerIds, () => props.selectedLayerIds], () => filterLayers(), {
   immediate: true
 })
-
-function showDocumentation(type: string) {
-  emit('documentation', type)
-}
-
-function selectSpecie(type: string) {
-  emit('specie', type)
-}
 
 function update(center?: LngLatLike, zoom?: number) {
   if (map) {
@@ -447,6 +251,7 @@ watch(() => projects,
 )
 
 function computeData() {
+  console.log(locale.value)
   const features = projects.value.filter(x => x?.receiver_coordinates).map((project: Project) => ({
     "type": "Feature",
     "geometry": {
@@ -454,10 +259,9 @@ function computeData() {
       "coordinates": project?.receiver_coordinates ?? []
     },
     "properties": {
-      "name": project.name_en
+      [`name_${locale.value as ProjectLang}`]: project[`name_${locale.value as ProjectLang}`],
     }
   }));
-  console.log(features)
   return {
         "type": "FeatureCollection",
         "features": features
@@ -492,7 +296,7 @@ function addProjects() {
 
     map.on('click', 'buildings-layer', function (e) {
       isProjectDialogOpen.value = true;
-      project.value = projects.value.find(x => x.name_en === e.features?.[0].properties.name_en);
+      project.value = projects.value.find(x => x[`name_${locale.value as ProjectLang}`] === e.features?.[0].properties[`name_${locale.value as ProjectLang}`]);
     });
     const popups: any[] = [];
     map.on('mouseenter', 'buildings-layer', function (e) {
@@ -503,7 +307,7 @@ function addProjects() {
           anchor: 'bottom'
         })
         .setLngLat((e.features?.[0].geometry as any)?.coordinates as LngLatLike)
-        .setHTML('<h3>' + e.features?.[0].properties.name_en + '</h3>')
+        .setHTML('<h3>' + e.features?.[0].properties[`name_${locale.value as ProjectLang}`] + '</h3>')
         .addTo(map);
         popups.push(a);
         map.getCanvas().style.cursor = 'pointer';

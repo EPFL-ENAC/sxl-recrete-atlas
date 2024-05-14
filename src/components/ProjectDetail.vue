@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-card-item :prepend-icon="mdiDomain">
-      <v-card-title>{{ props.project.name_en }}</v-card-title>
+      <v-card-title>{{ props.project[`name_${locale as ProjectLang}`] }}</v-card-title>
     </v-card-item>
     <v-card-item>
 
@@ -9,27 +9,27 @@
       <v-row>
         <v-col :cols="6">
           <v-row>
-            <b class="key">{{ $t("project_description") }}: </b> {{ props.project.description_en }}
+            <b class="key">{{ $t(`description_${locale as ProjectLang}`) }}: </b> {{ props.project[`description_${locale as ProjectLang}`] }}
           </v-row>
           <v-row>
-            <b class="key">{{ $t("project_receiver_country") }} ({{ $t("project_receiver_city") }}): </b> {{props.project.receiver_country }} ({{ props.project.receiver_city }})
+            <b class="key">{{ $t("receiver_country") }} ({{ $t("receiver_city") }}): </b> {{props.project.receiver_country }} ({{ props.project.receiver_city }})
           </v-row>
           <v-row>
-            <b class="key">{{ $t("project_start_date_year") }}: </b> {{ props.project.start_date_year }}
+            <b class="key">{{ $t("start_date_year") }}: </b> {{ props.project.start_date_year }}
           </v-row>
           <v-row>
-            <b class="key">{{ t("project_status") }}:</b><nb /> {{ props.project.status ?? $t("unknown") }}
+            <b class="key">{{ t("status") }}:</b> {{ props.project.status ?? $t("unknown") }}
           </v-row>
         </v-col>
         <v-col :cols="6">
           <v-carousel v-if="(props.project.images?.length ?? 0) > 0" height="100%" :show-arrows="false"  :interval="3000">
             <v-carousel-item v-for="(image, $key) in props.project.images" :key="$key" :src="image"  content-class="carousel-content"  cover height="300px">
 
-                <v-card-title class="image-title">{{ props.project.name_en }}</v-card-title>
+                <v-card-title class="image-title">{{ props.project[`name_${locale as ProjectLang}`] }}</v-card-title>
             </v-carousel-item>
           </v-carousel>
           <v-img v-else class="align-end text-white" cover height="300px" :src="`${defaultImage}`">
-            <v-card-title class="image-title">{{ props.project.name_en }}</v-card-title>
+            <v-card-title class="image-title">{{ props.project[`name_${locale as ProjectLang}`] }}</v-card-title>
           </v-img>
         </v-col>
       </v-row>
@@ -39,13 +39,13 @@
             <h3 class="text-decoration-underline">{{ t("about_the_donor_site") }}</h3>
           </v-row>
           <v-row>
-            <b class="key">{{ $t("project_distance_km") }}:</b> {{ props.project.distance_km }}
+            <b class="key">{{ $t("distance_km") }}:</b> {{ props.project.distance_km }}
           </v-row>
           <v-row>
             <b class="key">{{ $t("donor_use") }}:</b> {{ props.project.donor_use }}
           </v-row>
           <v-row>
-            <b class="key">{{ t("project_construction_year") }}:</b> {{ project_construction_year }}
+            <b class="key">{{ t("construction_year") }}:</b> {{ project_construction_year }}
           </v-row>
         </v-col>
         <v-col :cols="3">
@@ -115,7 +115,7 @@
           </v-row>
 
           <v-row>
-            <b class="key">{{ t("project_actors") }}:</b> {{ props.project.actors?.join(',') ?? $t("unknown") }}
+            <b class="key">{{ t("actors") }}:</b> {{ props.project.actors?.join(',') ?? $t("unknown") }}
           </v-row>
 
         </v-col>
@@ -142,10 +142,9 @@
 import { mdiDomain, mdiInformationBoxOutline } from '@mdi/js';
 import { computed, defineModel } from 'vue';
 import { defaultImage } from '@/utils/default';
-import type { Project } from '@/types/Project';
+import type { Project, ProjectLang } from '@/types/Project';
 import { useI18n } from 'vue-i18n'
-
-const { t } = useI18n()
+const { t, locale } = useI18n()
 
 const isDialogActive = defineModel({
   type: Boolean,
@@ -172,15 +171,16 @@ const project_construction_year = computed(() => {
     /* text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white; */
     font-family: sans;
     background-color: oklch(1 0 0 / 0.77);
-    border-top-right-radius: 44px;
+    border-top-right-radius: 10px;
     color: black;
 }
 
 .key::after {
-  content: '\00a0'; /* Unicode representation of a non-breaking space */
+  content: '\00a0'; /* Unicode representation of a non-breaking space nbsp */
 }
 </style>
 
+<!-- construction_year, status, actors should be moved to keys.csv -->
 <i18n lang="json">
 {
   "en": {
@@ -188,9 +188,9 @@ const project_construction_year = computed(() => {
     "about_the_reused_concrete": "About the reused concrete",
     "about_the_new_project": "About the new project",
     "more_information": "More information",
-    "project_construction_year": "Construction year",
-    "project_status": "Project status",
-    "project_actors": "Actors",
+    "construction_year": "Construction year",
+    "status": "Project status",
+    "actors": "Actors",
     "impact_source_tooltip": "Source",
     "cost_source_tooltip": "Source",
     "compared_to": "compared to"
@@ -200,9 +200,9 @@ const project_construction_year = computed(() => {
     "about_the_reused_concrete": "À propos du réemploi du béton",
     "about_the_new_project": "À propos du nouveau project",
     "more_information": "plus d'information",
-    "project_construction_year": "Année de construction",
-    "project_status": "État du projet",
-    "project_actors": "Acteurs",
+    "construction_year": "Année de construction",
+    "status": "État du projet",
+    "actors": "Acteurs",
     "impact_source_tooltip": "Source",
     "cost_source_tooltip": "Source",
     "compared_to": "comparé à"

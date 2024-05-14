@@ -10,11 +10,11 @@ import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { useDisplay } from 'vuetify'
 import keys from '@/assets/data/keys.json'
-import type { Project } from '@/types/Project'
+import type { Project, ProjectLang } from '@/types/Project'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
-const { t } = useI18n({ useScope: 'global' })
+const { t, locale } = useI18n({ useScope: 'global' })
 const { mobile } = useDisplay()
 const router = useRouter()
 const $route = router.currentRoute
@@ -53,15 +53,30 @@ const projectId = computed({
   }
 })
 
+interface ListViewHeaders {
+  title: string
+  value: string
+  sortable: boolean
+}
+
+const headers = computed<ListViewHeaders[]>({
+  get() {
+    // it works for name_en and name_fr because keys.json has the same translation for both languages
+    return keys.filter(x => x["List View"] === 'oui').map(x => ({
+        title: t(x.key),
+        value: x.key as string,
+        sortable: false
+      }))
+  },
+  set() {}
+});
+
+
 const onRowClicked = (ref: any, row: any) => {
   selectProject(row.item)
 }
 
-const headers = keys.filter(x => x["List View"] === 'oui').map(x => ({
-  title: t(x.key),
-  value: x.key as string,
-  sortable: false
-}))
+
 
 const mouseOverRow = (element: any, row: any) => {
   currentRowIndex.value = row.index;
@@ -96,7 +111,7 @@ const mouseLeaveRow = () => {
         :activator="`.hovered-${currentRowIndex}`"
         location="top"
       >
-    {{ currentRowItem?.description_en }}
+    {{ currentRowItem?.[`description_${locale as ProjectLang}`] }}
   </v-tooltip>
     <v-data-table
       :items="data"
