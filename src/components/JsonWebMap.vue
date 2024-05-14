@@ -2,7 +2,7 @@
 import type LayerSelector from '@/components/LayerSelector.vue'
 import MapLibreMap from '@/components/MapLibreMap.vue'
 import ProjectFilters from '@/components/ProjectFilters.vue'
-import type { LegendScale, Parameters } from '@/utils/jsonWebMap'
+import type { Parameters } from '@/utils/jsonWebMap'
 import type {
   SelectableGroupItem,
   SelectableItem,
@@ -15,8 +15,7 @@ import type { StyleSpecification } from 'maplibre-gl'
 import { computed, defineModel, onMounted, ref, shallowRef, triggerRef, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useDisplay } from 'vuetify'
-// @ts-ignore
-import { useCookies } from 'vue3-cookies'
+import type { Project } from '@/types/Project'
 
 const props = defineProps<{
   styleUrl: string
@@ -26,7 +25,6 @@ const props = defineProps<{
 }>()
 
 const { t, locale } = useI18n({ useScope: 'global' })
-const { cookies } = useCookies()
 
 const map = ref<InstanceType<typeof MapLibreMap>>()
 const selector = ref<InstanceType<typeof LayerSelector>>()
@@ -52,9 +50,9 @@ const isProjectDialogOpen = defineModel('isProjectDialogOpen', {
   default: false
 })
 
-const project = defineModel('project', {
-  type: Boolean,
-  default: false
+const project = defineModel<Project, string >('project', {
+  default: undefined,
+  type: Object,
 })
 
 onMounted(() => {
