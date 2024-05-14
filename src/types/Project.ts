@@ -1,3 +1,4 @@
+export type ProjectLang = 'fr' | 'en';
 export interface Project {
   _id: number;
   description_fr: string;
