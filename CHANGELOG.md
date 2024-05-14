@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.2.0](https://github.com/EPFL-ENAC/sxl-recrete-atlas/compare/v1.1.0...v1.2.0) (2024-05-14)
+
+
+### Features
+
+* add references file ([4ad8a56](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/4ad8a561f2d80b847b8dc2a2d5d61866e7dd89e7))
+
+
+### Bug Fixes
+
+* **frontend:** dynamic lang selection ([b0a67f3](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/b0a67f3b55276bf9fac71ac1ffe6c04cd71788a0))
+
 ## [1.1.0](https://github.com/EPFL-ENAC/sxl-recrete-atlas/compare/v1.0.2...v1.1.0) (2024-05-08)
 
 
