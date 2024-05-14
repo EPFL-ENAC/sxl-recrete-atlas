@@ -3,6 +3,7 @@
   "include": ["vite.config.*", "vitest.config.*", "cypress.config.*", "playwright.config.*"],
   "compilerOptions": {
     "esModuleInterop": true,
+    "resolveJsonModule": true,
     "composite": true,
     "types": ["node"],
     "baseUrl": "./",
