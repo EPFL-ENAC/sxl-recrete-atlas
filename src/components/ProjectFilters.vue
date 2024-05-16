@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { mdiMapLegend } from '@mdi/js'
-import { watch } from 'vue'
+import { computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useDisplay } from 'vuetify'
 import { useFiltersStore, stepsHash, valuesHash } from '@/stores/filters';
@@ -38,13 +38,12 @@ function getSelectValues(key: ProjectKey): (OptionValues)[] {
   }
 
 const filterSelectKeys: SelectFilterKey[] = keys.filter(x => x.Filtres === 'oui').map(x => x.key as SelectFilterKey)
-// should be acomputed value since it depends on the locale
-const filtersSelect: FilterSelectValues[] = filterSelectKeys.map((key: SelectFilterKey) => ({
+
+const filtersSelect = computed<FilterSelectValues[]>(() => filterSelectKeys.map((key: SelectFilterKey) => ({
   // example: { key: 'main_concrete_type', values: ['PC', 'CIP'] },
   key,
   values: getSelectValues(key)
-}))
-console.log(filtersSelect)
+})))
 
 
 interface FilterRangeValues {
