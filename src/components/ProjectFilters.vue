@@ -20,22 +20,32 @@ const { mobile } = useDisplay()
 
 interface FilterSelectValues {
   key: SelectFilterKey
-  values: string[]
+  values: (string | OptionValues)[]
 }
 
 const projects = (data as Project[]);
-function getSelectValues(key: ProjectKey): (string)[] {
+interface OptionValues {
+  title: string;
+  value: string;
+}
+function getSelectValues(key: ProjectKey): (OptionValues)[] {
     const projectValues = projects.map((project: Project) => project[key]);
     const uniqueValues = Array.from(new Set(projectValues));
-    return uniqueValues.filter(value => typeof value === 'string') as string[];
+    return uniqueValues.filter(value => typeof value === 'string').map((value: string) => ({
+      title: t(value) as string,
+      value: value
+    }));
   }
 
 const filterSelectKeys: SelectFilterKey[] = keys.filter(x => x.Filtres === 'oui').map(x => x.key as SelectFilterKey)
+// should be acomputed value since it depends on the locale
 const filtersSelect: FilterSelectValues[] = filterSelectKeys.map((key: SelectFilterKey) => ({
   // example: { key: 'main_concrete_type', values: ['PC', 'CIP'] },
   key,
   values: getSelectValues(key)
 }))
+console.log(filtersSelect)
+
 
 interface FilterRangeValues {
   key: RangeFilterKey 
