@@ -1,35 +1,47 @@
 /* eslint-disable no-debugger */
 import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
+import { computed } from 'vue'
 import type { ProjectKey, Project } from '@/types/Project'
 import data from '@/assets/data/data.json'
 import { useFiltersStore } from './filters'
 import { storeToRefs } from 'pinia'
+import { newFilter } from '@/stores/filters';
+import type { Filter, FilterKey } from '@/types/Filter'
 
 export interface Filters extends Record<ProjectKey, string|null|undefined|boolean> {
 }
 
 export const useProjectsStore = defineStore('projects', () => {
 
-  const { filters, getFilters } = storeToRefs(useFiltersStore());
+  const { filters } = storeToRefs(useFiltersStore());
 
   const projects = computed({
     get: () => {
       const filterKeys = Object.keys(filters.value) as ProjectKey[]
+      const defaultFilter: Filter = newFilter()
       return (data as Project[]).filter((project: Project) => {
-        return filterKeys.every((key: ProjectKey) => {
+        return filterKeys.every((key: ProjectKey|FilterKey) => {
           const filterValue = (filters as any).value[key as ProjectKey]
-          const projectValue = project[key]
+          const projectValue = project[key as ProjectKey]
+
           if (typeof filterValue === 'string' && typeof projectValue === 'string') {
             // name filter
             return projectValue.toLowerCase().replace(/[\W_]+/g,"").includes(filterValue.toLowerCase().replace(/[\W_]+/g,""))
           }
-          if (Array.isArray(filterValue) && typeof projectValue === 'string') {
-            // select filter
-            return filterValue.length === 0 || filterValue.includes(projectValue)
+          if (Array.isArray(filterValue) && (typeof projectValue === 'string' ||  projectValue === undefined)) {
+            // range filter here if defaultFilterValue.length === 2 // it works though..
+            const defaultFilterValue = defaultFilter[key as FilterKey] ?? [];
+            if (JSON.stringify(filterValue) === JSON.stringify(defaultFilterValue)) {
+              return true;
+            }
+            return projectValue !== undefined && filterValue.includes(projectValue)
           }
           if (Array.isArray(filterValue) && filterValue.length == 2) {
-            // range filter
+            // range filterq
+            const defaultFilterValue = defaultFilter[key as FilterKey] ?? [];
+            if (JSON.stringify(filterValue) === JSON.stringify(defaultFilterValue)) {
+              return true;
+            }
             if (typeof projectValue === 'number') {
               return filterValue[0] <= projectValue && projectValue <= filterValue[1]
             } else {
