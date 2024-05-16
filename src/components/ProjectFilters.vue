@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { mdiMapLegend } from '@mdi/js'
-import { computed, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useDisplay } from 'vuetify'
-import { useFiltersStore, stepsHash, valuesHash } from '@/stores/filters';
+import { useFiltersStore, stepsHash, valuesHash, newFilter } from '@/stores/filters';
 import { storeToRefs } from 'pinia';
 import type { Project, ProjectKey, ProjectLang } from '@/types/Project';
 import type { BooleanFilterKey, FilterKey, RangeFilterKey, SelectFilterKey } from '@/types/Filter'
@@ -81,6 +81,7 @@ const store = useFiltersStore()
 const { filters } = storeToRefs(store)
 const { setFilters, resetFilter } = store
 
+const defaultFilter = newFilter()
 const props = withDefaults(
   defineProps<{
     isVisible?: boolean
@@ -89,6 +90,28 @@ const props = withDefaults(
     isVisible: false
   }
 )
+
+type FilterActivated = Record<FilterKey, boolean>
+
+const filtersActivated = computed<FilterActivated>(() => {
+  return (Object.keys(defaultFilter) as FilterKey[]).reduce((acc: FilterActivated, key: FilterKey) => {
+    if (filters.value[key] == undefined) {
+      acc[key] = true;
+      return acc;
+    }
+    if (Array.isArray(filters.value[key])) {
+      acc[key] = JSON.stringify(filters.value[key]) === JSON.stringify(defaultFilter[key]);
+      return acc;
+    }
+    if (typeof filters.value[key] === 'boolean') {
+      acc[key] = filters.value[key] === defaultFilter[key];
+      return acc;
+    }
+    acc[key] = filters.value[key] === defaultFilter[key];
+
+    return acc;
+  }, {} as FilterActivated);
+})
 
 watch(filters, (newVal) => {
   setFilters(newVal);
@@ -108,7 +131,7 @@ watch(filters, (newVal) => {
   </v-list-item>
   <v-list-item v-show="props.isVisible">
     <v-row>
-      <v-col cols="6">
+      <v-col cols="6" :class="{ 'text-grey': filtersActivated.name }">
         {{ $t('search') }}
       </v-col>
       <v-col cols="6">
@@ -121,7 +144,7 @@ watch(filters, (newVal) => {
   </v-list-item>
   <v-list-item v-for="(filterSelect, $key) in filtersSelect" v-show="props.isVisible" :key="$key">
     <v-row>
-      <v-col cols="6">
+      <v-col cols="6"  :class="{ 'text-grey': filtersActivated[filterSelect.key] }">
         {{ $t(filterSelect.key) }}
       </v-col>
       <v-col cols="6">
@@ -134,13 +157,13 @@ watch(filters, (newVal) => {
   </v-list-item>
   <v-list-item v-for="(filterRange, $key) in filtersRange" v-show="props.isVisible" :key="$key">
     <v-row class="row-range">
-      <v-col cols="6">
+      <v-col cols="6" :class="{ 'text-grey': filtersActivated[filterRange.key] }">
         {{ $t(filterRange.key) }}
       </v-col>
       <v-col cols="6" class="d-flex align-end">
         <v-range-slider
           v-model="filters[filterRange.key]"
-          thumb-label="always" density="compact"
+          :thumb-label="!filtersActivated[filterRange.key] ? 'always': undefined" density="compact"
           :step="filterRange.step"
           :min="filterRange.values[0]"
           :max="filterRange.values[1]"
@@ -150,14 +173,19 @@ watch(filters, (newVal) => {
   </v-list-item>
   <v-list-item v-for="(filterBoolean, $key) in filtersBoolean" v-show="props.isVisible" :key="$key">
     <v-row class="row-range">
-      <v-col cols="6">
+      <v-col cols="6" :class="{ 'text-grey': filtersActivated[filterBoolean] }">
         {{ $t(filterBoolean) }}
       </v-col>
-      <v-col cols="6" class="d-flex align-end">
-       <v-radio-group v-model="filters[filterBoolean]" @update:model-value="() => setFilters(filters)" density="compact">
-          <v-radio label="with" :value="true" />
-          <v-radio label="without" :value="false" />
-        </v-radio-group>
+      <v-col cols="6" class="d-flex justify-space-between align-center">
+        <v-switch
+          v-model="filters[filterBoolean]"
+          :indeterminate="filters[filterBoolean] === undefined"
+          density="compact"
+          color="primary"
+          label="on"
+          @update:model-value="() => setFilters(filters)" 
+        ></v-switch>
+        <v-btn :icon="mdiClose" size="x-small" @click="filters[filterBoolean] = undefined"></v-btn>
       </v-col>
     </v-row>
   </v-list-item>
