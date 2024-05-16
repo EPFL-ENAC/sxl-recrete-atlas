@@ -24,6 +24,3 @@ coverage
 *.njsproj
 *.sln
 *.sw?
-public/images-cdn
-src/assets/data/data.json
-src/assets/data/keys.json
