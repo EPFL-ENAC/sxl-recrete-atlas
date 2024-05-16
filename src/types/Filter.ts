@@ -1,5 +1,5 @@
 export interface TextFilter {
-  name: string;
+  name: string|null;
 }
 export type TextFilterKey = keyof TextFilter;
 export interface SelectFilter {
@@ -23,8 +23,8 @@ export type RangeFilterKey = keyof RangeFilter;
 
 
 export interface BooleanFilter {
-  impact_difference: boolean;
-  cost_difference_min_percent: boolean;
+  impact_difference?: boolean;
+  cost_difference_min_percent?: boolean;
 }
 export type BooleanFilterKey = keyof BooleanFilter;
 
