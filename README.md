@@ -2,6 +2,22 @@
 
 ## Data source
 
+### Set-up git annex s3
+   - don't forget to setup the following env variable:
+   ```
+      BUCKET_NAME=xxx-xx
+      AWS_ACCESS_KEY_ID=xx
+      AWS_SECRET_ACCESS_KEY=xx
+   ```
+   - allowed the ip of s3.epfl.ch
+   - currently s3.epfl.ch is on the following ip 10.98.42.101
+   ```
+git config annex.security.allowed-ip-addresses "10.98.42.101"
+```
+   - git annex initremote epfl-s3 type=S3 encryption=none host=s3.epfl.ch protocol=https port=443  requeststyle=path \
+   bucket=$BUCKET_NAME  autoenable=true
+
+### where is the data
 - The main data is comming from [this file](https://github.com/EPFL-ENAC/sxl-recrete-atlas/blob/main/src/assets/data/data.csv) (which is directly used by the app for the table, map)
    - You can replace it directly on github by uploading a new data.csv file in [this directory](https://github.com/EPFL-ENAC/sxl-recrete-atlas/blob/main/src/assets/data)
 - The images defined in the data.csv should be placed in [this directory](https://github.com/EPFL-ENAC/sxl-recrete-atlas/blob/main/public/images)
