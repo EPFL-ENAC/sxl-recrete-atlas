@@ -12,7 +12,7 @@ export const valuesHash: Partial<Record<RangeFilterKey, number[]>> = {
 }
 
 // for reactiveness we need all the fields to be ref
-function newFilter(): Filter {
+export function newFilter(): Filter {
   return {
     main_concrete_type: [],
     receiver_country: [],
@@ -25,9 +25,9 @@ function newFilter(): Filter {
     component_age: [0, 100],
     donor_nb_floor: [0, 100],
     receiver_nb_floor: [0, 100],
-    impact_difference: false,
-    cost_difference_min_percent: false,
-    name: ""
+    impact_difference: undefined,
+    cost_difference_min_percent: undefined,
+    name: null
   }
 }
 
