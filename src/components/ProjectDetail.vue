@@ -136,7 +136,6 @@
     </v-card-text>
     </v-card-item>
     <template #actions>
-      <v-btn class="ml-auto" text="Close" @click="closeDialog"></v-btn>
     </template>
   </v-card>
 </template>
