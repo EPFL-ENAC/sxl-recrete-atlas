@@ -6,6 +6,7 @@ import {
   mdiListBox,
   mdiGrid,
   mdiMapOutline,
+  mdiCrane,
 } from '@mdi/js'
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -15,7 +16,8 @@ import { useLocale } from 'vuetify'
 import epflLogoUrl from '/EPFL_Logo_184X53.svg'
 
 const { current } = useLocale()
-const { t, locale } = useI18n()
+const { locale } = useI18n({ useScope: 'global'})
+const { t } = useI18n()
 const { cookies } = useCookies()
 
 const showProjectOpen = ref<boolean>(false)
@@ -38,6 +40,7 @@ function addProjectOpen() {
 function getCurrentLocaleOrFallback() {
   return ['en', 'fr'].includes(current.value) ? current.value : 'en'
 }
+
 </script>
 
 <template>
@@ -62,9 +65,9 @@ function getCurrentLocaleOrFallback() {
             <v-btn v-bind="activatorProps" :to="{ name: `list`, query: { view: 'list' } }"
               :active="$route.query.view === 'list'" :icon="mdiListBox" class="mr-3" :title="$t('list')"></v-btn>
           </template>
-          <span>
-            {{ $t('list') }}
-          </span>
+          <template #default>
+            {{  $t('list') }}
+          </template>
         </v-tooltip>
         <v-tooltip location="bottom">
           <template #activator="{ props: activatorProps }">
@@ -77,16 +80,16 @@ function getCurrentLocaleOrFallback() {
         <v-tooltip location="bottom">
           <template #activator="{ props: activatorProps }">
             <v-btn v-bind="activatorProps" :to="{ name: `home` }" :icon="mdiMapOutline" class="mr-3"
-              :title="$t('home')"></v-btn>
+              :title="$t('map')"></v-btn>
           </template>
-          <span>{{ $t('home') }} </span>
+          <span>{{ $t('map') }} </span>
         </v-tooltip>
 
       </div>
-
       <v-tooltip location="bottom">
         <template #activator="{ props: activatorProps }">
-          <v-btn v-bind="activatorProps" :icon="mdiPlusBox" class="mr-3" :title="$t('add_project')"
+          <v-btn
+            size="small" v-bind="activatorProps" :icon="mdiPlusBox" class="mr-3" :title="$t('add_project')"
             @click="addProjectOpen()"></v-btn>
         </template>
         <span>{{ $t('add_project') }} </span>
@@ -94,18 +97,26 @@ function getCurrentLocaleOrFallback() {
       <v-tooltip location="bottom">
         <template #activator="{ props: activatorProps }">
 
-          <v-btn v-bind="activatorProps" to="/about" :icon="mdiInformation" class="mr-3" :title="$t('about')"></v-btn>
+          <v-btn size="small" v-bind="activatorProps" to="/about" :icon="mdiInformation" class="mr-3" :title="$t('about')"></v-btn>
         </template>
         <span>{{ $t('about') }} </span>
       </v-tooltip>
       <v-tooltip location="bottom">
         <template #activator="{ props: activatorProps }">
-          <v-btn v-bind="activatorProps" id="locales-activator" color="primary" class="mr-2">
+
+          <v-btn size="small" v-bind="activatorProps" to="/faq" :icon="mdiCrane" class="mr-3" :title="$t('faq')"></v-btn>
+        </template>
+        <span>{{ $t('faq') }} </span>
+      </v-tooltip>
+      <v-tooltip location="bottom">
+        <template #activator="{ props: activatorProps }">
+          <v-btn size="small" v-bind="activatorProps" id="locales-activator" color="primary" class="mr-2">
             {{ getCurrentLocaleOrFallback() }}
           </v-btn>
         </template>
         <span>{{ t('choose-your-lang') }} </span>
       </v-tooltip>
+     
 
 
       <template #append>
@@ -126,6 +137,17 @@ function getCurrentLocaleOrFallback() {
 <style lang="scss" scoped>
 .v-app-bar {
   border-bottom: 1px solid rgb(var(--v-theme-primary));
+}
+.main-group-btn {
+    justify-content: end;
+    align-items: end;
+    display: flex;
+    border-right: 1px solid black;
+    margin-right: 1rem;
+    padding-right: 1rem;
+    // color: oklch(57% 0.21 29.5)
+    // border: 1px solid black;
+    // border-radius: 10px
 }
 </style>
 

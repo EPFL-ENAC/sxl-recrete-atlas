@@ -157,7 +157,8 @@ import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router';
 const route = useRoute()
 const router = useRouter()
-const { t, locale } = useI18n()
+const { locale } = useI18n({ useScope: 'global'})
+const { t } = useI18n()
 
 const isDialogActive = defineModel({
   type: Boolean,
