@@ -61,5 +61,8 @@ export default createI18n({
     en: {...projectValuesKeysEn,...en, ...enKeys, ...countriesEn  },
     fr: {...projectValuesKeysFr, ...fr, ...frKeys, ...countriesFr },
   },
+  warnHtmlMessage: false,
+  missingWarn: false,
+  fallbackWarn: false, // deactivate to see missing keys
   legacy: false
 })

@@ -1,7 +1,10 @@
 <template>
   <v-card>
     <v-card-item :prepend-icon="mdiDomain">
-      <v-card-title>{{ props.project[`name_${locale as ProjectLang}`] }}</v-card-title>
+      <v-card-title class="d-flex">
+          <span>{{ props.project[`name_${locale as ProjectLang}`] }}</span>
+          <v-btn size="small" class="ml-auto" text="Close" @click="closeDialog"></v-btn>
+      </v-card-title>
     </v-card-item>
     <v-card-item>
 
@@ -92,8 +95,8 @@
             {{ props.project.impact_unit }}
             {{  t("compared_to") }} {{ props.project.cost_design_alternative }}
             <v-tooltip text="Tooltip">
-                <template #activator="{ props }">
-                  <v-icon  v-bind="props">{{ mdiInformationBoxOutline }} props</v-icon>
+                <template #activator="{ props: activatorProps }">
+                  <v-icon  v-bind="activatorProps">{{ mdiInformationBoxOutline }} props</v-icon>
                 </template>
                 <span>{{ t("impact_source_tooltip") }}: {{ props.project.impact_source }}</span>
               </v-tooltip>
@@ -103,8 +106,8 @@
             <b class="key">{{ $t("cost_difference_max_percent") }}:</b> {{ props.project.cost_difference_max_percent }} %
             {{  t("compared_to") }} {{ props.project.cost_design_alternative }}
             <v-tooltip text="Tooltip">
-                <template #activator="{ props }">
-                  <v-icon  v-bind="props">{{ mdiInformationBoxOutline }} props</v-icon>
+                <template #activator="{ props: propsActivator }">
+                  <v-icon  v-bind="propsActivator">{{ mdiInformationBoxOutline }} props</v-icon>
                 </template>
                 <span>{{ t("cost_source_tooltip") }}: {{ props.project.cost_source }}</span>
               </v-tooltip>
@@ -175,7 +178,7 @@ const closeDialog = () => {
 }
 
 const project_construction_year = computed(() => {
-  return new Date().getFullYear() - (props?.project.component_age ?? 0);
+  return (props?.project.start_date_year ?? 0) - (props?.project.component_age ?? 0);
 })
 </script>
 

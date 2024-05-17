@@ -29,6 +29,7 @@ export const useProjectsStore = defineStore('projects', () => {
             return projectValue.toLowerCase().replace(/[\W_]+/g,"").includes(filterValue.toLowerCase().replace(/[\W_]+/g,""))
           }
           if (Array.isArray(filterValue) && (typeof projectValue === 'string' ||  projectValue === undefined)) {
+            // select filter mainly
             // range filter here if defaultFilterValue.length === 2 // it works though..
             const defaultFilterValue = defaultFilter[key as FilterKey] ?? [];
             if (JSON.stringify(filterValue) === JSON.stringify(defaultFilterValue)) {
@@ -36,6 +37,13 @@ export const useProjectsStore = defineStore('projects', () => {
             }
             return projectValue !== undefined && filterValue.includes(projectValue)
           }
+
+          if (Array.isArray(filterValue) && (Array.isArray(projectValue) && projectValue.length > 0 && typeof projectValue[0] === 'string')) {
+             // select filter for array and array
+            return projectValue !== undefined && filterValue
+              .every((value: string) => (projectValue as string[]).includes(value));
+          }
+
           if (Array.isArray(filterValue) && filterValue.length == 2) {
             // range filterq
             const defaultFilterValue = defaultFilter[key as FilterKey] ?? [];
