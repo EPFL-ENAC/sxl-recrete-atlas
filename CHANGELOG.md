@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.3.0](https://github.com/EPFL-ENAC/sxl-recrete-atlas/compare/v1.2.2...v1.3.0) (2024-05-17)
+
+
+### Features
+
+* **i18n:** change dynamically text ([89151b7](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/89151b7e85d433f5dbf0a257988be629c8368503))
+* **i18n:** make map tooltip works for en and fr ([1b699e0](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/1b699e03b97467d9a23ad2af364d481afd27d319))
+* **maps:** display default old arcgis ([502fa2f](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/502fa2f85b88553d6c12d7c86903340711565e7d))
+
+
+### Bug Fixes
+
+* **filters:** change filters behavior for boolean ([8ae9148](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/8ae914862a5a2431149b817cdaaefe2cc1474f68))
+* **filters:** correct filtering behavior ([9e6a0b2](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/9e6a0b23a4ba83e852771147e405b2aa899f7c53))
+* **i18n:** replace country by iso-code ([204ec49](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/204ec49c0acd8b8f6d275fd10f637621b932fd05))
+* remove console.log ([21777c4](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/21777c435dddaf33868fee98a8ae5515f230d4d5))
+* **typescript:** better type guard ([f7e067f](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/f7e067fa474b25f9ee0e9798932e418502762a79))
+* **typescript:** correct object definition ([3ab7d31](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/3ab7d315e4cc29de0998e6741e6e5a0884cd5212))
+
 ## [1.2.0](https://github.com/EPFL-ENAC/sxl-recrete-atlas/compare/v1.1.0...v1.2.0) (2024-05-14)
 
 
