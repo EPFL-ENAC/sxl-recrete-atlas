@@ -101,17 +101,13 @@ const mouseLeaveRow = () => {
   </v-navigation-drawer>
   <v-container v-if="listMode === 'list'" class="fill-height pa-0 align-baseline" fluid>
 
-    <v-tooltip v-if="currentRowIndex !== undefined"
-      :width="500"
-      :open-delay="300"
-      :close-delay="300"
+    <v-tooltip v-if="currentRowIndex !== undefined" :width="500" :open-delay="300" :close-delay="300"
       :activator="`.hovered-${currentRowIndex}`" location="top">
       {{ currentRowItem?.[`description_${locale as ProjectLang}`] }}
     </v-tooltip>
-    <v-data-table
-      :items="data" :headers="headers" :items-per-page="data.length" :hover="true"
-      :row-props="row => ({ class: `hovered-${row.index}` })" @click:row="onRowClicked" @mouseover:row="mouseOverRow"
-      @mouseleave:row="mouseLeaveRow">
+    <v-data-table  style="height: calc(100vh - 69px)" :items="data" :headers="headers" :items-per-page="data.length" :hover="true" :fixed-header="true"
+      :loading="data.length === 0" :row-props="row => ({ class: `hovered-${row.index}` })" @click:row="onRowClicked"
+      @mouseover:row="mouseOverRow" @mouseleave:row="mouseLeaveRow">
       <template #[`item.main_concrete_type`]="{ item }">
         <ul class="comma-separated-list">
           <li v-for="(concrete_type, $key) in item.main_concrete_type" :key="$key">{{ $t(concrete_type) }}</li>
