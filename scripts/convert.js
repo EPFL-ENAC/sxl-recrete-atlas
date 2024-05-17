@@ -6,9 +6,10 @@ csv({ checkType: true })
   .then((jsonObj) => {
     const path = './src/assets/data/keys.json';
     writeFileSync(path, JSON.stringify(jsonObj, null, 2));
-    console.log(`data.csv converted successfully to JSON in ${path}`)
+    console.log(`keys.csv converted successfully to JSON in ${path}`)
   });
 
+const arraySplitter = (item) => item.split(",").map((type) => type.trim());
 csv({ checkType: true, ignoreEmpty: true, trim: true,
   colParser:{
     "receiver_coordinates":function(item){
@@ -16,6 +17,13 @@ csv({ checkType: true, ignoreEmpty: true, trim: true,
         .map((coordinate) => parseFloat(coordinate.trim()))
         .reverse();
     },
+    "main_concrete_type": arraySplitter,
+    "main_concrete_type_uncertainty": arraySplitter,
+    "donor_element_type": arraySplitter,
+    "receiver_element_type": arraySplitter,
+    "donor_use": arraySplitter,
+    "receiver_use": arraySplitter,
+    "reference": arraySplitter,
     "images":function(item){
         return item.split(",").map((image) => `/images/${image.trim()}`);
     },
@@ -49,4 +57,13 @@ csv({ checkType: true })
     writeFileSync(path, JSON.stringify(jsonObj, null, 2));
     console.log(`countries.csv converted successfully to JSON in ${path}`)
   });
+
+  csv({ checkType: true })
+  .fromFile('./src/assets/data/references.csv')
+  .then((jsonObj) => {
+    const path = './src/assets/data/references.json';
+    writeFileSync(path, JSON.stringify(jsonObj, null, 2));
+    console.log(`references.csv converted successfully to JSON in ${path}`)
+  });
+
 

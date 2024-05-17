@@ -15,10 +15,10 @@ import { useLocale } from 'vuetify'
 import epflLogoUrl from '/EPFL_Logo_184X53.svg'
 
 const { current } = useLocale()
-const { locale } = useI18n({ useScope: 'global' })
+const { t, locale } = useI18n()
 const { cookies } = useCookies()
 
-const showProjectOpen =  ref<boolean>(false)
+const showProjectOpen = ref<boolean>(false)
 const addProjectOpened = computed<boolean>(() => showProjectOpen.value)
 
 function onLocale(lang: string) {
@@ -56,33 +56,57 @@ function getCurrentLocaleOrFallback() {
           </v-list-item>
         </v-list>
       </v-menu>
-      <v-btn
-        :to="{ name: `list`, query: { view: 'list' }}"
-        :active="$route.query.view === 'list'"
-        :icon="mdiListBox"
-        class="mr-3"
-        :title="$t('list')"
-      ></v-btn>
-      <v-btn
-        :to="{ name: `list` , query: { view: 'grid' }}"
-        :active="$route.query.view === 'grid'"
-        :icon="mdiGrid"
-        class="mr-3"
-        :title="$t('grid')"
-      ></v-btn>
-      <v-btn :to="{ name: `home` }" :icon="mdiMapOutline" class="mr-3" :title="$t('home')"></v-btn>
+      <div class="flex-grow-1 main-group-btn">
+        <v-tooltip location="bottom">
+          <template #activator="{ props: activatorProps }">
+            <v-btn v-bind="activatorProps" :to="{ name: `list`, query: { view: 'list' } }"
+              :active="$route.query.view === 'list'" :icon="mdiListBox" class="mr-3" :title="$t('list')"></v-btn>
+          </template>
+          <span>
+            {{ $t('list') }}
+          </span>
+        </v-tooltip>
+        <v-tooltip location="bottom">
+          <template #activator="{ props: activatorProps }">
+            <v-btn v-bind="activatorProps" :to="{ name: `list`, query: { view: 'grid' } }"
+              :active="$route.query.view === 'grid'" :icon="mdiGrid" class="mr-3" :title="$t('grid')"></v-btn>
+          </template>
+          <span>{{ $t('grid') }} </span>
+        </v-tooltip>
 
-      <v-btn
-        :icon="mdiPlusBox"
-        class="mr-3"
-        :title="$t('add_project')"
-        @click="addProjectOpen()"
-      ></v-btn>
-      <v-btn to="/about" :icon="mdiInformation" class="mr-3" :title="$t('about')"></v-btn>
+        <v-tooltip location="bottom">
+          <template #activator="{ props: activatorProps }">
+            <v-btn v-bind="activatorProps" :to="{ name: `home` }" :icon="mdiMapOutline" class="mr-3"
+              :title="$t('home')"></v-btn>
+          </template>
+          <span>{{ $t('home') }} </span>
+        </v-tooltip>
 
-      <v-btn id="locales-activator" color="primary" class="mr-2">
-        {{ getCurrentLocaleOrFallback() }}
-      </v-btn>
+      </div>
+
+      <v-tooltip location="bottom">
+        <template #activator="{ props: activatorProps }">
+          <v-btn v-bind="activatorProps" :icon="mdiPlusBox" class="mr-3" :title="$t('add_project')"
+            @click="addProjectOpen()"></v-btn>
+        </template>
+        <span>{{ $t('add_project') }} </span>
+      </v-tooltip>
+      <v-tooltip location="bottom">
+        <template #activator="{ props: activatorProps }">
+
+          <v-btn v-bind="activatorProps" to="/about" :icon="mdiInformation" class="mr-3" :title="$t('about')"></v-btn>
+        </template>
+        <span>{{ $t('about') }} </span>
+      </v-tooltip>
+      <v-tooltip location="bottom">
+        <template #activator="{ props: activatorProps }">
+          <v-btn v-bind="activatorProps" id="locales-activator" color="primary" class="mr-2">
+            {{ getCurrentLocaleOrFallback() }}
+          </v-btn>
+        </template>
+        <span>{{ t('choose-your-lang') }} </span>
+      </v-tooltip>
+
 
       <template #append>
         <a href="https://epfl.ch" target="_blank">
@@ -92,13 +116,8 @@ function getCurrentLocaleOrFallback() {
     </v-app-bar>
     <v-main>
       <RouterView />
-      <markdown-dialog
-        :button-text="$t('close')"
-        :content-url="`add_project_${locale}.md`"
-        :open="addProjectOpened"
-        width="800px"
-        @dialog-close="addProjectClosed"
-      >
+      <markdown-dialog :button-text="$t('close')" :content-url="`add_project_${locale}.md`" :open="addProjectOpened"
+        width="800px" @dialog-close="addProjectClosed">
       </markdown-dialog>
     </v-main>
   </v-app>
@@ -109,3 +128,14 @@ function getCurrentLocaleOrFallback() {
   border-bottom: 1px solid rgb(var(--v-theme-primary));
 }
 </style>
+
+<i18n>
+  {
+    "en": {
+      "choose-your-lang": "Choose your language",
+    },
+    "fr": {
+      "choose-your-lang": "Choisissez votre langue",
+    }
+  }
+</i18n>
