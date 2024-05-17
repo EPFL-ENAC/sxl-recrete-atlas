@@ -34,8 +34,9 @@ function getSelectValues(key: ProjectKey): (OptionValues)[] {
     const isArray = (value: any): value is string[] => Array.isArray(value);
     const uniqueValuesString: string[] = Array.from(new Set(projectValues))
     .filter(isString);
-    const uniqueValuesStringArray: string[] = Array.from(new Set(projectValues))
-    .filter(isArray).flat();
+    const uniqueValuesStringArray: string[] = Array.from(new Set((Array.from(new Set(projectValues))
+    .filter(isArray).flat())));
+    
     let uniqueValues: string[] = [];
     if (uniqueValuesStringArray.length > 0) {
       uniqueValues = uniqueValuesStringArray;
