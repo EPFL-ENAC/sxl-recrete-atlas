@@ -1,16 +1,13 @@
 <script setup lang="ts">
 import 'maplibre-gl/dist/maplibre-gl.css'
-import '@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css'
 import 'maplibregl-theme-switcher/styles.css'
 import 'maplibregl-scale-legend/styles.css'
 
-// import { geocoderApi } from '@/utils/geocoder'
 import { DivControl } from '@/utils/control'
 import { ThemeSwitcherControl } from 'maplibregl-theme-switcher'
 import type { ThemeDefinition } from 'maplibregl-theme-switcher'
 import { ScaleLegendControl } from 'maplibregl-scale-legend'
 import type { ScaleDefinition } from 'maplibregl-scale-legend'
-// import MaplibreGeocoder from '@maplibre/maplibre-gl-geocoder'
 import {
   AttributionControl,
   FullscreenControl,
@@ -25,7 +22,7 @@ import {
   type LngLatLike,
   type StyleSpecification
 } from 'maplibre-gl'
-import { onMounted, ref, watch, defineModel } from 'vue'
+import { onMounted, ref, watch, defineModel, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import type { SelectableSingleItem } from '@/utils/layerSelector'
 import type { LegendScale, ScaleEntry } from '@/utils/jsonWebMap'
@@ -110,14 +107,6 @@ onMounted(() => {
     compact: false,
     customAttribution: '© <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>, <a href="https://www.epfl.ch/labs/sxl/" target="_blank">SXL</a>'
   }));
-  // map.addControl(
-  //   new MaplibreGeocoder(geocoderApi, {
-  //     maplibregl: { Marker },
-  //     showResultsWhileTyping: true,
-  //     language: locale.value,
-  //   }),
-  //   'top-left',
-  // )
   const positionControl = new DivControl({ id: 'map-position' })
   map.addControl(positionControl, 'bottom-left')
 
@@ -242,16 +231,7 @@ function filterLayers() {
   }
 }
 
-watch(() => projects,
-  () => {
-    // all selected by default
-    updateLayerData(computeData())
-  },
-  { immediate: true, deep:true }
-)
-
-function computeData() {
-  console.log(locale.value)
+const computedData = computed(() => {
   const features = projects.value.filter(x => x?.receiver_coordinates).map((project: Project) => ({
     "type": "Feature",
     "geometry": {
@@ -266,7 +246,22 @@ function computeData() {
         "type": "FeatureCollection",
         "features": features
       };
-}
+})
+
+watch(() => projects,
+  () => {
+    // all selected by default
+    updateLayerData(computedData.value)
+  },
+  { immediate: true, deep:true }
+)
+watch(() => locale.value,
+  () => {
+    // all selected by default
+    updateLayerData(computedData.value)
+  }
+)
+
 
 function updateLayerData(newData:any): void {
   if (map !== undefined && newData !== undefined) {
@@ -281,7 +276,7 @@ function addProjects() {
   if (map !== undefined) {
     map.addSource('buildings', {
       type: 'geojson',
-      data: computeData()
+      data: computedData.value
     });
     // Now that we've added the source, we can create a layer that uses the 'buildings' source.
     map.addLayer({

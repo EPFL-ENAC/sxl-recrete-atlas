@@ -31,3 +31,22 @@ csv({ checkType: true, ignoreEmpty: true, trim: true,
     console.log(`images path updated from 'image.png' to '/images/image.png`)
     console.log(`receiver_coordinates path updated from 'lat, long' to '[long, lat]'`)
   });
+
+
+csv({ checkType: true })
+  .fromFile('./src/assets/data/project_values.csv')
+  .then((jsonObj) => {
+    const path = './src/assets/data/project_values.json';
+    writeFileSync(path, JSON.stringify(jsonObj, null, 2));
+    console.log(`project_values.csv converted successfully to JSON in ${path}`)
+  });
+
+
+  csv({ checkType: true })
+  .fromFile('./src/assets/data/countries.csv')
+  .then((jsonObj) => {
+    const path = './src/assets/data/countries.json';
+    writeFileSync(path, JSON.stringify(jsonObj, null, 2));
+    console.log(`countries.csv converted successfully to JSON in ${path}`)
+  });
+

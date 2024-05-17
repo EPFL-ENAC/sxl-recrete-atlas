@@ -15,27 +15,6 @@
       "tileSize": 256,
       "minzoom": 0,
       "maxzoom": 20
-    },
-    "stadiamaps": {
-      "type": "raster",
-      "tiles": ["https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.{ext}"],
-      "tileSize": 256,
-      "minzoom": 0,
-      "maxzoom": 20
-    },
-    "jawg": {
-      "type": "raster",
-      "tiles": ["https://tile.jawg.io/jawg-light/{z}/{x}/{y}{r}.png?access-token={accessToken}"],
-      "tileSize": 256,
-      "minzoom": 0,
-      "maxzoom": 20
-    },
-    "swissimage": {
-      "type": "raster",
-      "tileSize": 256,
-      "minzoom": 0,
-      "maxzoom": 20,
-      "tiles": ["https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.swissimage-product/default/current/3857/{z}/{x}/{y}.jpeg"]
     }
   },
   "layers": [
@@ -54,7 +33,8 @@
       "paint": {
         "raster-saturation": -0.9,
         "raster-brightness-min": 0.7
-      }
+      },
+      "layout": { "visibility": "none" }
     },
     { "id": "dark",
       "type": "raster",
@@ -63,11 +43,6 @@
         "raster-saturation": -1,
         "raster-brightness-max": 0.2
       },
-      "layout": { "visibility": "none" }
-    },
-    { "id": "swissimage",
-      "type": "raster",
-      "source": "swissimage",
       "layout": { "visibility": "none" }
     }
   ]
