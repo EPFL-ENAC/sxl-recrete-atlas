@@ -26,8 +26,8 @@ const listMode = computed({
   }
 })
 
-const currentRowIndex= ref<number|undefined>(undefined)
-const currentRowItem= ref<Project|undefined>(undefined)
+const currentRowIndex = ref<number | undefined>(undefined)
+const currentRowItem = ref<Project | undefined>(undefined)
 
 const projects = storeToRefs(useProjectsStore()).projects
 
@@ -35,7 +35,7 @@ const data = projects
 const drawerRail = ref(false)
 
 const isProjectDialogOpen = ref(route.query?.projectId !== undefined)
-const projectSelectedId = ref<number|undefined>(route?.query?.projectId ? parseInt(route.query.projectId as string, 10) : undefined)
+const projectSelectedId = ref<number | undefined>(route?.query?.projectId ? parseInt(route.query.projectId as string, 10) : undefined)
 const projectSelected = ref<any>(projects.value?.find((x: any) => x._id === projectSelectedId.value))
 
 const selectProject = (project: any) => {
@@ -49,7 +49,7 @@ const projectId = computed({
     return route.query.projectId ?? ''
   },
   set(projectId) {
-    router.replace({query: {...route.query, projectId } })
+    router.replace({ query: { ...route.query, projectId } })
   }
 })
 
@@ -63,12 +63,12 @@ const headers = computed<ListViewHeaders[]>({
   get() {
     // it works for name_en and name_fr because keys.json has the same translation for both languages
     return keys.filter(x => x["List View"] === 'oui').map(x => ({
-        title: t(x.key),
-        value: x.key as string,
-        sortable: false
-      }))
+      title: t(x.key),
+      value: x.key as string,
+      sortable: false
+    }))
   },
-  set() {}
+  set() { }
 });
 
 
@@ -89,12 +89,7 @@ const mouseLeaveRow = () => {
 </script>
 
 <template>
-  <v-navigation-drawer
-    :rail="drawerRail"
-    permanent
-    :width="mobile ? 300 : 450"
-    @click="drawerRail = false"
-  >
+  <v-navigation-drawer :rail="drawerRail" permanent :width="mobile ? 300 : 450" @click="drawerRail = false">
     <v-list density="compact" nav>
       <v-list-item :prepend-icon="drawerRail ? mdiChevronRight : undefined">
         <template #append>
@@ -106,34 +101,53 @@ const mouseLeaveRow = () => {
   </v-navigation-drawer>
   <v-container v-if="listMode === 'list'" class="fill-height pa-0 align-baseline" fluid>
 
-    <v-tooltip
-        v-if="currentRowIndex !== undefined"
-        :activator="`.hovered-${currentRowIndex}`"
-        location="top"
-      >
-    {{ currentRowItem?.[`description_${locale as ProjectLang}`] }}
-  </v-tooltip>
+    <v-tooltip v-if="currentRowIndex !== undefined"
+      :width="500"
+      :open-delay="300"
+      :close-delay="300"
+      :activator="`.hovered-${currentRowIndex}`" location="top">
+      {{ currentRowItem?.[`description_${locale as ProjectLang}`] }}
+    </v-tooltip>
     <v-data-table
-      :items="data"
-      :headers="headers"
-      :items-per-page="data.length"
-      :hover="true"
-      :row-props="row => ({ class: `hovered-${row.index}` })"
-      @click:row="onRowClicked"
-      @mouseover:row="mouseOverRow"
-      @mouseleave:row="mouseLeaveRow"
-
-    >
+      :items="data" :headers="headers" :items-per-page="data.length" :hover="true"
+      :row-props="row => ({ class: `hovered-${row.index}` })" @click:row="onRowClicked" @mouseover:row="mouseOverRow"
+      @mouseleave:row="mouseLeaveRow">
+      <template #[`item.main_concrete_type`]="{ item }">
+        <ul class="comma-separated-list">
+          <li v-for="(concrete_type, $key) in item.main_concrete_type" :key="$key">{{ $t(concrete_type) }}</li>
+        </ul>
+      </template>
+      <template #[`item.donor_element_type`]="{ item }">
+        <ul class="comma-separated-list">
+          <li v-for="(el, $key) in item.donor_element_type" :key="$key">{{ $t(el) }}</li>
+        </ul>
+      </template>
+      <template #[`item.receiver_element_type`]="{ item }">
+        <ul class="comma-separated-list">
+          <li v-for="(el, $key) in item.receiver_element_type" :key="$key">{{ $t(el) }}</li>
+        </ul>
+      </template>
+      <template #[`item.donor_use`]="{ item }">
+        <ul class="comma-separated-list">
+          <li v-for="(el, $key) in item.donor_use" :key="$key">{{ $t(el) }}</li>
+        </ul>
+      </template>
+      <template #[`item.receiver_use`]="{ item }">
+        <ul class="comma-separated-list">
+          <li v-for="(el, $key) in item.receiver_use" :key="$key">{{ $t(el) }}</li>
+        </ul>
+      </template>
+      <template #[`item.receiver_country`]="{ item }">
+        {{ $t(item.receiver_country) }}
+      </template>
+      <template #[`item.name_en`]="{ item }">
+        {{ item[`name_${locale as ProjectLang}`] }}
+      </template>
       <template #bottom />
     </v-data-table>
   </v-container>
   <v-container v-if="listMode === 'grid'" class="fill-height pa-0 grid-list" fluid>
-    <project-card
-      v-for="(item, $key) in data"
-      :key="$key"
-      :item="item"
-      @click="() => selectProject(item)"
-    />
+    <project-card v-for="(item, $key) in data" :key="$key" :item="item" @click="() => selectProject(item)" />
   </v-container>
   <project-dialog v-model="isProjectDialogOpen" :project="projectSelected" />
 </template>
@@ -145,5 +159,19 @@ const mouseLeaveRow = () => {
   grid-template-columns: repeat(auto-fill, minmax(var(--card-size), 1fr));
   grid-template-rows: repeat(auto-fill, minmax(var(--card-size), var(--card-size)));
   gap: 1rem;
+}
+
+.comma-separated-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  li {
+    display: inline;
+  }
+
+  li:not(:last-child)::after {
+    content: ", ";
+  }
 }
 </style>
