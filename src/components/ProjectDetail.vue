@@ -133,7 +133,7 @@
     </v-card-text>
     </v-card-item>
     <template #actions>
-      <v-btn class="ml-auto" text="Close" @click="isDialogActive = false"></v-btn>
+      <v-btn class="ml-auto" text="Close" @click="closeDialog"></v-btn>
     </template>
   </v-card>
 </template>
@@ -144,6 +144,9 @@ import { computed, defineModel } from 'vue';
 import { defaultImage } from '@/utils/default';
 import type { Project, ProjectLang } from '@/types/Project';
 import { useI18n } from 'vue-i18n'
+import { useRoute, useRouter } from 'vue-router';
+const route = useRoute()
+const router = useRouter()
 const { t, locale } = useI18n()
 
 const isDialogActive = defineModel({
@@ -155,6 +158,21 @@ const props = defineProps<{
   project: Project
 }>()
 
+
+
+const projectId = computed({
+  get() {
+    return route.query.projectId ?? ''
+  },
+  set(projectId) {
+    router.replace({query: {...route.query, projectId: projectId === '' ? undefined : projectId } })
+  }
+})
+
+const closeDialog = () => {
+  isDialogActive.value = false
+  projectId.value = '';
+}
 
 const project_construction_year = computed(() => {
   return new Date().getFullYear() - (props?.project.component_age ?? 0);
