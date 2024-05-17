@@ -14,14 +14,13 @@
     "test:unit": "vitest",
     "build-only": "vite build",
     "pretype-check": "npm run convert",
-    "type-check": "vue-tsc --noEmit -p tsconfig.vitest.json --composite false",
+    "type-check": "vue-tsc --noEmit -p tsconfig.vitest.json",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
     "format": "prettier --write src/",
     "schema": "typescript-json-schema --esModuleInterop -o schema/parameters.schema.json src/utils/*.ts Parameters",
     "install-hooks": "lefthook install"
   },
   "dependencies": {
-    "@maplibre/maplibre-gl-geocoder": "^1.5.0",
     "@types/dompurify": "^3.0.2",
     "@types/marked": "^5.0.0",
     "axios": "^1.6.8",

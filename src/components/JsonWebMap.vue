@@ -1,13 +1,11 @@
 <script setup lang="ts">
-import type LayerSelector from '@/components/LayerSelector.vue'
 import MapLibreMap from '@/components/MapLibreMap.vue'
 import ProjectFilters from '@/components/ProjectFilters.vue'
-import type { LegendScale, Parameters } from '@/utils/jsonWebMap'
+import type { Parameters } from '@/utils/jsonWebMap'
 import type {
   SelectableGroupItem,
   SelectableItem,
-  SelectableSingleItem,
-  SpeciesItem
+  SelectableSingleItem
 } from '@/utils/layerSelector'
 import { mdiChevronLeft, mdiChevronRight, mdiClose } from '@mdi/js'
 import axios from 'axios'
@@ -15,8 +13,7 @@ import type { StyleSpecification } from 'maplibre-gl'
 import { computed, defineModel, onMounted, ref, shallowRef, triggerRef, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useDisplay } from 'vuetify'
-// @ts-ignore
-import { useCookies } from 'vue3-cookies'
+import type { Project } from '@/types/Project'
 
 const props = defineProps<{
   styleUrl: string
@@ -26,10 +23,8 @@ const props = defineProps<{
 }>()
 
 const { t, locale } = useI18n({ useScope: 'global' })
-const { cookies } = useCookies()
 
 const map = ref<InstanceType<typeof MapLibreMap>>()
-const selector = ref<InstanceType<typeof LayerSelector>>()
 const selectedLayerIds = ref<string[]>([])
 const style = shallowRef<StyleSpecification>()
 const parameters = shallowRef<Parameters>()
@@ -43,18 +38,16 @@ const docId = ref<string>()
 const docHtml = ref<any>({})
 const { mobile } = useDisplay()
 const scale = ref<string>()
-const showAllSpecies = ref<boolean>(true)
 
-const species = ref<SpeciesItem[]>([])
 
 const isProjectDialogOpen = defineModel('isProjectDialogOpen', {
   type: Boolean,
   default: false
 })
 
-const project = defineModel('project', {
-  type: Boolean,
-  default: false
+const project = defineModel<Project, string >('project', {
+  default: undefined,
+  type: Object,
 })
 
 onMounted(() => {
@@ -106,13 +99,7 @@ const selectedItemWithLegend = computed(() =>
     .pop()
 )
 const extendedSelectedLayerIds = computed<string[]>(() => {
-  const addtionalIds: string[] = showAllSpecies.value
-    ? singleItems.value
-        .filter(
-          (item: SelectableSingleItem) => item.ids && selectedLayerIds.value.includes(item.id)
-        )
-        .flatMap((item: SelectableSingleItem) => item.ids)
-    : []
+  const addtionalIds: string[] = []
   const measureLayerIds: string[] = selectedLayerIds.value.map((id) => `${id}_${scale.value}`)
   const ids: string[] = [selectedLayerIds.value, measureLayerIds, addtionalIds]
     .flat()
@@ -148,11 +135,6 @@ watch(
   }
 )
 
-function getSpecie(sel: SelectableSingleItem | undefined) {
-  return sel ? species.value.filter((item) => item.id === sel.id).pop() : undefined
-}
-
-
 function showDocumentation(id: string) {
   const lid = `${id}_${locale.value}`
   if (docId.value === lid) {
@@ -166,11 +148,6 @@ function showDocumentation(id: string) {
     docId.value = lid
     drawerRight.value = true
   }
-}
-
-function selectSpecie(id: string) {
-  const tokens = id.split(':')
-  selector.value?.update(tokens[0], tokens[1])
 }
 
 </script>
@@ -223,6 +200,8 @@ function selectSpecie(id: string) {
       <v-col cols="12" class="py-0">
         <MapLibreMap
           ref="map"
+          v-model:isProjectDialogOpen="isProjectDialogOpen"
+          v-model:project="project"
           :center="parameters?.center"
           :zoom="parameters?.zoom"
           :max-zoom="parameters?.maxZoom"
@@ -235,9 +214,6 @@ function selectSpecie(id: string) {
           :popup-layer-ids="parameters?.popupLayerIds"
           :selected-scale-id="scale"
           @documentation="(type) => showDocumentation(type)"
-          @specie="(specie) => selectSpecie(specie)"
-          v-model:isProjectDialogOpen="isProjectDialogOpen"
-          v-model:project="project"
         />
       </v-col>
     </v-row>
