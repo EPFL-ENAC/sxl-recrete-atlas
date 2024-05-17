@@ -5,8 +5,8 @@ export interface Project {
   description_en: string;
   name_fr: string;
   name_en: string;
-  main_concrete_type: string;
-  main_concrete_type_uncertainty?: number;
+  main_concrete_type: string[];
+  main_concrete_type_uncertainty?: number[];
   receiver_country: string;
   receiver_city: string;
   receiver_coordinates?: number[];
