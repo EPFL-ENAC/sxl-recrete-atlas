@@ -227,7 +227,7 @@ function filterLayers() {
   }
 }
 
-const computedData = computed(() => {
+const computedData = computed<GeoJSON.GeoJSON | string>(() => {
   const features = projects.value.filter(x => x?.receiver_coordinates).map((project: Project) => ({
     "type": "Feature",
     "geometry": {
@@ -241,7 +241,7 @@ const computedData = computed(() => {
   return {
         "type": "FeatureCollection",
         "features": features
-      };
+      } as GeoJSON.GeoJSON;
 })
 
 watch(() => projects,
@@ -259,7 +259,7 @@ watch(() => locale.value,
 )
 
 
-function updateLayerData(newData:any): void {
+function updateLayerData(newData: GeoJSON.GeoJSON | string): void {
   if (map !== undefined && newData !== undefined) {
     const source: GeoJSONSource = map.getSource('buildings') as GeoJSONSource;
     source?.setData(newData);
@@ -289,7 +289,7 @@ function addProjects() {
       isProjectDialogOpen.value = true;
       project.value = projects.value.find(x => x[`name_${locale.value as ProjectLang}`] === e.features?.[0].properties[`name_${locale.value as ProjectLang}`]);
     });
-    const popups: any[] = [];
+    const popups: Popup[] = [];
     map.on('mouseenter', 'buildings-layer', function (e) {
       if (map !== undefined) {
         const a = new Popup({
@@ -297,7 +297,7 @@ function addProjects() {
           closeOnClick: false,
           anchor: 'bottom'
         })
-        .setLngLat((e.features?.[0].geometry as any)?.coordinates as LngLatLike)
+        .setLngLat((e.features?.[0].geometry as GeoJSON.Point)?.coordinates as LngLatLike)
         .setHTML('<h3>' + e.features?.[0].properties[`name_${locale.value as ProjectLang}`] + '</h3>')
         .addTo(map);
         popups.push(a);

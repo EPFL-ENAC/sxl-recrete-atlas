@@ -30,8 +30,8 @@ interface OptionValues {
 }
 function getSelectValues(key: ProjectKey): (OptionValues)[] {
     const projectValues = projects.map((project: Project) => project[key]);
-    const isString = (value: any): value is string => typeof value === 'string';
-    const isArray = (value: any): value is string[] => Array.isArray(value);
+    const isString = (value: unknown): value is string => typeof value === 'string';
+    const isArray = (value: unknown): value is string[] => Array.isArray(value);
     const uniqueValuesString: string[] = Array.from(new Set(projectValues))
     .filter(isString);
     const uniqueValuesStringArray: string[] = Array.from(new Set((Array.from(new Set(projectValues))
