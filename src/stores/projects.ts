@@ -6,7 +6,7 @@ import data from '@/assets/data/data.json'
 import { useFiltersStore } from './filters'
 import { storeToRefs } from 'pinia'
 import { newFilter } from '@/stores/filters';
-import type { Filter, FilterKey, TextFilter } from '@/types/Filter'
+import type { Filter, FilterKey } from '@/types/Filter'
 import { useI18n } from 'vue-i18n'
 
 export interface Filters extends Record<ProjectKey, string|null|undefined|boolean> {

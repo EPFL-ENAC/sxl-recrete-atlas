@@ -67,10 +67,6 @@ const props = withDefaults(
     selectedScaleId: undefined,
   }
 )
-const emit = defineEmits<{
-  (e: 'documentation', value: string): void
-  (e: 'specie', value: string): void
-}>()
 
 const { t, locale } = useI18n({ useScope: 'global' })
 

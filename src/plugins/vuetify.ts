@@ -1,6 +1,5 @@
 import { createVuetify } from 'vuetify'
 import { aliases, mdi } from 'vuetify/iconsets/mdi-svg'
-import { mdiAbacus } from '@mdi/js'
 import colors from 'vuetify/lib/util/colors'
 import 'vuetify/styles'
 import { useCookies } from 'vue3-cookies'

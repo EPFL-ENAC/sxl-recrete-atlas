@@ -12,6 +12,8 @@ import { useDisplay } from 'vuetify'
 import keys from '@/assets/data/keys.json'
 import type { Project, ProjectLang } from '@/types/Project'
 import { useRoute } from 'vue-router'
+import { defaultAppHeaderHeight } from '@/utils/default'
+import type { VDataTable } from 'vuetify/components/VDataTable'
 
 const route = useRoute()
 const { t, locale } = useI18n({ useScope: 'global' })
@@ -36,12 +38,12 @@ const drawerRail = ref(false)
 
 const isProjectDialogOpen = ref(route.query?.projectId !== undefined)
 const projectSelectedId = ref<number | undefined>(route?.query?.projectId ? parseInt(route.query.projectId as string, 10) : undefined)
-const projectSelected = ref<any>(projects.value?.find((x: any) => x._id === projectSelectedId.value))
+const projectSelected = ref<Project|undefined>(projects.value?.find((x: Project) => x._id === projectSelectedId.value))
 
-const selectProject = (project: any) => {
+const selectProject = (project: Project) => {
   projectSelected.value = project
   isProjectDialogOpen.value = true
-  projectId.value = project._id
+  projectId.value = String(project._id)
 }
 
 const projectId = computed({
@@ -68,17 +70,21 @@ const headers = computed<ListViewHeaders[]>({
       sortable: false
     }))
   },
-  set() { }
+  set() { return void 0}
 });
 
+interface ProjectRow<T> {
+  index: number
+  item: T
+}
 
-const onRowClicked = (ref: any, row: any) => {
+const onRowClicked = (ref: unknown, row: ProjectRow<Project>) => {
   selectProject(row.item)
 }
 
 
 
-const mouseOverRow = (element: any, row: any) => {
+const mouseOverRow = (element: unknown, row: ProjectRow<Project>) => {
   currentRowIndex.value = row.index;
   currentRowItem.value = row.item;
 }
@@ -86,6 +92,8 @@ const mouseLeaveRow = () => {
   currentRowIndex.value = undefined;
   currentRowItem.value = undefined;
 }
+const appHeaderHeight = ref(`${defaultAppHeaderHeight}px`);
+
 </script>
 
 <template>
@@ -101,11 +109,13 @@ const mouseLeaveRow = () => {
   </v-navigation-drawer>
   <v-container v-if="listMode === 'list'" class="fill-height pa-0 align-baseline" fluid>
 
-    <v-tooltip v-if="currentRowIndex !== undefined" :width="500" :open-delay="300" :close-delay="300"
+    <v-tooltip
+v-if="currentRowIndex !== undefined" :width="500" :open-delay="300" :close-delay="300"
       :activator="`.hovered-${currentRowIndex}`" location="top">
       {{ currentRowItem?.[`description_${locale as ProjectLang}`] }}
     </v-tooltip>
-    <v-data-table  style="height: calc(100vh - 69px)" :items="data" :headers="headers" :items-per-page="data.length" :hover="true" :fixed-header="true"
+    <v-data-table
+      class="recrete-list-data-table" :items="data" :headers="headers" :items-per-page="data.length" :hover="true" :fixed-header="true"
       :loading="data.length === 0" :row-props="row => ({ class: `hovered-${row.index}` })" @click:row="onRowClicked"
       @mouseover:row="mouseOverRow" @mouseleave:row="mouseLeaveRow">
       <template #[`item.main_concrete_type`]="{ item }">
@@ -169,5 +179,8 @@ const mouseLeaveRow = () => {
   li:not(:last-child)::after {
     content: ", ";
   }
+}
+.recrete-list-data-table {
+  height: calc(100vh - v-bind(appHeaderHeight))
 }
 </style>

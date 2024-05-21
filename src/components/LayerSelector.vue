@@ -22,7 +22,7 @@ defineExpose({
   update
 })
 
-const { t, locale } = useI18n({ useScope: 'global' })
+const { locale } = useI18n({ useScope: 'global' })
 
 const genre = ref<string>()
 const tab = ref<string>()
