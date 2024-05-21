@@ -32,10 +32,10 @@ export function newFilter(): Filter {
 }
 
 export const useFiltersStore = defineStore('filters', () => {
-  function valueToLocalStorage(value: any): void{
+  function valueToLocalStorage(value: Filter): void{
     localStorage.setItem("pinia_filters", JSON.stringify(value));
   }
-  function localStorageToValue(): any {
+  function localStorageToValue(): Filter {
     const pinia_filters = localStorage.getItem("pinia_filters")
     return pinia_filters ? JSON.parse(pinia_filters) : newFilter()
   }
