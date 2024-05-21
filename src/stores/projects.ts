@@ -9,8 +9,9 @@ import { newFilter } from '@/stores/filters';
 import type { Filter, FilterKey } from '@/types/Filter'
 import { useI18n } from 'vue-i18n'
 
-export interface Filters extends Record<ProjectKey, string|null|undefined|boolean> {
-}
+export type FilterValue = string|null|undefined|boolean;
+export type Filters = Record<ProjectKey, FilterValue>
+
 
 export const useProjectsStore = defineStore('projects', () => {
 
@@ -23,7 +24,7 @@ export const useProjectsStore = defineStore('projects', () => {
       const defaultFilter: Filter = newFilter()
       return (data as Project[]).filter((project: Project) => {
         return filterKeys.every((key: ProjectKey|FilterKey) => {
-          const filterValue = (filters as any).value[key as ProjectKey]
+          const filterValue: FilterValue = filters.value[key as FilterKey] as FilterValue
           let projectValue = project[key as ProjectKey]
           if (key === "name") {
             const projectName: string = project[`${key}_${locale.value as ProjectLang}` as ('name_en'| 'name_fr')];
@@ -85,7 +86,9 @@ export const useProjectsStore = defineStore('projects', () => {
         })
       })
     },
-    set: () => {}
+    set: () => {
+      return;
+    }
   })
 
 

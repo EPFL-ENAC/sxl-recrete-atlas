@@ -11,6 +11,7 @@ v-model="isDialogActive" max-width="80%" height="80%"
 
 <script setup lang="ts">
 import ProjectDetail from '@/components/ProjectDetail.vue';
+import type { Project } from '@/types/Project';
 import { computed, defineModel } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 const route = useRoute()
@@ -22,7 +23,7 @@ const isDialogActive = defineModel({
 })
 
 const props = defineProps<{
-  project: any
+  project: Project|undefined
 }>()
 
 

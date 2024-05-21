@@ -1,5 +1,5 @@
 <template>
-  <v-card>
+  <v-card v-if="props.project">
     <v-card-item :prepend-icon="mdiDomain">
       <v-card-title class="d-flex">
         <span>{{ props.project[`name_${locale as ProjectLang}`] }}</span>
@@ -121,7 +121,7 @@
               </v-tooltip>
             </v-row>
 
-            <v-row v-if="$props.project.other">
+            <v-row v-if="props.project?.other">
               <b class="key">{{ $t("other") }}:</b> {{ props.project.other }}
             </v-row>
 
@@ -166,7 +166,7 @@ const isDialogActive = defineModel({
 })
 
 const props = defineProps<{
-  project: Project
+  project: Project  |undefined
 }>()
 
 
@@ -186,7 +186,7 @@ const closeDialog = () => {
 }
 
 const project_construction_year = computed(() => {
-  return (props?.project.start_date_year ?? 0) - (props?.project.component_age ?? 0);
+  return (props?.project?.start_date_year ?? 0) - (props?.project?.component_age ?? 0);
 })
 </script>
 

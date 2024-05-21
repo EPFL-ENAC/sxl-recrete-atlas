@@ -33,7 +33,6 @@ export type Filter = SelectFilter & RangeFilter & BooleanFilter & TextFilter;
 
 // todo should be extension of Project key somehow
 export type FilterKey = keyof Filter;
-
 export interface Key {
   key: string;
   english: string;
