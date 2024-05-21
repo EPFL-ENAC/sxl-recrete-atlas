@@ -14,6 +14,7 @@ import { RouterView } from 'vue-router'
 import { useCookies } from 'vue3-cookies'
 import { useLocale } from 'vuetify'
 import epflLogoUrl from '/EPFL_Logo_184X53.svg'
+import { defaultAppHeaderHeight } from '@/utils/default'
 
 const { current } = useLocale()
 const { locale } = useI18n({ useScope: 'global'})
@@ -41,11 +42,13 @@ function getCurrentLocaleOrFallback() {
   return ['en', 'fr'].includes(current.value) ? current.value : 'en'
 }
 
+const appHeaderHeight = ref(defaultAppHeaderHeight);
+
 </script>
 
 <template>
   <v-app>
-    <v-app-bar flat height="68">
+    <v-app-bar flat :height="appHeaderHeight">
       <v-app-bar-title>
         <div class="text-h5">{{ $t('app_title') }}</div>
         <div class="text-subtitle-2">{{ $t('app_subtitle') }}</div>
@@ -62,7 +65,8 @@ function getCurrentLocaleOrFallback() {
       <div class="flex-grow-1 main-group-btn">
         <v-tooltip location="bottom">
           <template #activator="{ props: activatorProps }">
-            <v-btn v-bind="activatorProps" :to="{ name: `list`, query: { view: 'list' } }"
+            <v-btn
+v-bind="activatorProps" :to="{ name: `list`, query: { view: 'list' } }"
               :active="$route.query.view === 'list'" :icon="mdiListBox" class="mr-3" :title="$t('list')"></v-btn>
           </template>
           <template #default>
@@ -71,7 +75,8 @@ function getCurrentLocaleOrFallback() {
         </v-tooltip>
         <v-tooltip location="bottom">
           <template #activator="{ props: activatorProps }">
-            <v-btn v-bind="activatorProps" :to="{ name: `list`, query: { view: 'grid' } }"
+            <v-btn
+v-bind="activatorProps" :to="{ name: `list`, query: { view: 'grid' } }"
               :active="$route.query.view === 'grid'" :icon="mdiGrid" class="mr-3" :title="$t('grid')"></v-btn>
           </template>
           <span>{{ $t('grid') }} </span>
@@ -79,7 +84,8 @@ function getCurrentLocaleOrFallback() {
 
         <v-tooltip location="bottom">
           <template #activator="{ props: activatorProps }">
-            <v-btn v-bind="activatorProps" :to="{ name: `home` }" :icon="mdiMapOutline" class="mr-3"
+            <v-btn
+v-bind="activatorProps" :to="{ name: `home` }" :icon="mdiMapOutline" class="mr-3"
               :title="$t('map')"></v-btn>
           </template>
           <span>{{ $t('map') }} </span>
@@ -110,7 +116,7 @@ function getCurrentLocaleOrFallback() {
       </v-tooltip>
       <v-tooltip location="bottom">
         <template #activator="{ props: activatorProps }">
-          <v-btn size="small" v-bind="activatorProps" id="locales-activator" color="primary" class="mr-2">
+          <v-btn v-bind="activatorProps" id="locales-activator" size="small" color="primary" class="mr-2">
             {{ getCurrentLocaleOrFallback() }}
           </v-btn>
         </template>
@@ -127,7 +133,8 @@ function getCurrentLocaleOrFallback() {
     </v-app-bar>
     <v-main>
       <RouterView />
-      <markdown-dialog :button-text="$t('close')" :content-url="`add_project_${locale}.md`" :open="addProjectOpened"
+      <markdown-dialog
+:button-text="$t('close')" :content-url="`add_project_${locale}.md`" :open="addProjectOpened"
         width="800px" @dialog-close="addProjectClosed">
       </markdown-dialog>
     </v-main>

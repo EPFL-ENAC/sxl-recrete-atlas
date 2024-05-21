@@ -4,17 +4,17 @@ import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vite'
 import vuetify from 'vite-plugin-vuetify'
 import { resolve, dirname } from 'node:path'
-import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite'
+import { default as VueI18nPlugin } from '@intlify/unplugin-vue-i18n/vite';
+import type { Plugin } from 'vite';
 
-
-// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [vue(), vuetify(),
     VueI18nPlugin({
     /* options */
     // locale messages resource pre-compile option
     include: resolve(dirname(fileURLToPath(import.meta.url)), './src/locales/**'),
-  }),],
+  }) as Plugin,
+  ],
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))

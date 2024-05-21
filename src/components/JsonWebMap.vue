@@ -22,7 +22,7 @@ const props = defineProps<{
   martinUrl: string
 }>()
 
-const { t, locale } = useI18n({ useScope: 'global' })
+const { t } = useI18n({ useScope: 'global' })
 
 const map = ref<InstanceType<typeof MapLibreMap>>()
 const selectedLayerIds = ref<string[]>([])
@@ -34,8 +34,6 @@ const legendDialogImageSrc = ref<string>()
 const drawerRail = ref(false)
 const drawerRight = ref(false)
 const drawerHtml = ref('')
-const docId = ref<string>()
-const docHtml = ref<any>({})
 const { mobile } = useDisplay()
 const scale = ref<string>()
 
@@ -135,24 +133,11 @@ watch(
   }
 )
 
-function showDocumentation(id: string) {
-  const lid = `${id}_${locale.value}`
-  if (docId.value === lid) {
-    drawerRight.value = !drawerRight.value
-  } else {
-    if (lid in docHtml.value) {
-      drawerHtml.value = docHtml.value[lid]
-    } else {
-      drawerHtml.value = `Ooops, there is no documentation about '${id}'`
-    }
-    docId.value = lid
-    drawerRight.value = true
-  }
-}
-
 </script>
 
 <template>
+  <!-- eslint-disable vue/no-v-text-v-html-on-component -->
+  <!-- eslint-disable vue/no-v-html -->
   <v-navigation-drawer
     :rail="drawerRail"
     permanent
@@ -190,7 +175,8 @@ function showDocumentation(id: string) {
       </v-list-item>
       <v-list-item>
         <v-card>
-          <v-card-text v-html="drawerHtml" class="marked"> </v-card-text>
+          // eslint-disable-next-line vue/no-v-html
+          <v-card-text class="marked" v-html="drawerHtml"> </v-card-text>
         </v-card>
       </v-list-item>
     </v-list>
@@ -213,7 +199,6 @@ function showDocumentation(id: string) {
           :selected-layer-ids="extendedSelectedLayerIds"
           :popup-layer-ids="parameters?.popupLayerIds"
           :selected-scale-id="scale"
-          @documentation="(type) => showDocumentation(type)"
         />
       </v-col>
     </v-row>
