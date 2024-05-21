@@ -35,11 +35,11 @@ watch(() => props.open, (open) => {
 
 watch(() => props.contentUrl, (contentUrl) => {
   axios
-    .get<string>(contentUrl)
-    .then((response) => response.data)
-    .then((data) => {
-      contentHtml.value = DOMPurify.sanitize(marked.parse(data, {headerIds: false, mangle: false}))
-    })
+  .get<string>(contentUrl)
+  .then((response) => response.data)
+  .then((data) => {
+    contentHtml.value = DOMPurify.sanitize(marked.parse(data, {headerIds: false, mangle: false}))
+  })
 })
 
 onMounted(() => {
@@ -47,11 +47,11 @@ onMounted(() => {
     dialog.value = true;
   }
   axios
-    .get<string>(props.contentUrl)
-    .then((response) => response.data)
-    .then((data) => {
-      contentHtml.value = DOMPurify.sanitize(marked.parse(data, {headerIds: false, mangle: false}))
-    })
+  .get<string>(props.contentUrl)
+  .then((response) => response.data)
+  .then((data) => {
+    contentHtml.value = DOMPurify.sanitize(marked.parse(data, {headerIds: false, mangle: false}))
+  })
 })
 
 function close() {
@@ -61,12 +61,13 @@ function close() {
 </script>
 
 <template>
+  <!-- eslint-disable vue/no-v-html -->
   <v-dialog v-model="dialog" :width="width" :fullscreen="mobile" @update:model-value="emit('dialogClose')">
     <v-card class="text-justify">
       <v-card-title v-if="name">{{ name }}</v-card-title>
       <v-card-text>
         <br v-if="!name" />
-        <div v-html="contentHtml" class="marked"></div>
+        <div class="marked" v-html="contentHtml"></div>
       </v-card-text>
       <v-card-actions class="justify-end">
         <v-btn v-if="buttonText" @click="close">

@@ -2,10 +2,16 @@
   "extends": "@tsconfig/node20/tsconfig.json",
   "include": ["vite.config.*", "vitest.config.*", "cypress.config.*", "playwright.config.*"],
   "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "strict": true,
+    "jsx": "preserve",
     "esModuleInterop": true,
-    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
     "composite": true,
-    "types": ["node"],
+    "types": ["node", "vite/client"],
     "baseUrl": "./",
     "paths": {
       "@/*": ["src/*"]
