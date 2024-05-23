@@ -15,6 +15,10 @@ import { useI18n } from 'vue-i18n'
 import { useDisplay } from 'vuetify'
 import type { Project } from '@/types/Project'
 
+import { useProjectsStore } from '@/stores/projects'
+import BarProjectEchart from './BarProjectEchart.vue'
+import { storeToRefs } from 'pinia'
+
 const props = defineProps<{
   styleUrl: string
   parametersUrl: string
@@ -133,6 +137,8 @@ watch(
   }
 )
 
+const projects = storeToRefs(useProjectsStore()).projects
+
 </script>
 
 <template>
@@ -168,7 +174,7 @@ watch(
     </v-list>
 
     <v-sheet v-if="!drawerRail" class="pa-0">
-      <BarProjectEchart :projects="data" />
+      <BarProjectEchart :projects="projects" />
     </v-sheet>
 
   </v-navigation-drawer>
