@@ -239,7 +239,7 @@ const projects = storeToRefs(useProjectsStore()).projects
   opacity: 0.6;
 }
 .permanent-drawer {
-  :deep(.v-navigation-drawer__content) {
+  .v-navigation-drawer__content {
     z-index: 1000;
     display: grid;
     grid-template-rows: auto 200px;
