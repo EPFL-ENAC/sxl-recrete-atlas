@@ -51,14 +51,6 @@ csv({ checkType: true })
 
 
   csv({ checkType: true })
-  .fromFile('./src/assets/data/countries.csv')
-  .then((jsonObj) => {
-    const path = './src/assets/data/countries.json';
-    writeFileSync(path, JSON.stringify(jsonObj, null, 2));
-    console.log(`countries.csv converted successfully to JSON in ${path}`)
-  });
-
-  csv({ checkType: true })
   .fromFile('./src/assets/data/references.csv')
   .then((jsonObj) => {
     const path = './src/assets/data/references.json';

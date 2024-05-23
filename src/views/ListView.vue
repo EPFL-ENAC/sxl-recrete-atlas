@@ -2,6 +2,7 @@
 import ProjectCard from '@/components/ProjectCard.vue'
 import ProjectDialog from '@/components/ProjectDialog.vue'
 import ProjectFilters from '@/components/ProjectFilters.vue'
+import BarProjectEchart from '@/components/BarProjectEchart.vue'
 import { useProjectsStore } from '@/stores/projects'
 import { mdiChevronLeft, mdiChevronRight } from '@mdi/js'
 import { storeToRefs } from 'pinia'
@@ -38,7 +39,7 @@ const drawerRail = ref(false)
 
 const isProjectDialogOpen = ref(route.query?.projectId !== undefined)
 const projectSelectedId = ref<number | undefined>(route?.query?.projectId ? parseInt(route.query.projectId as string, 10) : undefined)
-const projectSelected = ref<Project|undefined>(projects.value?.find((x: Project) => x._id === projectSelectedId.value))
+const projectSelected = ref<Project | undefined>(projects.value?.find((x: Project) => x._id === projectSelectedId.value))
 
 const selectProject = (project: Project) => {
   projectSelected.value = project
@@ -70,7 +71,7 @@ const headers = computed<ListViewHeaders[]>({
       sortable: false
     }))
   },
-  set() { return void 0}
+  set() { return void 0 }
 });
 
 interface ProjectRow<T> {
@@ -97,7 +98,9 @@ const appHeaderHeight = ref(`${defaultAppHeaderHeight}px`);
 </script>
 
 <template>
-  <v-navigation-drawer :rail="drawerRail" permanent :width="mobile ? 300 : 450" @click="drawerRail = false">
+  <v-navigation-drawer
+:rail="drawerRail" permanent :width="mobile ? 300 : 450" class="permanent-drawer"
+    @click="drawerRail = false">
     <v-list density="compact" nav>
       <v-list-item :prepend-icon="drawerRail ? mdiChevronRight : undefined">
         <template #append>
@@ -106,6 +109,10 @@ const appHeaderHeight = ref(`${defaultAppHeaderHeight}px`);
       </v-list-item>
       <project-filters :is-visible="!drawerRail" />
     </v-list>
+    <v-sheet v-if="!drawerRail" class="pa-0">
+      <BarProjectEchart :projects="data" />
+    </v-sheet>
+
   </v-navigation-drawer>
   <v-container v-if="listMode === 'list'" class="fill-height pa-0 align-baseline" fluid>
 
@@ -115,9 +122,10 @@ v-if="currentRowIndex !== undefined" :width="500" :open-delay="300" :close-delay
       {{ currentRowItem?.[`description_${locale as ProjectLang}`] }}
     </v-tooltip>
     <v-data-table
-      class="recrete-list-data-table" :items="data" :headers="headers" :items-per-page="data.length" :hover="true" :fixed-header="true"
-      :loading="data.length === 0" :row-props="row => ({ class: `hovered-${row.index}` })" @click:row="onRowClicked"
-      @mouseover:row="mouseOverRow" @mouseleave:row="mouseLeaveRow">
+class="recrete-list-data-table" :items="data" :headers="headers" :items-per-page="data.length"
+      :hover="true" :fixed-header="true" :loading="data.length === 0"
+      :row-props="row => ({ class: `hovered-${row.index}` })" @click:row="onRowClicked" @mouseover:row="mouseOverRow"
+      @mouseleave:row="mouseLeaveRow">
       <template #[`item.main_concrete_type`]="{ item }">
         <ul class="comma-separated-list">
           <li v-for="(concrete_type, $key) in item.main_concrete_type" :key="$key">{{ $t(concrete_type) }}</li>
@@ -144,7 +152,7 @@ v-if="currentRowIndex !== undefined" :width="500" :open-delay="300" :close-delay
         </ul>
       </template>
       <template #[`item.receiver_country`]="{ item }">
-        {{ $t(item.receiver_country) }}
+        {{ $t("countryFn", [item.receiver_country]) }}
       </template>
       <template #[`item.name_en`]="{ item }">
         {{ item[`name_${locale as ProjectLang}`] }}
@@ -159,6 +167,15 @@ v-if="currentRowIndex !== undefined" :width="500" :open-delay="300" :close-delay
 </template>
 
 <style scoped lang="scss">
+.permanent-drawer {
+  :deep(.v-navigation-drawer__content) {
+    z-index: 1000;
+    display: grid;
+    grid-template-rows: auto 200px;
+    grid-gap: 1rem;
+  }
+}
+
 .grid-list {
   --card-size: 400px;
   display: grid;
@@ -180,6 +197,7 @@ v-if="currentRowIndex !== undefined" :width="500" :open-delay="300" :close-delay
     content: ", ";
   }
 }
+
 .recrete-list-data-table {
   height: calc(100vh - v-bind(appHeaderHeight))
 }
