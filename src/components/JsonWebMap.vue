@@ -16,7 +16,7 @@ import { useDisplay } from 'vuetify'
 import type { Project } from '@/types/Project'
 
 import { useProjectsStore } from '@/stores/projects'
-import BarProjectEchart from './BarProjectEchart.vue'
+import BarProjectEchart from '@/components/BarProjectEchart.vue'
 import { storeToRefs } from 'pinia'
 
 const props = defineProps<{
