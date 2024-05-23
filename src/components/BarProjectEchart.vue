@@ -47,9 +47,8 @@ const projectsCount = computed<Record<string, number>>(() =>
       (acc[country] = (acc[country] || 0) + 1, acc), {} as Record<string, number>)
   )
 
-
 const grid = {
-  left: 10,
+  left: 16,
   right: 10,
   top: 30,
   bottom: 10
@@ -58,7 +57,7 @@ const grid = {
 const option = computed(() => {
 
 
-  const countriesISO = Object.keys(projectsCount.value);
+  const countriesISO = Object.keys(projectsCount.value).sort((a, b) => projectsCount.value[b] - projectsCount.value[a]) as string[];
 
 
   const series = countriesISO.map((countryISO) => {
@@ -70,6 +69,7 @@ const option = computed(() => {
         barHeight: '100%',
         label: {
           show: true,
+          valueAnimation: true
         },
         data: [projectsCount.value[countryISO]],
       };
@@ -77,7 +77,11 @@ const option = computed(() => {
   return {
   title: {
     text: `${props.projects.length} ${t('receiver_title', props.projects.length)}`,
-    left: "center"
+    left: "8px", // todo align
+    textStyle: {
+      fontSize: 14,
+      fontWeight: "bold",
+    }
   },
   tooltip: {
     trigger: "item",

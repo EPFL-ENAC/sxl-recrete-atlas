@@ -126,7 +126,7 @@ v-bind="activatorProps" :to="{ name: `home` }" :icon="mdiMapOutline" class="mr-3
 
 
       <template #append>
-        <a href="https://epfl.ch" target="_blank">
+        <a href="https://www.epfl.ch/labs/sxl/" target="_blank">
           <v-img :src="epflLogoUrl" width="100px" />
         </a>
       </template>
