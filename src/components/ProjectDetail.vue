@@ -17,13 +17,10 @@
             </v-row>
             <v-row>
               <b class="key">{{ $t("receiver_country") }} ({{ $t("receiver_city") }}): </b>
-              {{ props.project.receiver_country }} ({{ props.project.receiver_city }})
+              {{ $t("countryFn", [props.project.receiver_country]) }} ({{ props.project.receiver_city }})
             </v-row>
             <v-row>
               <b class="key">{{ $t("start_date_year") }}: </b> {{ props.project.start_date_year }}
-            </v-row>
-            <v-row>
-              <b class="key">{{ t("status") }}:</b> {{ props.project.status ?? $t("unknown") }}
             </v-row>
           </v-col>
           <v-col :cols="6">

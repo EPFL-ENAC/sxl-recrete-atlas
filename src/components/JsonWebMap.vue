@@ -1,4 +1,4 @@
-<script setup lang="ts">
+ <script setup lang="ts">
 import MapLibreMap from '@/components/MapLibreMap.vue'
 import ProjectFilters from '@/components/ProjectFilters.vue'
 import type { Parameters } from '@/utils/jsonWebMap'
@@ -142,6 +142,7 @@ watch(
     :rail="drawerRail"
     permanent
     :width="mobile ? 300 : 450"
+    class="permanent-drawer"
     @click="drawerRail = false"
   >
     <v-list density="compact" nav>
@@ -165,6 +166,11 @@ watch(
       </v-list-item>
       <project-filters :is-visible="!drawerRail" />
     </v-list>
+
+    <v-sheet v-if="!drawerRail" class="pa-0">
+      <BarProjectEchart :projects="data" />
+    </v-sheet>
+
   </v-navigation-drawer>
   <v-navigation-drawer v-if="drawerRight" permanent location="right" :width="mobile ? 200 : 400">
     <v-list>
@@ -226,4 +232,13 @@ watch(
 .v-card-image:not(.on-hover) {
   opacity: 0.6;
 }
+.permanent-drawer {
+  :deep(.v-navigation-drawer__content) {
+    z-index: 1000;
+    display: grid;
+    grid-template-rows: auto 200px;
+    grid-gap: 1rem;
+  }
+}
+
 </style>

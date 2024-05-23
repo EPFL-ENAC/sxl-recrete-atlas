@@ -46,7 +46,7 @@ function getSelectValues(key: ProjectKey): (OptionValues)[] {
     }
     return uniqueValues
     .map((uniqueValue: string) => ({
-      title: t(uniqueValue) as string,
+      title: key.includes('country') ? t('countryFn', [uniqueValue]) : t(uniqueValue) as string,
       value: uniqueValue as string,
     }));
   }
