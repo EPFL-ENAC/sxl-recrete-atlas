@@ -31,7 +31,7 @@ age_uncertainty,,component_age in italic if 1,Component age uncertainty,Âge des
 quantity_reclaimed,,oui,Quantity of reclaimed components,Quantité d'éléments réemployés
 quantity_reclaimed_unit,,concatenate with quantity_reclaimed,Units for quantity of reclaimed components,Unités pour la quantité d'éléments réemployés
 element_type_different,,,Different use between donor an receiving structures,Utilisation différente entre structure donneuse ou receveuse
-reference,,overview,Reference,Référence
+reference,,oui,Reference,Référence
 impact_design_alternative,,,Compared design alternative for environmental impact calculations,Alternative pour les calculs d'impact environnemental
 impact_difference,with/without,,Environment-impact available,Impact sur l'environnement disponible
 impact_source,,,Reference for environmental impacts calculations,Référence pour le calcul d'impact environnemental

@@ -171,8 +171,12 @@ class="recrete-list-data-table" :items="data" :headers="headers" :items-per-page
   :deep(.v-navigation-drawer__content) {
     z-index: 1000;
     display: grid;
-    grid-template-rows: auto 200px;
+    grid-template-rows: auto 100px;
     grid-gap: 1rem;
+    .v-list {
+      overflow: auto;
+    
+    }
   }
 }
 
