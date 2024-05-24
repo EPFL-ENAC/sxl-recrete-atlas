@@ -132,7 +132,19 @@
               <h3 class="text-decoration-underline">{{ t("more_information") }}</h3>
             </v-row>
             <v-row>
-              <b class="key">{{ $t("reference") }}:</b> {{ props.project.reference }}
+              <b class="key">{{ $t("reference") }}:</b> {{ props.project.reference?.join(", ") }}
+              <VDropdown
+                :distance="6" popper-class="popper-class" placement="bottom">
+                          <!-- This will be the popover reference (for the events and position) -->
+                          <button>
+                            <v-icon :icon="mdiInformationSlabCircle"></v-icon>
+                          </button>
+
+                          <!-- This will be the content of the popover -->
+                          <template #popper>
+                            <ReferenceList :item="props.project" />
+                          </template>
+                        </VDropdown>
             </v-row>
           </v-col>
         </v-row>
@@ -146,12 +158,15 @@
 </template>
 
 <script setup lang="ts">
-import { mdiDomain, mdiInformationBoxOutline } from '@mdi/js';
+import { mdiDomain, mdiInformationBoxOutline, mdiInformationSlabCircle } from '@mdi/js';
 import { computed, defineModel } from 'vue';
 import { defaultImage } from '@/utils/default';
 import type { Project, ProjectLang } from '@/types/Project';
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router';
+import ReferenceList from '@/components/ReferenceList.vue';
+import { Dropdown as VDropdown } from 'floating-vue'
+
 const route = useRoute()
 const router = useRouter()
 const { locale } = useI18n({ useScope: 'global'})
