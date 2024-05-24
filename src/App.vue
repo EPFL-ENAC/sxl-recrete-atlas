@@ -20,6 +20,21 @@ const { current } = useLocale()
 const { locale } = useI18n({ useScope: 'global'})
 const { t } = useI18n()
 const { cookies } = useCookies()
+const openWelcome = computed<boolean>(() => cookies.get('welcome') !== '1')
+const showWelcome = ref<boolean>(openWelcome.value)
+const welcomeOpened = computed<boolean>(() => openWelcome.value || showWelcome.value)
+
+
+
+function welcomeClosed() {
+  cookies.set('welcome','1', '365d');
+  showWelcome.value = false
+}
+
+// function welcomeOpen() {
+//   showWelcome.value = true
+// }
+
 
 const showProjectOpen = ref<boolean>(false)
 const addProjectOpened = computed<boolean>(() => showProjectOpen.value)
@@ -133,8 +148,10 @@ v-bind="activatorProps" :to="{ name: `home` }" :icon="mdiMapOutline" class="mr-3
     </v-app-bar>
     <v-main>
       <RouterView />
+      <markdown-dialog :button-text="$t('close')" :content-url="`welcome_${locale}.md`" :open="welcomeOpened" width="800px" @dialog-close="welcomeClosed">
+      </markdown-dialog>
       <markdown-dialog
-:button-text="$t('close')" :content-url="`add_project_${locale}.md`" :open="addProjectOpened"
+        :button-text="$t('close')" :content-url="`add_project_${locale}.md`" :open="addProjectOpened"
         width="800px" @dialog-close="addProjectClosed">
       </markdown-dialog>
     </v-main>
@@ -152,9 +169,6 @@ v-bind="activatorProps" :to="{ name: `home` }" :icon="mdiMapOutline" class="mr-3
     border-right: 1px solid black;
     margin-right: 1rem;
     padding-right: 1rem;
-    // color: oklch(57% 0.21 29.5)
-    // border: 1px solid black;
-    // border-radius: 10px
 }
 </style>
 

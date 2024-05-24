@@ -182,8 +182,9 @@ class="recrete-list-data-table" :items="data" :headers="headers" :items-per-page
     </v-data-table>
   </v-container>
   <v-container v-if="listMode === 'grid'" class="pa-0 grid-list" fluid>
-    <project-card v-for="(item, $key) in data" :key="$key" :item="item" @click="() => selectProject(item)"
-        max-height="100%" min-height="100%" height="100%"/>
+    <project-card
+v-for="(item, $key) in data" :key="$key" :item="item" max-height="100%"
+        min-height="100%" height="100%" @click="() => selectProject(item)"/>
   </v-container>
   <project-dialog v-model="isProjectDialogOpen" :project="projectSelected" />
 </template>
