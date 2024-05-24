@@ -181,8 +181,9 @@ class="recrete-list-data-table" :items="data" :headers="headers" :items-per-page
       <template #bottom />
     </v-data-table>
   </v-container>
-  <v-container v-if="listMode === 'grid'" class="fill-height pa-0 grid-list" fluid>
-    <project-card v-for="(item, $key) in data" :key="$key" :item="item" @click="() => selectProject(item)" />
+  <v-container v-if="listMode === 'grid'" class="pa-0 grid-list" fluid>
+    <project-card v-for="(item, $key) in data" :key="$key" :item="item" @click="() => selectProject(item)"
+        max-height="100%" min-height="100%" height="100%"/>
   </v-container>
   <project-dialog v-model="isProjectDialogOpen" :project="projectSelected" />
 </template>
@@ -214,11 +215,11 @@ class="recrete-list-data-table" :items="data" :headers="headers" :items-per-page
 }
 
 .grid-list {
-  --card-size: 400px;
+  --card-size: 350px;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(var(--card-size), 1fr));
   grid-template-rows: repeat(auto-fill, minmax(var(--card-size), var(--card-size)));
-  gap: 1rem;
+  gap: 2rem;
 }
 
 .comma-separated-list {

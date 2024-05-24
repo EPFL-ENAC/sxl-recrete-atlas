@@ -23,6 +23,7 @@
   "dependencies": {
     "@types/dompurify": "^3.0.2",
     "@types/marked": "^5.0.0",
+    "@vueuse/core": "^10.9.0",
     "axios": "^1.6.8",
     "dompurify": "^3.0.4",
     "echarts": "^5.5.0",
