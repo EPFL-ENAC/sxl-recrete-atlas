@@ -18,6 +18,7 @@ export const useProjectsStore = defineStore('projects', () => {
   const { locale } = useI18n({ useScope: 'global' })
   const { filters } = storeToRefs(useFiltersStore());
 
+  const countries = computed(() => (data as Project[]).map((project: Project) => project.receiver_country).filter((value, index, self) => self.indexOf(value) === index))
   const projects = computed({
     get: () => {
       const filterKeys = Object.keys(filters.value) as ProjectKey[]
@@ -92,5 +93,5 @@ export const useProjectsStore = defineStore('projects', () => {
   })
 
 
-  return { projects }
+  return { projects, countries }
 })
