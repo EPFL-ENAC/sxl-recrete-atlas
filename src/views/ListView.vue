@@ -3,8 +3,9 @@ import ProjectCard from '@/components/ProjectCard.vue'
 import ProjectDialog from '@/components/ProjectDialog.vue'
 import ProjectFilters from '@/components/ProjectFilters.vue'
 import BarProjectEchart from '@/components/BarProjectEchart.vue'
+import ReferenceList from '@/components/ReferenceList.vue'
 import { useProjectsStore } from '@/stores/projects'
-import { mdiChevronLeft, mdiChevronRight } from '@mdi/js'
+import { mdiChevronLeft, mdiChevronRight, mdiInformationSlabCircle } from '@mdi/js'
 import { storeToRefs } from 'pinia'
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -15,6 +16,7 @@ import type { Project, ProjectLang } from '@/types/Project'
 import { useRoute } from 'vue-router'
 import { defaultAppHeaderHeight } from '@/utils/default'
 import type { VDataTable } from 'vuetify/components/VDataTable'
+import { Dropdown as VDropdown } from 'floating-vue'
 
 const route = useRoute()
 const { t, locale } = useI18n({ useScope: 'global' })
@@ -86,6 +88,9 @@ const onRowClicked = (ref: unknown, row: ProjectRow<Project>) => {
 
 
 const mouseOverRow = (element: unknown, row: ProjectRow<Project>) => {
+  if (showRowTooltip.value === false) {
+    return
+  }
   currentRowIndex.value = row.index;
   currentRowItem.value = row.item;
 }
@@ -94,6 +99,8 @@ const mouseLeaveRow = () => {
   currentRowItem.value = undefined;
 }
 const appHeaderHeight = ref(`${defaultAppHeaderHeight}px`);
+
+const showRowTooltip = ref(true);
 
 </script>
 
@@ -115,9 +122,8 @@ const appHeaderHeight = ref(`${defaultAppHeaderHeight}px`);
 
   </v-navigation-drawer>
   <v-container v-if="listMode === 'list'" class="fill-height pa-0 align-baseline" fluid>
-
     <v-tooltip
-v-if="currentRowIndex !== undefined" :width="500" :open-delay="300" :close-delay="300"
+v-if="currentRowIndex !== undefined" :width="500" :open-delay="150" :animate="true" :close-delay="150"
       :activator="`.hovered-${currentRowIndex}`" location="top">
       {{ currentRowItem?.[`description_${locale as ProjectLang}`] }}
     </v-tooltip>
@@ -157,6 +163,21 @@ class="recrete-list-data-table" :items="data" :headers="headers" :items-per-page
       <template #[`item.name_en`]="{ item }">
         {{ item[`name_${locale as ProjectLang}`] }}
       </template>
+      <template #[`item.reference`]="{ item }">
+        <VDropdown
+:distance="6" popper-class="popper-class" placement="left"
+          @click.stop.prevent="">
+          <!-- This will be the popover reference (for the events and position) -->
+          <button @click.stop.prevent="">
+            <v-icon :icon="mdiInformationSlabCircle"></v-icon>
+          </button>
+
+          <!-- This will be the content of the popover -->
+          <template #popper>
+            <ReferenceList :item="item" />
+          </template>
+        </VDropdown>
+      </template>
       <template #bottom />
     </v-data-table>
   </v-container>
@@ -166,16 +187,28 @@ class="recrete-list-data-table" :items="data" :headers="headers" :items-per-page
   <project-dialog v-model="isProjectDialogOpen" :project="projectSelected" />
 </template>
 
+<style>
+.popper-class {
+  width: 800px;
+  .v-popper__inner {
+    padding: 1.5rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+}
+</style>
 <style scoped lang="scss">
+
 .permanent-drawer {
   :deep(.v-navigation-drawer__content) {
     z-index: 1000;
     display: grid;
     grid-template-rows: auto 100px;
     grid-gap: 1rem;
+
     .v-list {
       overflow: auto;
-    
+
     }
   }
 }
