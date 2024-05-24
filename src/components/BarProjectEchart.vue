@@ -27,9 +27,12 @@ import { defineProps, computed } from 'vue'
 import type { Project } from "@/types/Project";
 import { useI18n } from "vue-i18n";
 import type { ComponentItemTooltipLabelFormatterParams } from "echarts/types/src/util/types.js";
+import { useProjectsStore } from "@/stores/projects";
+import { storeToRefs } from "pinia";
 
 
 const { t } = useI18n({ useScope: 'global' })
+const projectsStore = storeToRefs(useProjectsStore())
 
 const props = withDefaults(
   defineProps<{
@@ -54,9 +57,19 @@ const grid = {
   bottom: 10
 };
 
+const countriesISOAlphanumericOrder = projectsStore.countries.value.sort((a, b) => a.localeCompare(b)) as string[];
 const option = computed(() => {
 
-
+  const colors = [
+    "#D64C48",
+    "#F0662A",
+    "#F08A6B",
+    "#F09749",
+    "#F0AC45",
+    "#F0BF8F",
+    "#F0D472",
+    "#FAEAAB",
+  ]
   const countriesISO = Object.keys(projectsCount.value).sort((a, b) => projectsCount.value[b] - projectsCount.value[a]) as string[];
 
 
@@ -67,6 +80,9 @@ const option = computed(() => {
         stack: 'total',
         barWidth: '100%',
         barHeight: '100%',
+        itemStyle: {
+          color: colors[countriesISOAlphanumericOrder.indexOf(countryISO) % colors.length],
+        },
         label: {
           show: true,
           valueAnimation: true
