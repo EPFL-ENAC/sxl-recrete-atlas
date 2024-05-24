@@ -48,7 +48,7 @@
               <b class="key">{{ $t("distance_km") }}:</b> {{ props.project.distance_km }}
             </v-row>
             <v-row>
-              <b class="key">{{ $t("donor_use") }}:</b> {{ props.project.donor_use }}
+              <b class="key">{{ $t("donor_use") }}:</b> {{ props.project.donor_use?.join(", ") }}
             </v-row>
             <v-row>
               <b class="key">{{ t("construction_year") }}:</b> {{ project_construction_year }}
@@ -72,10 +72,10 @@
           </v-row> -->
 
             <v-row>
-              <b class="key">{{ $t("donor_element_type") }}:</b> {{ props.project.donor_element_type }}
+              <b class="key">{{ $t("donor_element_type") }}:</b> {{ props.project.donor_element_type?.join(", ") }}
             </v-row>
             <v-row>
-              <b class="key">{{ $t("receiver_element_type") }}:</b> {{ props.project.receiver_element_type }}
+              <b class="key">{{ $t("receiver_element_type") }}:</b> {{ props.project.receiver_element_type?.join(", ") }}
             </v-row>
             <v-row>
               <b class="key">{{ $t("component_age") }}:</b> {{ props.project.component_age }}
