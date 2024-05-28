@@ -18,8 +18,6 @@
         "events": "^3.3.0",
         "floating-vue": "^5.2.2",
         "maplibre-gl": "^3.5.1",
-        "maplibregl-scale-legend": "github:EPFL-ENAC/maplibregl-scale-legend#1.1.0",
-        "maplibregl-theme-switcher": "github:EPFL-ENAC/maplibregl-theme-switcher#1.1.0",
         "marked": "^5.1.0",
         "papaparse": "^5.4.1",
         "pinia": "^2.0.32",
@@ -5051,20 +5049,6 @@
       },
       "funding": {
         "url": "https://github.com/maplibre/maplibre-gl-js?sponsor=1"
-      }
-    },
-    "node_modules/maplibregl-scale-legend": {
-      "version": "1.1.0",
-      "resolved": "git+ssh://git@github.com/EPFL-ENAC/maplibregl-scale-legend.git#8d2e117b86f1311912b439e64cd8c02b01d54d71",
-      "dependencies": {
-        "maplibre-gl": "^3.5.1"
-      }
-    },
-    "node_modules/maplibregl-theme-switcher": {
-      "version": "1.1.0",
-      "resolved": "git+ssh://git@github.com/EPFL-ENAC/maplibregl-theme-switcher.git#b9866d8d659d113d39be89362b2572227d2ac6f6",
-      "dependencies": {
-        "maplibre-gl": "^3.5.1"
       }
     },
     "node_modules/marked": {

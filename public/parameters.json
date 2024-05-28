@@ -9,24 +9,9 @@
       "label": "Theme",
       "children": [
         {
-          "id": "classic",
-          "label": "Classic",
-          "selected": false
-        },
-        {
           "id": "arcgis",
           "label": "ArcGIS",
           "selected": true
-        },
-        {
-          "id": "light",
-          "label": "Light",
-          "selected": false
-        },
-        {
-          "id": "dark",
-          "label": "Dark",
-          "selected": false
         }
       ]
     },
