@@ -30,8 +30,6 @@
     "events": "^3.3.0",
     "floating-vue": "^5.2.2",
     "maplibre-gl": "^3.5.1",
-    "maplibregl-scale-legend": "github:EPFL-ENAC/maplibregl-scale-legend#1.1.0",
-    "maplibregl-theme-switcher": "github:EPFL-ENAC/maplibregl-theme-switcher#1.1.0",
     "marked": "^5.1.0",
     "papaparse": "^5.4.1",
     "pinia": "^2.0.32",

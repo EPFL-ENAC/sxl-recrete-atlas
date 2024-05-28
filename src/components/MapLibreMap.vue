@@ -1,31 +1,20 @@
 <script setup lang="ts">
 import 'maplibre-gl/dist/maplibre-gl.css'
-import 'maplibregl-theme-switcher/styles.css'
-import 'maplibregl-scale-legend/styles.css'
 
 import { DivControl } from '@/utils/control'
-import { ThemeSwitcherControl } from 'maplibregl-theme-switcher'
-import type { ThemeDefinition } from 'maplibregl-theme-switcher'
-import { ScaleLegendControl } from 'maplibregl-scale-legend'
-import type { ScaleDefinition } from 'maplibregl-scale-legend'
 import {
   AttributionControl,
   FullscreenControl,
   GeoJSONSource,
-  GeolocateControl,
   Map,
   MapMouseEvent,
-  // Marker,
   NavigationControl,
   Popup,
-  ScaleControl,
   type LngLatLike,
   type StyleSpecification
 } from 'maplibre-gl'
 import { onMounted, ref, watch, defineModel, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import type { SelectableSingleItem } from '@/utils/layerSelector'
-import type { LegendScale, ScaleEntry } from '@/utils/jsonWebMap'
 import { storeToRefs } from 'pinia'
 
 import { useProjectsStore } from '@/stores/projects'
@@ -45,11 +34,6 @@ const props = withDefaults(
     aspectRatio?: number
     minZoom?: number
     maxZoom?: number
-    themes: SelectableSingleItem[]
-    scales: LegendScale[]
-    selectedScaleId?: string
-    selectableLayerIds?: string[]
-    selectedLayerIds?: string[]
     popupLayerIds?: string[]
     areaLayerIds?: string[]
   }>(),
@@ -59,8 +43,6 @@ const props = withDefaults(
     aspectRatio: undefined,
     minZoom: 4,
     maxZoom: undefined,
-    selectableLayerIds: () => [],
-    selectedLayerIds: () => [],
     popupLayerIds: () => [],
     areaLayerIds: () => [],
     scales: () => [],
@@ -68,17 +50,16 @@ const props = withDefaults(
   }
 )
 
-const { t, locale } = useI18n({ useScope: 'global' })
+const { locale } = useI18n({ useScope: 'global' })
 
 const loading = ref(true)
 let map: Map | undefined = undefined
-const scaleControl = ref<ScaleLegendControl>()
-const isProjectDialogOpen = defineModel('isProjectDialogOpen',{
+const isProjectDialogOpen = defineModel('isProjectDialogOpen', {
   type: Boolean,
   default: false,
 })
 
-const project = defineModel('project',{
+const project = defineModel('project', {
   type: Object,
   default: undefined,
 })
@@ -96,12 +77,10 @@ onMounted(() => {
     pixelRatio: window.devicePixelRatio || 1
   })
   map.addControl(new NavigationControl({}))
-  map.addControl(new GeolocateControl({}))
-  map.addControl(new ScaleControl({}))
   map.addControl(new FullscreenControl({}))
   map.addControl(new AttributionControl({
     compact: false,
-    customAttribution: '© <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>, <a href="https://www.epfl.ch/labs/sxl/" target="_blank">SXL</a>'
+    customAttribution: '© <a href="https://www.epfl.ch/labs/sxl/" target="_blank">SXL</a>'
   }));
   const positionControl = new DivControl({ id: 'map-position' })
   map.addControl(positionControl, 'bottom-left')
@@ -119,7 +98,6 @@ onMounted(() => {
   })
 
   map.once('load', () => {
-    filterLayers()
     addProjects();
     loading.value = false
   })
@@ -135,71 +113,6 @@ watch(
   { immediate: true }
 )
 
-watch(
-  () => props.themes,
-  (themes) => {
-    if (themes) {
-      const themeDefs: ThemeDefinition[] = themes.map((item: SelectableSingleItem) => {
-        return {
-          id: item.id,
-          label: t(item.label),
-          selected: item.selected
-        }
-      })
-      const selectedTheme = themes.find((item) => item.selected)?.id
-      map?.addControl(new ThemeSwitcherControl(themeDefs, selectedTheme))
-    }
-  },
-  { immediate: true }
-)
-
-
-watch(
-  () => props.scales,
-  (scales) => {
-    if (scales) {
-      const scaleDefs: ScaleDefinition[] = scales.map((item: LegendScale) => {
-        return {
-          id: item.id,
-          title: t(item.id),
-          titleStart: item.titleStart ? t(item.titleStart) : undefined,
-          titleEnd: item.titleEnd ? t(item.titleEnd) : undefined,
-          scale: item.scale.map((entry: ScaleEntry) => {
-            const range: string[] | undefined = entry.range ? [
-              formatNumber(entry.range[0], "") ?? "",
-              formatNumber(entry.range[1], "") ?? ""
-            ] : undefined
-            return {
-              label: entry.label ? t(entry.label) : undefined,
-              color: entry.color,
-              range: range,
-              unit: entry.unit ? t(entry.unit) : (item.unit ? t(item.unit) : undefined)
-            }
-          })
-        }
-      })
-      scaleControl.value = new ScaleLegendControl(scaleDefs)
-      map?.addControl(scaleControl.value, 'top-left')
-      if (props.selectedScaleId) {
-        scaleControl.value.showScale(props.selectedScaleId)
-      }
-    }
-  },
-  { immediate: true }
-)
-
-watch(() => props.selectedScaleId, () => {
-  if (scaleControl.value) {
-    scaleControl.value.showScale(props.selectedScaleId)
-  }
-}, {
-  immediate: true
-})
-
-watch([() => props.selectableLayerIds, () => props.selectedLayerIds], () => filterLayers(), {
-  immediate: true
-})
-
 function update(center?: LngLatLike, zoom?: number) {
   if (map) {
     if (center !== undefined) {
@@ -208,22 +121,6 @@ function update(center?: LngLatLike, zoom?: number) {
     if (zoom !== undefined) {
       map.setZoom(zoom)
     }
-  }
-}
-
-function filterLayers() {
-  if (map?.loaded()) {
-    map
-      .getStyle()
-      .layers
-      .filter((layer) => !props.themes.map((theme) => theme.id).includes(layer.id))
-      .forEach((layer) => {
-        map?.setLayoutProperty(
-          layer.id,
-          'visibility',
-          props.selectedLayerIds.includes(layer.id) ? 'visible' : 'none'
-        )
-      })
   }
 }
 
@@ -239,9 +136,9 @@ const computedData = computed<GeoJSON.GeoJSON | string>(() => {
     }
   }));
   return {
-        "type": "FeatureCollection",
-        "features": features
-      } as GeoJSON.GeoJSON;
+    "type": "FeatureCollection",
+    "features": features
+  } as GeoJSON.GeoJSON;
 })
 
 watch(() => projects,
@@ -249,7 +146,7 @@ watch(() => projects,
     // all selected by default
     updateLayerData(computedData.value)
   },
-  { immediate: true, deep:true }
+  { immediate: true, deep: true }
 )
 watch(() => locale.value,
   () => {
@@ -297,9 +194,9 @@ function addProjects() {
           closeOnClick: false,
           anchor: 'bottom'
         })
-        .setLngLat((e.features?.[0].geometry as GeoJSON.Point)?.coordinates as LngLatLike)
-        .setHTML('<h3>' + e.features?.[0].properties[`name_${locale.value as ProjectLang}`] + '</h3>')
-        .addTo(map);
+          .setLngLat((e.features?.[0].geometry as GeoJSON.Point)?.coordinates as LngLatLike)
+          .setHTML('<h3>' + e.features?.[0].properties[`name_${locale.value as ProjectLang}`] + '</h3>')
+          .addTo(map);
         popups.push(a);
         map.getCanvas().style.cursor = 'pointer';
       }
@@ -311,13 +208,7 @@ function addProjects() {
         map.getCanvas().style.cursor = '';
       }
     });
-}
-
-
-}
-
-function formatNumber(nb: number, unit: string) {
-  return nb === undefined || isNaN(nb) ? '-' : `${new Intl.NumberFormat(`${locale.value}`).format(Math.round(nb * 100) / 100)} ${unit}`
+  }
 }
 
 </script>
