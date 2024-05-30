@@ -102,7 +102,6 @@ const option = computed(() => {
   tooltip: {
     trigger: "item",
     formatter: (params: ComponentItemTooltipLabelFormatterParams) => {
-      console.log(params)
       return `${t('receiver_country')} <br/> ${t('countryFn', [params.seriesName])}: ${params.value} `
     }
   },
