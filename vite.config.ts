@@ -7,6 +7,9 @@ import { default as VueI18nPlugin } from '@intlify/unplugin-vue-i18n/vite';
 import type { Plugin } from 'vite';
 
 export default defineConfig({
+  optimizeDeps: {
+    exclude: ['marked-emoji']
+  },
   plugins: [vue(), vuetify(),
     VueI18nPlugin({
     /* options */

@@ -31,6 +31,7 @@
     "floating-vue": "^5.2.2",
     "maplibre-gl": "^3.5.1",
     "marked": "^5.1.0",
+    "marked-emoji": "^1.4.0",
     "papaparse": "^5.4.1",
     "pinia": "^2.0.32",
     "vue": "^v3.4.25",
@@ -43,6 +44,7 @@
   "devDependencies": {
     "@intlify/unplugin-vue-i18n": "^4.0.0",
     "@intlify/vue-i18n-loader": "^5.0.1",
+    "@mdi/font": "^7.4.47",
     "@mdi/js": "^7.4.47",
     "@rushstack/eslint-patch": "^1.2.0",
     "@tsconfig/node20": "^20.1.4",
