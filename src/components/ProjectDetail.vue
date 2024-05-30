@@ -31,17 +31,20 @@
             </v-row>
             <v-row>
               <b class="key">{{ $t('start_date_year') }}: </b>
-              <span :class="{
+              <span
+:class="{
                 'font-italic': props.project.date_uncertainty,
                 'text-grey': props.project.date_uncertainty
               }"> {{ props.project.start_date_year }} </span>
             </v-row>
           </v-col>
           <v-col :cols="6">
-            <v-carousel v-if="(props.project.images?.length ?? 0) > 0" height="90%" :show-arrows="false"
-              v-model="carouselIndex"
+            <v-carousel
+v-if="(props.project.images?.length ?? 0) > 0" v-model="carouselIndex" height="90%"
+              :show-arrows="false"
               :interval="3000">
-              <v-carousel-item v-for="(image, $key) in props.project.images" :key="$key" :src="image"
+              <v-carousel-item
+v-for="(image, $key) in props.project.images" :key="$key" :src="image"
                 content-class="carousel-content" cover height="300px">
                 
               </v-carousel-item>
@@ -65,7 +68,8 @@
           </v-col>
         </v-row>
         <v-row>
-          <v-col v-if="
+          <v-col
+v-if="
             props.project.distance_km ||
             props.project.donor_use?.length > 0 ||
             props.project.project_construction_year > 0
@@ -92,7 +96,8 @@
               <span v-else>{{ project_construction_year }}</span>
             </v-row>
           </v-col>
-          <v-col v-if="
+          <v-col
+v-if="
             props.project.quantity_reclaimed ||
             props.project.donor_element_type?.length > 0 ||
             props.project.receiver_element_type?.length > 0 ||
@@ -127,7 +132,8 @@
               <b class="key">{{ $t('main_concrete_type') }}:</b>
               <ul class="comma-separated-list">
                 <li v-for="(concrete_type, $key) in props.project.main_concrete_type" :key="$key">
-                  <span :class="{
+                  <span
+:class="{
                     'font-italic': props.project?.main_concrete_type_uncertainty?.[$key],
                     'text-grey': props.project?.main_concrete_type_uncertainty?.[$key]
                   }">{{ $t(concrete_type) }}</span>
@@ -135,7 +141,8 @@
               </ul>
             </v-row>
           </v-col>
-          <v-col v-if="props.project.impact_difference ||
+          <v-col
+v-if="props.project.impact_difference ||
             props.project.cost_difference_max_percent ||
             props.project?.other" :cols="3">
             <v-row>
