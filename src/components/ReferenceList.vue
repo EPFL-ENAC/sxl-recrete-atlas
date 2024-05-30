@@ -52,7 +52,6 @@ const { copy } = useClipboard({ source })
 
 <style scoped lang="scss">
 ul {
-  list-style: lower-latin;
 
   li {
     margin-bottom: 0.5rem;
