@@ -134,7 +134,14 @@ class="recrete-list-data-table" :items="data" :headers="headers" :items-per-page
       @mouseleave:row="mouseLeaveRow">
       <template #[`item.main_concrete_type`]="{ item }">
         <ul class="comma-separated-list">
-          <li v-for="(concrete_type, $key) in item.main_concrete_type" :key="$key">{{ $t(concrete_type) }}</li>
+          <li v-for="(concrete_type, $key) in item.main_concrete_type" :key="$key">
+            
+            <span
+:class="{
+                    'font-italic': item?.main_concrete_type_uncertainty?.[$key],
+                    'text-grey': item?.main_concrete_type_uncertainty?.[$key]
+                  }">{{ $t(concrete_type) }}</span>
+          </li>
         </ul>
       </template>
       <template #[`item.donor_element_type`]="{ item }">
@@ -159,6 +166,42 @@ class="recrete-list-data-table" :items="data" :headers="headers" :items-per-page
       </template>
       <template #[`item.receiver_country`]="{ item }">
         {{ $t("countryFn", [item.receiver_country]) }}
+      </template>
+      <template #[`item.receiver_city`]="{ item }">
+        <span
+        :class="{
+                    'font-italic': item?.location_uncertainty,
+                    'text-grey': item?.location_uncertainty
+                  }">
+        {{ item.receiver_city }}  
+        </span>
+      </template>
+      <template #[`item.start_date_year`]="{ item }">
+        <span
+        :class="{
+                    'font-italic': item?.date_uncertainty,
+                    'text-grey': item?.date_uncertainty
+                  }">
+        {{ item.start_date_year }}  
+        </span>
+      </template>
+      <template #[`item.component_age`]="{ item }">
+        <span
+        :class="{
+                    'font-italic': item?.age_uncertainty,
+                    'text-grey': item?.age_uncertainty
+                  }">
+        {{ item.component_age }}  
+        </span>
+      </template>
+      <template #[`item.distance_km`]="{ item }">
+        <span
+        :class="{
+                    'font-italic': item?.distance_uncertainty,
+                    'text-grey': item?.distance_uncertainty
+                  }">
+        {{ item.distance_km }}  
+        </span>
       </template>
       <template #[`item.name_en`]="{ item }">
         {{ item[`name_${locale as ProjectLang}`] }}
