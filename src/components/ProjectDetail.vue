@@ -58,7 +58,7 @@ v-for="(image, $key) in props.project.images" :key="$key" :src="image"
                 }}
                 </span>
                 <v-card-subtitle>
-              <span v-if="props.project.images_credits?.length > 0">
+              <span v-if="props.project.images_credits?.length ?? 0 > 0">
                 {{ t("credits") }}:
               {{  props.project.images_credits[carouselIndex] }}
             </span>
@@ -71,7 +71,7 @@ v-for="(image, $key) in props.project.images" :key="$key" :src="image"
           <v-col
 v-if="
             props.project.distance_km ||
-            props.project.donor_use?.length > 0 ||
+            (props.project.donor_use?.length ?? 0) > 0 ||
             props.project.project_construction_year > 0
           " :cols="3">
             <v-row>
@@ -85,7 +85,7 @@ v-if="
               </i>
               <span v-else>{{ props.project.distance_km }}</span>
             </v-row>
-            <v-row v-if="props.project.donor_use?.length > 0">
+            <v-row v-if="(props.project.donor_use?.length ?? 0) > 0">
               <b class="key">{{ $t('donor_use') }}:</b> {{ props.project.donor_use?.join(', ') }}
             </v-row>
             <v-row v-if="props.project.project_construction_year > 0">
@@ -99,8 +99,8 @@ v-if="
           <v-col
 v-if="
             props.project.quantity_reclaimed ||
-            props.project.donor_element_type?.length > 0 ||
-            props.project.receiver_element_type?.length > 0 ||
+            (props.project.donor_element_type?.length ?? 0) > 0 ||
+            (props.project.receiver_element_type?.length ?? 0) > 0 ||
             props.project.component_age
           " :cols="3">
             <v-row>
@@ -111,11 +111,11 @@ v-if="
               {{ props.project.quantity_reclaimed }} ({{ props.project.quantity_reclaimed_unit }})
             </v-row>
 
-            <v-row v-if="props.project.donor_element_type?.length > 0">
+            <v-row v-if="(props.project.donor_element_type?.length ?? 0) > 0">
               <b class="key">{{ $t('donor_element_type') }}:</b>
               {{ props.project.donor_element_type?.join(', ') }}
             </v-row>
-            <v-row v-if="props.project.receiver_element_type?.length > 0">
+            <v-row v-if="(props.project.receiver_element_type?.length ?? 0) > 0">
               <b class="key">{{ $t('receiver_element_type') }}:</b>
               {{ props.project.receiver_element_type?.join(', ') }}
             </v-row>
@@ -177,7 +177,7 @@ v-if="props.project.impact_difference ||
               <b class="key">{{ $t('other') }}:</b> {{ props.project.other }}
             </v-row>
 
-            <v-row v-if="props.project.actors?.length > 0">
+            <v-row v-if="(props.project.actors?.length ?? 0) > 0">
               <b class="key">{{ t("actors") }}:</b> {{ props.project.actors?.join(',') ?? $t("unknown") }}
             </v-row>
           </v-col>
