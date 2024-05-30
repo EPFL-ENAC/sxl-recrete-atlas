@@ -57,6 +57,9 @@ onMounted(() => {
     .get<StyleSpecification>(props.styleUrl)
     .then((response) => response.data)
     .then((data) => {
+      const newTileSize = 256 / (window.devicePixelRatio || 1)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      data.sources = Object.keys(data.sources).reduce((acc: any, key: string) => { acc[key] = {...data.sources[key], tileSize: newTileSize}; return acc;}, {})
       style.value = data
     })
     .then(() => {
