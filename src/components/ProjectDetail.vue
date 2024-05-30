@@ -53,16 +53,12 @@ v-for="(image, $key) in props.project.images" :key="$key" :src="image"
               
             </v-img>
             <v-card-title class="image-title d-flex flex-spacebetween" style="gap: 1rem; align-items: center;">
-            <span v-if="false">{{
-                props.project[`name_${locale as ProjectLang}`]
-                }}
-                </span>
                 <v-card-subtitle>
-              <span v-if="props.project.images_credits?.length ?? 0 > 0">
-                {{ t("credits") }}:
-              {{  props.project.images_credits[carouselIndex] }}
-            </span>
-            </v-card-subtitle>
+                  <span v-if="props.project?.images_credits?.length ?? 0 > 0">
+                      {{ t("credits") }}:
+                      {{  props.project?.images_credits?.[carouselIndex] }}
+                  </span>
+                </v-card-subtitle>
             </v-card-title>
             
           </v-col>
@@ -72,7 +68,7 @@ v-for="(image, $key) in props.project.images" :key="$key" :src="image"
 v-if="
             props.project.distance_km ||
             (props.project.donor_use?.length ?? 0) > 0 ||
-            props.project.project_construction_year > 0
+            project_construction_year > 0
           " :cols="3">
             <v-row>
               <h3 class="text-decoration-underline">{{ t('about_the_donor_site') }}</h3>

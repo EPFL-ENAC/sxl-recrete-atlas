@@ -2,6 +2,7 @@
 import axios from 'axios'
 import { marked } from 'marked'
 import { markedEmoji } from 'marked-emoji'
+import type { EmojiToken } from 'marked-emoji'
 import DOMPurify from 'dompurify'
 import { useDisplay } from 'vuetify'
 import { onMounted, ref } from 'vue'
@@ -48,7 +49,7 @@ const options = {
     'mdi-email': 'mdi-email',
     'mdi-information': 'mdi-information'
   },
-  renderer: (token) => {
+  renderer: (token: EmojiToken) => {
     return `<span class="mdi ${token.emoji}"></span>`
   }
 }
