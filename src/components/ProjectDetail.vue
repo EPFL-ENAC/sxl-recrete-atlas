@@ -88,7 +88,7 @@ v-if="
             <v-row v-if="(props.project.donor_use?.length ?? 0) > 0">
               <b class="key">{{ $t('donor_use') }}:</b> {{ props.project.donor_use?.join(', ') }}
             </v-row>
-            <v-row v-if="props.project.project_construction_year > 0">
+            <v-row v-if="project_construction_year > 0">
               <b class="key">{{ t('construction_year') }}:</b>
               <i v-if="props.project.age_uncertainty || props.project.date_uncertainty">
                 {{ project_construction_year }}
