@@ -1,11 +1,10 @@
-import { createI18n } from 'vue-i18n'
+import { createI18n, type MessageContext } from 'vue-i18n'
 import { useCookies } from 'vue3-cookies'
 
 import en from '@/locales/en.json'
 import fr from '@/locales/fr.json'
 import keys from '@/assets/data/keys.json'
 import project_values from '@/assets/data/project_values.json'
-import countries from "@/assets/data/countries.json"
 import type { Key } from '@/types/Filter'
 
 const { cookies } = useCookies()
@@ -40,26 +39,26 @@ const projectValuesKeysFr = (project_values as Key[]).reduce(
     return acc;
 }, {})
 
-// countries
-const countriesEn = (countries as Key[]).reduce(
-  (acc: LangKeys, filter: Key) => {
-    acc[filter.key] = filter.english
-    return acc;
-}, {})
-
-const countriesFr = (countries as Key[]).reduce(
-  (acc: LangKeys, filter: Key) => {
-    acc[filter.key] = filter.french
-    return acc;
-}, {})
-
+const regionOfEn = new Intl.DisplayNames(['en'], {type: 'region'});
+const regionOfFr = new Intl.DisplayNames(['fr'], {type: 'region'});
 
 export default createI18n({
   locale: locale ?? 'en',
   fallbackLocale: 'en',
   messages: {
-    en: {...projectValuesKeysEn,...en, ...enKeys, ...countriesEn  },
-    fr: {...projectValuesKeysFr, ...fr, ...frKeys, ...countriesFr },
+    en: {...projectValuesKeysEn,...en, ...enKeys,
+      countryFn: (ctx: MessageContext) => {
+        const region = ctx.list?.(0) as string
+        return regionOfEn.of(region)
+      }},
+    fr: {...projectValuesKeysFr, ...fr, ...frKeys,
+      countryFn: (ctx: MessageContext) => {
+        const region = ctx.list?.(0) as string
+        return regionOfFr.of(region)
+      } },
   },
+  warnHtmlMessage: false,
+  missingWarn: false,
+  fallbackWarn: false, // deactivate to see missing keys
   legacy: false
 })

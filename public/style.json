@@ -2,13 +2,6 @@
   "version": 8,
   "name": "Default Style",
   "sources": {
-    "osm": {
-      "type": "raster",
-      "tiles": ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
-      "tileSize": 256,
-      "minzoom": 0,
-      "maxzoom": 20
-    },
     "arcgis": {
       "type": "raster",
       "tiles": ["https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}"],
@@ -18,32 +11,9 @@
     }
   },
   "layers": [
-    { "id": "classic",
-      "type": "raster",
-      "source": "osm",
-      "layout": { "visibility": "none" }
-    },
     { "id": "arcgis",
       "type": "raster",
       "source": "arcgis"
-    },
-    { "id": "light",
-      "type": "raster",
-      "source": "osm",
-      "paint": {
-        "raster-saturation": -0.9,
-        "raster-brightness-min": 0.7
-      },
-      "layout": { "visibility": "none" }
-    },
-    { "id": "dark",
-      "type": "raster",
-      "source": "osm",
-      "paint": {
-        "raster-saturation": -1,
-        "raster-brightness-max": 0.2
-      },
-      "layout": { "visibility": "none" }
     }
   ]
 }

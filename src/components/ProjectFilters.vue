@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { mdiMapLegend } from '@mdi/js'
-import { computed, ref, watch } from 'vue'
+import { computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useDisplay } from 'vuetify'
 import { useFiltersStore, stepsHash, valuesHash, newFilter } from '@/stores/filters';
@@ -30,12 +30,23 @@ interface OptionValues {
 }
 function getSelectValues(key: ProjectKey): (OptionValues)[] {
     const projectValues = projects.map((project: Project) => project[key]);
-    const isString = (value: any): value is string => typeof value === 'string';
-    const uniqueValues: string[] = Array.from(new Set(projectValues))
+    const isString = (value: unknown): value is string => typeof value === 'string';
+    const isArray = (value: unknown): value is string[] => Array.isArray(value);
+    const uniqueValuesString: string[] = Array.from(new Set(projectValues))
     .filter(isString);
+    const uniqueValuesStringArray: string[] = Array.from(new Set((Array.from(new Set(projectValues))
+    .filter(isArray).flat())));
+    
+    let uniqueValues: string[] = [];
+    if (uniqueValuesStringArray.length > 0) {
+      uniqueValues = uniqueValuesStringArray;
+    }
+    if (uniqueValuesString.length > 0) {
+      uniqueValues = uniqueValuesString;
+    }
     return uniqueValues
     .map((uniqueValue: string) => ({
-      title: t(uniqueValue) as string,
+      title: key.includes('country') ? t('countryFn', [uniqueValue]) : t(uniqueValue) as string,
       value: uniqueValue as string,
     }));
   }
@@ -187,7 +198,14 @@ watch(filters, (newVal) => {
           color="primary"
           label="on"
           @update:model-value="() => setFilters(filters)" 
-        ></v-switch>
+        >
+        <template #label>
+          <span v-if="filters[filterBoolean] === undefined">
+            {{ $t('indeterminate') }}
+          </span>
+          <span v-else>{{ filters[filterBoolean] ? $t('with') : $t('without') }}</span>
+        </template>
+      </v-switch>
         <v-btn :icon="mdiClose" size="x-small" @click="filters[filterBoolean] = undefined"></v-btn>
       </v-col>
     </v-row>

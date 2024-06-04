@@ -19,15 +19,16 @@ watch(locale, () => {
 
 function updateAbout() {
   axios
-    .get<string>(`about_${locale.value}.md`)
-    .then((response) => response.data)
-    .then((data) => {
-      contentHtml.value = DOMPurify.sanitize(marked.parse(data, {headerIds: false, mangle: false}))
-    })
+  .get<string>(`about_${locale.value}.md`)
+  .then((response) => response.data)
+  .then((data) => {
+    contentHtml.value = DOMPurify.sanitize(marked.parse(data, {headerIds: false, mangle: false}))
+  })
 }
 
 </script>
 <template>
+  <!-- eslint-disable vue/no-v-html -->
   <v-container class="pa-3" fluid>
     <div>
       <v-btn to="/" :icon="mdiKeyboardBackspace" flat></v-btn>

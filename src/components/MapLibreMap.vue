@@ -1,38 +1,28 @@
+<!-- eslint-disable @typescript-eslint/no-explicit-any -->
 <script setup lang="ts">
 import 'maplibre-gl/dist/maplibre-gl.css'
-import 'maplibregl-theme-switcher/styles.css'
-import 'maplibregl-scale-legend/styles.css'
 
 import { DivControl } from '@/utils/control'
-import { ThemeSwitcherControl } from 'maplibregl-theme-switcher'
-import type { ThemeDefinition } from 'maplibregl-theme-switcher'
-import { ScaleLegendControl } from 'maplibregl-scale-legend'
-import type { ScaleDefinition } from 'maplibregl-scale-legend'
 import {
   AttributionControl,
   FullscreenControl,
   GeoJSONSource,
-  GeolocateControl,
   Map,
   MapMouseEvent,
-  // Marker,
   NavigationControl,
   Popup,
-  ScaleControl,
   type LngLatLike,
   type StyleSpecification
 } from 'maplibre-gl'
 import { onMounted, ref, watch, defineModel, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import type { SelectableSingleItem } from '@/utils/layerSelector'
-import type { LegendScale, ScaleEntry } from '@/utils/jsonWebMap'
 import { storeToRefs } from 'pinia'
 
 import { useProjectsStore } from '@/stores/projects'
 import type { Project, ProjectLang } from '@/types/Project'
 
 const projects = storeToRefs(useProjectsStore()).projects
-
+const { t } = useI18n({ useScope: 'global' })
 
 defineExpose({
   update
@@ -45,11 +35,6 @@ const props = withDefaults(
     aspectRatio?: number
     minZoom?: number
     maxZoom?: number
-    themes: SelectableSingleItem[]
-    scales: LegendScale[]
-    selectedScaleId?: string
-    selectableLayerIds?: string[]
-    selectedLayerIds?: string[]
     popupLayerIds?: string[]
     areaLayerIds?: string[]
   }>(),
@@ -58,31 +43,24 @@ const props = withDefaults(
     zoom: 4,
     aspectRatio: undefined,
     minZoom: 4,
-    maxZoom: undefined,
-    selectableLayerIds: () => [],
-    selectedLayerIds: () => [],
+    maxZoom: 10,
     popupLayerIds: () => [],
     areaLayerIds: () => [],
     scales: () => [],
     selectedScaleId: undefined,
   }
 )
-const emit = defineEmits<{
-  (e: 'documentation', value: string): void
-  (e: 'specie', value: string): void
-}>()
 
-const { t, locale } = useI18n({ useScope: 'global' })
+const { locale } = useI18n({ useScope: 'global' })
 
 const loading = ref(true)
 let map: Map | undefined = undefined
-const scaleControl = ref<ScaleLegendControl>()
-const isProjectDialogOpen = defineModel('isProjectDialogOpen',{
+const isProjectDialogOpen = defineModel('isProjectDialogOpen', {
   type: Boolean,
   default: false,
 })
 
-const project = defineModel('project',{
+const project = defineModel('project', {
   type: Object,
   default: undefined,
 })
@@ -100,12 +78,10 @@ onMounted(() => {
     pixelRatio: window.devicePixelRatio || 1
   })
   map.addControl(new NavigationControl({}))
-  map.addControl(new GeolocateControl({}))
-  map.addControl(new ScaleControl({}))
   map.addControl(new FullscreenControl({}))
   map.addControl(new AttributionControl({
     compact: false,
-    customAttribution: '© <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>, <a href="https://www.epfl.ch/labs/sxl/" target="_blank">SXL</a>'
+    customAttribution: '© <a href="https://www.epfl.ch/labs/sxl/" target="_blank">SXL</a>'
   }));
   const positionControl = new DivControl({ id: 'map-position' })
   map.addControl(positionControl, 'bottom-left')
@@ -123,7 +99,6 @@ onMounted(() => {
   })
 
   map.once('load', () => {
-    filterLayers()
     addProjects();
     loading.value = false
   })
@@ -139,71 +114,6 @@ watch(
   { immediate: true }
 )
 
-watch(
-  () => props.themes,
-  (themes) => {
-    if (themes) {
-      const themeDefs: ThemeDefinition[] = themes.map((item: SelectableSingleItem) => {
-        return {
-          id: item.id,
-          label: t(item.label),
-          selected: item.selected
-        }
-      })
-      const selectedTheme = themes.find((item) => item.selected)?.id
-      map?.addControl(new ThemeSwitcherControl(themeDefs, selectedTheme))
-    }
-  },
-  { immediate: true }
-)
-
-
-watch(
-  () => props.scales,
-  (scales) => {
-    if (scales) {
-      const scaleDefs: ScaleDefinition[] = scales.map((item: LegendScale) => {
-        return {
-          id: item.id,
-          title: t(item.id),
-          titleStart: item.titleStart ? t(item.titleStart) : undefined,
-          titleEnd: item.titleEnd ? t(item.titleEnd) : undefined,
-          scale: item.scale.map((entry: ScaleEntry) => {
-            const range: string[] | undefined = entry.range ? [
-              formatNumber(entry.range[0], "") ?? "",
-              formatNumber(entry.range[1], "") ?? ""
-            ] : undefined
-            return {
-              label: entry.label ? t(entry.label) : undefined,
-              color: entry.color,
-              range: range,
-              unit: entry.unit ? t(entry.unit) : (item.unit ? t(item.unit) : undefined)
-            }
-          })
-        }
-      })
-      scaleControl.value = new ScaleLegendControl(scaleDefs)
-      map?.addControl(scaleControl.value, 'top-left')
-      if (props.selectedScaleId) {
-        scaleControl.value.showScale(props.selectedScaleId)
-      }
-    }
-  },
-  { immediate: true }
-)
-
-watch(() => props.selectedScaleId, () => {
-  if (scaleControl.value) {
-    scaleControl.value.showScale(props.selectedScaleId)
-  }
-}, {
-  immediate: true
-})
-
-watch([() => props.selectableLayerIds, () => props.selectedLayerIds], () => filterLayers(), {
-  immediate: true
-})
-
 function update(center?: LngLatLike, zoom?: number) {
   if (map) {
     if (center !== undefined) {
@@ -215,37 +125,83 @@ function update(center?: LngLatLike, zoom?: number) {
   }
 }
 
-function filterLayers() {
-  if (map?.loaded()) {
-    map
-      .getStyle()
-      .layers
-      .filter((layer) => !props.themes.map((theme) => theme.id).includes(layer.id))
-      .forEach((layer) => {
-        map?.setLayoutProperty(
-          layer.id,
-          'visibility',
-          props.selectedLayerIds.includes(layer.id) ? 'visible' : 'none'
-        )
-      })
-  }
+const radiusInKm = 20;
+function zoomToPixels(zoom: number, radiusKm = radiusInKm): number {
+          const scale = Math.pow(2, zoom);
+            const pixelTile = 256 / (window.devicePixelRatio || 1) 
+            const metersPerPixel = 40075016.686 / scale / pixelTile;
+            return radiusKm * 1000 / metersPerPixel;
+}
+// function radiusToPixels(map, radiusKm = radiusInKm) {
+//             const zoom = map.getZoom();
+//            return zoomToPixels(zoom, radiusKm);
+// }
+/* eslint-disable  @typescript-eslint/no-explicit-any */
+const genusPaint: any = {
+  'circle-radius': [
+    "interpolate", ["linear"], ["zoom"],
+    0,0,
+    5, zoomToPixels(5, 50),
+    6, zoomToPixels(6, 40),
+    7, zoomToPixels(7, 30),
+    8, zoomToPixels(8, 20),
+    9, zoomToPixels(9, 20),
+    10, zoomToPixels(10, 5),
+    11, zoomToPixels(11, 4),
+    12, zoomToPixels(12, 3),
+    13, zoomToPixels(13, 2),
+    14, zoomToPixels(14, 1), // Radius in pixels at zoom level 13 (5 km)
+    15, zoomToPixels(15, 0.5) // Adjust this based on desired scale
+      
+  ],
+  'circle-color': 'red',
+  'circle-opacity': 0.5,
+  'circle-stroke-color': 'red',
+  'circle-stroke-width': 1,
+  'circle-stroke-opacity': 0.5
 }
 
-const computedData = computed(() => {
-  const features = projects.value.filter(x => x?.receiver_coordinates).map((project: Project) => ({
+function randomOffset() {
+            const radius = 5; // 1 km
+            const distance = Math.random() * radius;
+            const angle = Math.random() * 2 * Math.PI;
+            const offsetX = distance * Math.cos(angle);
+            const offsetY = distance * Math.sin(angle);
+
+            return [offsetX, offsetY];
+        }
+
+// Function to convert offsets to latitude and longitude changes
+function offsetToCoordinates(lon:  number, lat:  number, offsetX:  number, offsetY:  number) {
+    const earthRadius = 6371; // Earth's radius in km
+
+    const newLat = lat + (offsetY / earthRadius) * (180 / Math.PI);
+    const newLon = lon + (offsetX / (earthRadius * Math.cos(Math.PI * lat / 180))) * (180 / Math.PI);
+
+    return [newLon, newLat];
+}
+
+
+const computedData = computed<GeoJSON.GeoJSON | string>(() => {
+  const features = projects.value.filter(x => x?.receiver_coordinates).map((project: Project) => {
+    const [offsetX, offsetY] = randomOffset();
+    const currentCoordinates = project?.receiver_coordinates ?? [];
+    const newCoordinates = offsetToCoordinates(currentCoordinates[0], currentCoordinates[1], offsetX, offsetY);
+    return ({
     "type": "Feature",
     "geometry": {
       "type": "Point",
-      "coordinates": project?.receiver_coordinates ?? []
+      "coordinates": newCoordinates
     },
     "properties": {
       [`name_${locale.value as ProjectLang}`]: project[`name_${locale.value as ProjectLang}`],
     }
-  }));
+  })
+  });
   return {
-        "type": "FeatureCollection",
-        "features": features
-      };
+    "type": "FeatureCollection",
+    "features": features
+  } as GeoJSON.GeoJSON;
 })
 
 watch(() => projects,
@@ -253,7 +209,7 @@ watch(() => projects,
     // all selected by default
     updateLayerData(computedData.value)
   },
-  { immediate: true, deep:true }
+  { immediate: true, deep: true }
 )
 watch(() => locale.value,
   () => {
@@ -263,7 +219,7 @@ watch(() => locale.value,
 )
 
 
-function updateLayerData(newData:any): void {
+function updateLayerData(newData: GeoJSON.GeoJSON | string): void {
   if (map !== undefined && newData !== undefined) {
     const source: GeoJSONSource = map.getSource('buildings') as GeoJSONSource;
     source?.setData(newData);
@@ -276,24 +232,30 @@ function addProjects() {
   if (map !== undefined) {
     map.addSource('buildings', {
       type: 'geojson',
+      cluster: true,
+      clusterMaxZoom: 6, // Max zoom to cluster points on
+      clusterRadius: 10, // Radius of each cluster when clustering poi
       data: computedData.value
     });
+
+    
     // Now that we've added the source, we can create a layer that uses the 'buildings' source.
     map.addLayer({
       id: 'buildings-layer',
       type: 'circle',
       source: 'buildings',
-      paint: {
-        'circle-radius': 6,
-        'circle-color': '#B42222'
-      }
+      paint: genusPaint,
     });
 
+    // map.on('zoomend', () => {
+    //     const radius = radiusToPixels(map); // 5 km radius
+    //     map.setPaintProperty('buildings-layer', 'circle-radius', radius);
+    // });
     map.on('click', 'buildings-layer', function (e) {
       isProjectDialogOpen.value = true;
       project.value = projects.value.find(x => x[`name_${locale.value as ProjectLang}`] === e.features?.[0].properties[`name_${locale.value as ProjectLang}`]);
     });
-    const popups: any[] = [];
+    const popups: Popup[] = [];
     map.on('mouseenter', 'buildings-layer', function (e) {
       if (map !== undefined) {
         const a = new Popup({
@@ -301,9 +263,17 @@ function addProjects() {
           closeOnClick: false,
           anchor: 'bottom'
         })
-        .setLngLat((e.features?.[0].geometry as any)?.coordinates as LngLatLike)
-        .setHTML('<h3>' + e.features?.[0].properties[`name_${locale.value as ProjectLang}`] + '</h3>')
-        .addTo(map);
+          .setLngLat((e.features?.[0].geometry as GeoJSON.Point)?.coordinates as LngLatLike)
+          .setHTML((() => {
+            const property = e.features?.[0].properties;
+            if (property?.cluster) {
+              return `<h3>${property.point_count_abbreviated} ${t('receiver_title', property.point_count_abbreviated)}</h3>`;
+            } else {
+              const name = e.features?.[0].properties[`name_${locale.value as ProjectLang}`];
+              return `<h3>${name}</h3>`;
+            }
+          })())
+          .addTo(map);
         popups.push(a);
         map.getCanvas().style.cursor = 'pointer';
       }
@@ -315,13 +285,7 @@ function addProjects() {
         map.getCanvas().style.cursor = '';
       }
     });
-}
-
-
-}
-
-function formatNumber(nb: number, unit: string) {
-  return nb === undefined || isNaN(nb) ? '-' : `${new Intl.NumberFormat(`${locale.value}`).format(Math.round(nb * 100) / 100)} ${unit}`
+  }
 }
 
 </script>
