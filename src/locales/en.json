@@ -1,6 +1,6 @@
 {
-  "app_title": "SXL Atlas RE:CRETE",
-  "app_subtitle": "Atlas of reused conncrete",
+  "app_title": "Atlas of reused concrete projects",
+  "app_subtitle": "An interactive database on concrete structural reuse in construction",
   "reuse_title": "Reuse of concrete",
   "reuse_description": "The re-use of concrete - Documentation for the curious and the experts",
   "brief_title": "Concrete reuse in brief",
@@ -8,13 +8,15 @@
   "introduction": "Introduction",
   "add_project": "Add a project",
   "close": "Close",
-  "list": "List",
+  "list": "List view",
   "grid": "Grid",
   "map": "Map",
   "search": "Search",
   "filters": "Filters",
   "home": "Home",
-  "about": "About",
+  "about": "About the Atlas",
+  "contribute": "Contribute",
+  "faq": "Concrete Reuse FAQ",
   "view": "View",
   "legends": "Legends",
   "measures": "Measures",
@@ -29,5 +31,6 @@
   "other": "Unknown",
   "start": "Start",
   "legend": "Legend",
-  "unknown": "Unknown"
+  "unknown": "Unknown",
+  "receiver_title": "project | projects"
 }

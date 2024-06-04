@@ -1,4 +1,4 @@
-<script setup lang="ts">
+ <script setup lang="ts">
 import MapLibreMap from '@/components/MapLibreMap.vue'
 import ProjectFilters from '@/components/ProjectFilters.vue'
 import type { Parameters } from '@/utils/jsonWebMap'
@@ -15,6 +15,10 @@ import { useI18n } from 'vue-i18n'
 import { useDisplay } from 'vuetify'
 import type { Project } from '@/types/Project'
 
+import { useProjectsStore } from '@/stores/projects'
+import BarProjectEchart from '@/components/BarProjectEchart.vue'
+import { storeToRefs } from 'pinia'
+
 const props = defineProps<{
   styleUrl: string
   parametersUrl: string
@@ -22,7 +26,7 @@ const props = defineProps<{
   martinUrl: string
 }>()
 
-const { t, locale } = useI18n({ useScope: 'global' })
+const { t } = useI18n({ useScope: 'global' })
 
 const map = ref<InstanceType<typeof MapLibreMap>>()
 const selectedLayerIds = ref<string[]>([])
@@ -34,8 +38,6 @@ const legendDialogImageSrc = ref<string>()
 const drawerRail = ref(false)
 const drawerRight = ref(false)
 const drawerHtml = ref('')
-const docId = ref<string>()
-const docHtml = ref<any>({})
 const { mobile } = useDisplay()
 const scale = ref<string>()
 
@@ -55,6 +57,9 @@ onMounted(() => {
     .get<StyleSpecification>(props.styleUrl)
     .then((response) => response.data)
     .then((data) => {
+      const newTileSize = 256 / (window.devicePixelRatio || 1)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      data.sources = Object.keys(data.sources).reduce((acc: any, key: string) => { acc[key] = {...data.sources[key], tileSize: newTileSize}; return acc;}, {})
       style.value = data
     })
     .then(() => {
@@ -135,28 +140,18 @@ watch(
   }
 )
 
-function showDocumentation(id: string) {
-  const lid = `${id}_${locale.value}`
-  if (docId.value === lid) {
-    drawerRight.value = !drawerRight.value
-  } else {
-    if (lid in docHtml.value) {
-      drawerHtml.value = docHtml.value[lid]
-    } else {
-      drawerHtml.value = `Ooops, there is no documentation about '${id}'`
-    }
-    docId.value = lid
-    drawerRight.value = true
-  }
-}
+const projects = storeToRefs(useProjectsStore()).projects
 
 </script>
 
 <template>
+  <!-- eslint-disable vue/no-v-text-v-html-on-component -->
+  <!-- eslint-disable vue/no-v-html -->
   <v-navigation-drawer
     :rail="drawerRail"
     permanent
     :width="mobile ? 300 : 450"
+    class="permanent-drawer"
     @click="drawerRail = false"
   >
     <v-list density="compact" nav>
@@ -180,6 +175,11 @@ function showDocumentation(id: string) {
       </v-list-item>
       <project-filters :is-visible="!drawerRail" />
     </v-list>
+
+    <v-sheet v-if="!drawerRail" class="pa-0">
+      <BarProjectEchart :projects="projects" />
+    </v-sheet>
+
   </v-navigation-drawer>
   <v-navigation-drawer v-if="drawerRight" permanent location="right" :width="mobile ? 200 : 400">
     <v-list>
@@ -190,7 +190,8 @@ function showDocumentation(id: string) {
       </v-list-item>
       <v-list-item>
         <v-card>
-          <v-card-text v-html="drawerHtml" class="marked"> </v-card-text>
+          // eslint-disable-next-line vue/no-v-html
+          <v-card-text class="marked" v-html="drawerHtml"> </v-card-text>
         </v-card>
       </v-list-item>
     </v-list>
@@ -213,7 +214,6 @@ function showDocumentation(id: string) {
           :selected-layer-ids="extendedSelectedLayerIds"
           :popup-layer-ids="parameters?.popupLayerIds"
           :selected-scale-id="scale"
-          @documentation="(type) => showDocumentation(type)"
         />
       </v-col>
     </v-row>
@@ -241,4 +241,13 @@ function showDocumentation(id: string) {
 .v-card-image:not(.on-hover) {
   opacity: 0.6;
 }
+.permanent-drawer {
+  .v-navigation-drawer__content {
+    z-index: 1000;
+    display: grid;
+    grid-template-rows: auto 200px;
+    grid-gap: 1rem;
+  }
+}
+
 </style>
