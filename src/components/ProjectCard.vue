@@ -11,20 +11,12 @@
     <v-img class="align-end text-white" height="200" :src="`${item.images?.[0] ?? defaultImage}`" cover>
       <v-card-title>{{ item[`name_${locale as ProjectLang}`] }}</v-card-title>
     </v-img>
-
-    <v-card-subtitle class="pt-4">
-      {{ item._id }}
-    </v-card-subtitle>
-
-    <v-card-text>
-      {{ item[`description_${locale as ProjectLang}`] }}
+    <v-card-text  class="text-overflow">
+      <span >
+        {{ item[`description_${locale as ProjectLang}`] }}
+      </span>
     </v-card-text>
 
-    <v-card-actions>
-      <v-btn color="orange" text="Share"></v-btn>
-
-      <v-btn color="orange" text="Explore"></v-btn>
-    </v-card-actions>
   </v-card>
 </template>
 
@@ -43,4 +35,33 @@ const { locale } = useI18n({ useScope: 'global' })
 
 </script>
 
-<style scoped></style>
+<style>
+
+.text-overflow {
+  --max-lines: 6;
+  --lh: 1.425rem;
+  position: relative;
+  max-height: calc(var(--lh) * var(--max-lines));
+  overflow: hidden;
+  padding-right: 1rem;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: var(--max-lines);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* .text-overflow::before {
+  position: absolute;
+  content: "...";
+  bottom: 0;
+  right: 0;
+}
+.text-overflow::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  width: 1rem;
+  height: 1rem;
+  background: white;
+} */
+</style>

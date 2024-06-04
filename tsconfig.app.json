@@ -10,6 +10,7 @@
     "src/**/__tests__/*"
   ],
   "compilerOptions": {
+    "types": ["vite/client"],
     "composite": true,
     "esModuleInterop": true,
     "resolveJsonModule": true,
