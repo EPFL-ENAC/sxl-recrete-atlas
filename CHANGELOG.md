@@ -1,5 +1,43 @@
 # Changelog
 
+## [1.4.0](https://github.com/EPFL-ENAC/sxl-recrete-atlas/compare/v1.3.0...v1.4.0) (2024-06-06)
+
+
+### Features
+
+* add array filter ([a99d4c1](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/a99d4c1f71ec3e1bc0dcddf5fc0e8170418b33b6))
+* **frontend:** add chart with maps ([0411ed7](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/0411ed79de010b20e1c83a673bc813e1cc191f4c))
+* **frontend:** add chart with maps ([57f7d08](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/57f7d0884fbea62c1d4615e6948e55c87502dece))
+* **frontend:** add chart with maps ([70ecac8](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/70ecac87a18a42854737ab60b5a58a4bc8d2d73b))
+* **frontend:** add faq view and markdown ([2fbe240](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/2fbe240d8531deac37ff50a7392fcea61475deed))
+* **frontend:** add icon to welcome page [#11](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/11) ([e65c18e](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/e65c18e6e2d1243e69c281ec4b3f50cd1369502b))
+* **frontend:** add proper color code for chart ([7b40cc3](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/7b40cc3cedbd41e72486e3c4cc3dc3688e1c3694))
+* **frontend:** add references to project detail [#21](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/21) ([5fcd9f3](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/5fcd9f302e0f83d69ecb4a959ad50aa6f88e515c))
+* **frontend:** add welcome logic [#11](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/11) ([4184a9d](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/4184a9d6f9165da068efb4b254903b35ec92984c))
+* **frontend:** correct detail project [#7](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/7) ([6b457fa](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/6b457fae3d63a3f727ac0664bffd6d8ac10b9a5a))
+* **frontend:** correct detail project [#7](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/7) [#8](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/8) ([6c0e039](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/6c0e0394a969d7374fbc38f2d1ac280ceeb5d5bd))
+* **frontend:** correct detail project [#7](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/7) [#8](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/8) ([d789ed4](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/d789ed4cc9390425436281c5a1da99609ee84c12))
+* **frontend:** correct detail project [#7](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/7) [#8](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/8) ([fb2190f](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/fb2190ffbb82fb88c920d8b98fef9eefa0d42bf6))
+* **frontend:** correct detail project [#7](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/7) [#8](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/8) ([5fa45d0](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/5fa45d0d350748b3f0bbe6230a2e72accbe9a04d))
+* **frontend:** improve project detail ([27c7c79](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/27c7c791ad1c9f114588d92e89f551d6cfc305c0))
+* **frontend:** remove unused control for map [#15](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/15) ([ac9ae7f](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/ac9ae7f98367432a5e0eeb54c5f0b6b23bc0e82d))
+* **frontend:** reorganize filters ([3b5f93f](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/3b5f93fa6be9582d5baa9e888b74b7631d6eed8e))
+* transform main-concrete in string[] instead of string ([9a7224d](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/9a7224d93d859e7d0884f636ebe70f300ca4af4e))
+
+
+### Bug Fixes
+
+* **add_project_en:** add link to form pdf ([535e569](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/535e569d3b5f0363d0c67059a101bdef6cd54daa))
+* change route on close and better with/without ([3cbc6cb](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/3cbc6cbc8912806d3085651e173831c27c8ba6f0))
+* **frontend:** better graph order ([4bde4f3](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/4bde4f32d904276786c2fd5f4ab166a0e708df31))
+* **frontend:** correct issue [#14](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/14) regarding ellipsis ([552b7ba](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/552b7bad6fd041b46d718246c45e76e852514363))
+* **frontend:** correct name filter ([cac4ffb](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/cac4ffb7139d80f50ed64d1d7207df991f90194f))
+* **frontend:** correct zoom level and cluster [#31](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/31) ([352fb91](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/352fb91a799829ca9ea43dd7c8c3798d3c2a92e6))
+* **frontend:** new component for tooltip ([03190b4](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/03190b4cb9be5e7f56df7475dd857fcc436342b5))
+* **lint:** better linter ([83cdffd](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/83cdffde1deea3e4a29f48f68243fee27e3d9919))
+* rewrite header ([d3a282a](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/d3a282a2bb235cfdabb862af5471c77f51d9a1d2))
+* **table:** fixed header [#12](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/12) ([8a52581](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/8a52581e189e32b4f6227c75bf3b85b4b8c487a1))
+
 ## [1.3.0](https://github.com/EPFL-ENAC/sxl-recrete-atlas/compare/v1.2.2...v1.3.0) (2024-05-17)
 
 
