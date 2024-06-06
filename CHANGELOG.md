@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.4.1](https://github.com/EPFL-ENAC/sxl-recrete-atlas/compare/v1.4.0...v1.4.1) (2024-06-06)
+
+
+### Bug Fixes
+
+* PDF in new tab ([28118b9](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/28118b95ea45ad8d14ffaf6d0282fc13689e1b9e))
+* **pdf_form:** New form for contribution ([10b0cd5](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/10b0cd5fcdf4e362b39ad9f2ed435e9c8eb08b94))
+* update add_project_en.md use html ([83dad50](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/83dad508db6a060d6eeb1646c1fdae3c6e16d1a4))
+* Update_add_project_en ([b8846c5](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/b8846c56e54a2d1c5039bdfbdc6d246b3da63b1d))
+
 ## [1.4.0](https://github.com/EPFL-ENAC/sxl-recrete-atlas/compare/v1.3.0...v1.4.0) (2024-06-06)
 
 
