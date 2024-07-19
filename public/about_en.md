@@ -2,7 +2,7 @@
 
 The Atlas is an initiative from the Structural Xploration Lab at EPFL for a greater understanding of concrete reuse in construction, both in research and practice.
 
-The project is born from an initial research project on the history of concrete reuse. In this research, we built a database of structural concrete reuse projects in the construction sector. It is presented and analyzed in a paper available here (https://doi.org/10.1016/j.jclepro.2022.135235). 
+The project is born from an initial research project on the history of concrete reuse. In this research, we built a database of structural concrete reuse projects in the construction sector. It is presented and analyzed in a paper available [here](https://doi.org/10.1016/j.jclepro.2022.135235). 
 
 In 2024, we decided to transform the database into an interactive atlas to make it more accessible to practitioners and researchers. We will keep updating the database with newly collected projects. To keep the atlas up to date, share your project with us via the “+” button!
 
