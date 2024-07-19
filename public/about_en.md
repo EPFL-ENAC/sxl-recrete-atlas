@@ -24,7 +24,7 @@ Concept and design:
 Célia Küpfer + Malena Bastien-Masse + Corentin Fivet ([Structural Xploration Lab](https://www.epfl.ch/labs/sxl/), EPFL)
 
 Web-app development:
-Pierre Guilbert + Charlotte Weil ([EPFL ENACIT4Research](https://www.epfl.ch/schools/enac/about/data-at-enac/enac-it4research/)
+Pierre Guilbert + Charlotte Weil ([ENACIT4Research](https://www.epfl.ch/schools/enac/about/data-at-enac/enac-it4research/), EPFL)
 
 ### Contact
 
