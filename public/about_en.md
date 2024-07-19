@@ -14,7 +14,7 @@ Despite the large environmental degradation caused by the concrete industry, con
 
 Instead of crushing and downcycling concrete into rubble, techniques exist to deconstruct soon-to-be-demolished concrete structures into large structural elements and to reuse these elements to build new structures. 
 
-Concrete elements can be directly reused in new structures, avoiding the need for fresh cement, sand, or aggregates. Thus, concrete reuse has extremely little environmental impacts compared to conventional concrete construction. Plus, it’s an innovative way to support local economy and prolong the use of material and immaterial resources.
+Reusing concrete elements avoids the need for fresh cement, sand, or aggregates. Thus, concrete reuse has extremely little environmental impacts compared to conventional concrete construction. Plus, it’s an innovative way to support local economy and prolong the use of material and immaterial resources.
 
 Sharing knowledge on past projects – the driver behind the Atlas project - is essential for a better understanding by the community of the challenges and opportunities of this little-known, circular approach.
 
