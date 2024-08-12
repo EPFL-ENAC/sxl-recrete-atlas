@@ -32,5 +32,6 @@
   "start": "Start",
   "legend": "Legend",
   "unknown": "Unknown",
-  "receiver_title": "project | projects"
+  "receiver_title": "project | projects",
+  "choose-your-lang": "Choose your language"
 }
