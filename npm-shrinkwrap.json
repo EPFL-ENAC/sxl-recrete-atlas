@@ -18,7 +18,7 @@
         "events": "^3.3.0",
         "floating-vue": "^5.2.2",
         "maplibre-gl": "^3.5.1",
-        "marked": "^5.1.0",
+        "marked": "^5.1.2",
         "marked-emoji": "^1.4.0",
         "papaparse": "^5.4.1",
         "pinia": "^2.0.32",
