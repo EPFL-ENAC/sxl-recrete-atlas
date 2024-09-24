@@ -1,6 +1,8 @@
 {
   "app_title": "Atlas of reused concrete projects",
   "app_subtitle": "An interactive database on concrete structural reuse in construction",
+  "app_wip_title": "Work in progress",
+  "app_wip_subtitle": "This application is still under development.",
   "reuse_title": "Reuse of concrete",
   "reuse_description": "The re-use of concrete - Documentation for the curious and the experts",
   "brief_title": "Concrete reuse in brief",

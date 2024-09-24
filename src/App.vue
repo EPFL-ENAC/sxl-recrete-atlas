@@ -9,6 +9,7 @@ import { useLocale } from 'vuetify'
 import epflLogoUrl from '/EPFL_Logo_184X53.svg'
 import { defaultAppHeaderHeight } from '@/utils/default'
 import LocaleSelector from './components/LocaleSelector.vue'
+import { mdiWrench } from '@mdi/js'
 
 const { current } = useLocale()
 const { locale } = useI18n({ useScope: 'global' })
@@ -50,11 +51,18 @@ const appHeaderHeight = ref(defaultAppHeaderHeight)
 <template>
   <v-app>
     <v-app-bar flat :height="appHeaderHeight">
-      <v-app-bar-title>
+      <v-app-bar-title class="flex-1-1">
         <div class="text-h5">{{ $t('app_title') }}</div>
         <div class="text-subtitle-2">{{ $t('app_subtitle') }}</div>
       </v-app-bar-title>
-
+      <div class="flex-shrink-1 flex-grow-1">
+        <div class="text-h5">
+          {{ $t('app_wip_title') }}<v-icon class="ml-5"> {{ mdiWrench }}</v-icon>
+        </div>
+        <div class="text-subtitle-2">
+          {{ $t('app_wip_subtitle') }}
+        </div>
+      </div>
       <v-menu activator="#locales-activator">
         <v-list>
           <v-list-item v-for="(lang, index) in $i18n.availableLocales" :key="index">
@@ -64,7 +72,7 @@ const appHeaderHeight = ref(defaultAppHeaderHeight)
           </v-list-item>
         </v-list>
       </v-menu>
-      <div class="flex-grow-1 main-group-btn">
+      <div class="main-group-btn">
         <v-tooltip location="bottom">
           <template #activator="{ props: activatorProps }">
             <v-btn
