@@ -1,5 +1,36 @@
 # Changelog
 
+## [1.5.0](https://github.com/EPFL-ENAC/sxl-recrete-atlas/compare/v1.4.1...v1.5.0) (2024-09-26)
+
+
+### Features
+
+* add WIP titles and subtitles to app header in EN and FR locales ([c43a6ca](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/c43a6ca36320ab71e5fd61763f030df47ca6bd4b))
+* French pdf to contribute new project ([c8e6045](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/c8e6045d1c123ea0be73beeba0120a83fe0c7410))
+* Implemented text for FAQ ([41fedda](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/41fedda681a50346ed4195f4ba53e96f798282b0))
+* Initial text inpUt for faq in FR ([5cf3198](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/5cf319899cd358792f913a3b096e6957991b8346))
+* refactor locale selector & add it to welcome dialog [#45](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/45) ([93f12f6](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/93f12f6c16353be00bff846801516a36dbae160a))
+* Update about_en.md ([4b15c44](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/4b15c4480a7b48933a55e26dfe964bc7c41cf40c))
+* Update about_fr.md ([203f6d8](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/203f6d871923b5245f01cd21c15b78945d038e5e))
+
+
+### Bug Fixes
+
+* contribute button ([fa9546b](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/fa9546ba3a0878f792371969ddf4dc426b60c7d0))
+* ENAC IT WEBSITE ([3bd7c17](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/3bd7c17f74d3b7e837b589801904465f34eaba67))
+* short_name ([0813fa3](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/0813fa3c2af2e69ac3d0f5f1166ea932bf87ad1c))
+* texte update ([6b85d73](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/6b85d73918dffb69da04aea12a943b69ca07aaea))
+* Update add_project_en.md ([1dd8222](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/1dd822239701127a4422387d1726ddbbd3cf2be8))
+* Update add_project_en.md ([e4613a2](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/e4613a2560e6acad270d4a2352d7e56d6807486c))
+* Update add_project_en.md ([55c9824](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/55c9824725fd4c1ddbed437fd207139db043ad91))
+* Update add_project_fr.md ([25a6fb7](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/25a6fb7a69b689d5bde520ce974ec110bfe1dc7f))
+* Update add_project_fr.md ([a9eca2e](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/a9eca2ed8c0ab756988289bfc6b05f7e87ba64cd))
+* Update add_project_fr.md ([2ad442c](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/2ad442c098d5230c7958082db2b9a3b5874137b9))
+* update marked & fix markdown formatting pb + add my name [#44](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/44) ([6b288e3](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/6b288e341063b2ded25a71322bb865e073c27006))
+* Update welcome_en.md ([c3e3f46](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/c3e3f469aa5d7bd6b569eec89aad264b2c1995ca))
+* Update welcome_fr.md ([0aeedaf](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/0aeedaf64b4e1597e829d43c6676ad6f60b84d15))
+* website paper ([f8b1ea3](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/f8b1ea3941da17b29a4b454240757c786cfcea8b))
+
 ## [1.4.1](https://github.com/EPFL-ENAC/sxl-recrete-atlas/compare/v1.4.0...v1.4.1) (2024-06-06)
 
 
