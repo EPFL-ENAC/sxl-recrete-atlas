@@ -1,6 +1,8 @@
 {
-  "app_title": "Atlas des projets de béton réutilisé",
+  "app_title": "Atlas des projets de réemploi béton",
   "app_subtitle": "Une base de données interactive sur la réutilisation des structures en béton dans la construction",
+  "app_wip_title": "En construction",
+  "app_wip_subtitle": "Cette application est encore en développement.",
   "reuse_title": "Réutilisation du béton",
   "reuse_description": "Le réemploi du béton - Documentation pour curieux et experts",
   "brief_title": "Le réemploi du béton en bref",
@@ -32,5 +34,6 @@
   "start": "Commencer",
   "legend": "Légende",
   "unknown": "Inconnu",
-  "receiver_title": "projet | projets"
+  "receiver_title": "projet | projets",
+  "choose-your-lang": "Choisissez votre langue"
 }

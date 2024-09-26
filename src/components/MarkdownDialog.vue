@@ -5,6 +5,9 @@ import { markedEmoji } from 'marked-emoji'
 import type { EmojiToken } from 'marked-emoji'
 import DOMPurify from 'dompurify'
 import { useDisplay } from 'vuetify'
+
+import LocaleSelector from '../components/LocaleSelector.vue'
+
 import { onMounted, ref } from 'vue'
 import { watch } from 'vue'
 
@@ -99,8 +102,11 @@ function close() {
     @update:model-value="emit('dialogClose')"
   >
     <v-card class="text-justify">
-      <v-card-title v-if="name">{{ name }}</v-card-title>
+      <v-card-title v-if="name" class="d-flex justify-space-between align-center">
+        {{ name }}
+      </v-card-title>
       <v-card-text>
+        <LocaleSelector class="locale-selector" />
         <br v-if="!name" />
         <div class="marked" v-html="contentHtml"></div>
       </v-card-text>
@@ -115,3 +121,12 @@ function close() {
     </v-card>
   </v-dialog>
 </template>
+
+<style scoped>
+.locale-selector {
+  position: fixed;
+  right: 0;
+  top: 0;
+  padding: 24px;
+}
+</style>
