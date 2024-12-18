@@ -1,4 +1,5 @@
-# it4r-webmap
+# Atlas of reused concrete projects
+An interactive database on concrete structural reuse in construction
 
 ## Data source
 
