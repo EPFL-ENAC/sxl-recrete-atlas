@@ -266,6 +266,8 @@ function addProjects() {
     // map.on('zoomend', () => {
     //     const radius = radiusToPixels(map); // 5 km radius
     //     map.setPaintProperty('buildings-layer', 'circle-radius', radius);
+    // The `e` parameter is a combination of `MapMouseEvent` and an optional `features` property.
+    // The `features` property contains an array of `MapGeoJSONFeature` objects representing the features at the clicked location.
     map.on('click', 'buildings-layer', function (e: MapMouseEvent & { features?: MapGeoJSONFeature[] }) {
       const feature = e.features?.[0];
       if (!feature) {
