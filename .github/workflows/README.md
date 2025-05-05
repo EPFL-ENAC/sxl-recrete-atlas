@@ -1,6 +1,6 @@
 # We use the following secrets:
 
-Don't forget to check that everthing is working and configured on the
+Don't forget to check that everything is working and configured on the
 https://github.com/EPFL-ENAC/sxl-recrete-atlas/settings/secrets/actions repository_secrets tab
 
 ## For the Continuous Deployment pipeline (on our kube cluster):
