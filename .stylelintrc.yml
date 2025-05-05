@@ -1,0 +1,6 @@
+extends:
+  - "stylelint-config-standard"
+  - "stylelint-config-standard-scss"
+rules:
+  block-no-empty: true
+  color-no-invalid-hex: true

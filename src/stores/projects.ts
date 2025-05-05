@@ -5,59 +5,71 @@ import type { ProjectKey, Project, ProjectLang } from '@/types/Project'
 import data from '@/assets/data/data.json'
 import { useFiltersStore } from './filters'
 import { storeToRefs } from 'pinia'
-import { newFilter } from '@/stores/filters';
+import { newFilter } from '@/stores/filters'
 import type { Filter, FilterKey } from '@/types/Filter'
 import { useI18n } from 'vue-i18n'
 
-export type FilterValue = string|null|undefined|boolean;
+export type FilterValue = string | null | undefined | boolean
 export type Filters = Record<ProjectKey, FilterValue>
 
-
 export const useProjectsStore = defineStore('projects', () => {
-
   const { locale } = useI18n({ useScope: 'global' })
-  const { filters } = storeToRefs(useFiltersStore());
+  const { filters } = storeToRefs(useFiltersStore())
 
-  const countries = computed(() => (data as Project[]).map((project: Project) => project.receiver_country).filter((value, index, self) => self.indexOf(value) === index))
+  const countries = computed(() =>
+    (data as Project[])
+      .map((project: Project) => project.receiver_country)
+      .filter((value, index, self) => self.indexOf(value) === index)
+  )
   const projects = computed({
     get: () => {
       const filterKeys = Object.keys(filters.value) as ProjectKey[]
       const defaultFilter: Filter = newFilter()
       return (data as Project[]).filter((project: Project) => {
-        return filterKeys.every((key: ProjectKey|FilterKey) => {
+        return filterKeys.every((key: ProjectKey | FilterKey) => {
           const filterValue: FilterValue = filters.value[key as FilterKey] as FilterValue
           let projectValue = project[key as ProjectKey]
-          if (key === "name") {
-            const projectName: string = project[`${key}_${locale.value as ProjectLang}` as ('name_en'| 'name_fr')];
-            projectValue = projectName?.toLowerCase().replace(/[\W_]+/g,"")
-
+          if (key === 'name') {
+            const projectName: string =
+              project[`${key}_${locale.value as ProjectLang}` as 'name_en' | 'name_fr']
+            projectValue = projectName?.toLowerCase().replace(/[\W_]+/g, '')
           }
           // const projectValue = project[key as ProjectKey]
 
           if (typeof filterValue === 'string' && typeof projectValue === 'string') {
-            return projectValue.includes(filterValue.toLowerCase().replace(/[\W_]+/g,""))
+            return projectValue.includes(filterValue.toLowerCase().replace(/[\W_]+/g, ''))
           }
-          if (Array.isArray(filterValue) && (typeof projectValue === 'string' ||  projectValue === undefined)) {
+          if (
+            Array.isArray(filterValue) &&
+            (typeof projectValue === 'string' || projectValue === undefined)
+          ) {
             // select filter mainly
             // range filter here if defaultFilterValue.length === 2 // it works though..
-            const defaultFilterValue = defaultFilter[key as FilterKey] ?? [];
+            const defaultFilterValue = defaultFilter[key as FilterKey] ?? []
             if (JSON.stringify(filterValue) === JSON.stringify(defaultFilterValue)) {
-              return true;
+              return true
             }
             return projectValue !== undefined && filterValue.includes(projectValue)
           }
 
-          if (Array.isArray(filterValue) && (Array.isArray(projectValue) && projectValue.length > 0 && typeof projectValue[0] === 'string')) {
-             // select filter for array and array
-            return projectValue !== undefined && filterValue
-              .every((value: string) => (projectValue as string[]).includes(value));
+          if (
+            Array.isArray(filterValue) &&
+            Array.isArray(projectValue) &&
+            projectValue.length > 0 &&
+            typeof projectValue[0] === 'string'
+          ) {
+            // select filter for array and array
+            return (
+              projectValue !== undefined &&
+              filterValue.every((value: string) => (projectValue as string[]).includes(value))
+            )
           }
 
           if (Array.isArray(filterValue) && filterValue.length == 2) {
             // range filterq
-            const defaultFilterValue = defaultFilter[key as FilterKey] ?? [];
+            const defaultFilterValue = defaultFilter[key as FilterKey] ?? []
             if (JSON.stringify(filterValue) === JSON.stringify(defaultFilterValue)) {
-              return true;
+              return true
             }
             if (typeof projectValue === 'number') {
               return filterValue[0] <= projectValue && projectValue <= filterValue[1]
@@ -65,33 +77,32 @@ export const useProjectsStore = defineStore('projects', () => {
               // should probably check if the filterValue === defaultFilterValue ?
               // if that's the case return true ?
               // until then, we must return true, to avoid filtering out the project with undefined value
-              return true;
+              return true
             }
           }
-          
+
           if (typeof filterValue === 'boolean') {
             // boolean filter
-            if (projectValue !== undefined){
-              return filterValue;
+            if (projectValue !== undefined) {
+              return filterValue
             } else {
-              return !filterValue;
+              return !filterValue
             }
           }
           if (projectValue === undefined || projectValue === null) {
-            return true;
+            return true
           }
           if (filterValue === null || filterValue === undefined) {
-            return true;
+            return true
           }
-          return true;
+          return true
         })
       })
     },
     set: () => {
-      return;
+      return
     }
   })
-
 
   return { projects, countries }
 })

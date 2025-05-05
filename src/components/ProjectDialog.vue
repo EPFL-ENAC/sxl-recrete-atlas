@@ -1,46 +1,42 @@
 <template>
-  <v-dialog
-v-model="isDialogActive" max-width="80%" height="80%"
-    @after-leave="closeDialog">
+  <v-dialog v-model="isDialogActive" max-width="80%" height="80%" @after-leave="closeDialog">
     <template #default="{ isActive }">
-      <project-detail v-if="isActive" v-model="isDialogActive" :project="props.project"/>
+      <project-detail v-if="isActive" v-model="isDialogActive" :project="props.project" />
     </template>
   </v-dialog>
-
 </template>
 
 <script setup lang="ts">
-import ProjectDetail from '@/components/ProjectDetail.vue';
-import type { Project } from '@/types/Project';
-import { computed, defineModel } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import ProjectDetail from '@/components/ProjectDetail.vue'
+import type { Project } from '@/types/Project'
+import { computed, defineModel } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 const route = useRoute()
 const router = useRouter()
 
 const isDialogActive = defineModel({
   type: Boolean,
-  default: false,
+  default: false
 })
 
 const props = defineProps<{
-  project: Project|undefined
+  project: Project | undefined
 }>()
-
 
 const projectId = computed({
   get() {
     return route.query.projectId ?? ''
   },
   set(projectId) {
-    router.replace({query: {...route.query, projectId: projectId === '' ? undefined : projectId } })
+    router.replace({
+      query: { ...route.query, projectId: projectId === '' ? undefined : projectId }
+    })
   }
 })
 
 const closeDialog = () => {
-  projectId.value = '';
+  projectId.value = ''
 }
-
-
 </script>
 
 <style scoped></style>

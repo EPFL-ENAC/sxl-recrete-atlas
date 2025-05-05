@@ -19,13 +19,14 @@ watch(locale, () => {
 
 function updateAbout() {
   axios
-  .get<string>(`about_${locale.value}.md`)
-  .then((response) => response.data)
-  .then((data) => {
-    contentHtml.value = DOMPurify.sanitize(marked.parse(data, {headerIds: false, mangle: false}))
-  })
+    .get<string>(`about_${locale.value}.md`)
+    .then((response) => response.data)
+    .then((data) => {
+      contentHtml.value = DOMPurify.sanitize(
+        marked.parse(data, { headerIds: false, mangle: false })
+      )
+    })
 }
-
 </script>
 <template>
   <!-- eslint-disable vue/no-v-html -->
@@ -33,7 +34,6 @@ function updateAbout() {
     <div>
       <v-btn to="/" :icon="mdiKeyboardBackspace" flat></v-btn>
     </div>
-    <div class="marked ml-3 mr-3" v-html="contentHtml">
-    </div>
+    <div class="marked ml-3 mr-3" v-html="contentHtml"></div>
   </v-container>
 </template>

@@ -43,7 +43,7 @@
   },
   "devDependencies": {
     "@intlify/unplugin-vue-i18n": "^4.0.0",
-    "@intlify/vue-i18n-loader": "^5.0.1",
+    "@intlify/vue-i18n-loader": "^4.2.0",
     "@mdi/font": "^7.4.47",
     "@mdi/js": "^7.4.47",
     "@rushstack/eslint-patch": "^1.2.0",
@@ -64,6 +64,9 @@
     "prettier": "^3.2.5",
     "prettier-plugin-organize-imports": "^3.2.4",
     "sass": "^1.61.0",
+    "stylelint": "^16.19.1",
+    "stylelint-config-standard": "^38.0.0",
+    "stylelint-config-standard-scss": "^14.0.0",
     "typescript": "~5.4.5",
     "typescript-json-schema": "^0.63.0",
     "unplugin": "^1.10.1",
@@ -73,6 +76,6 @@
     "vue-tsc": "^2.0.14"
   },
   "engines": {
-    "node": ">=16.0.0 < 21.0.0"
+    "node": ">=22 <23"
   }
 }
