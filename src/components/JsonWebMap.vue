@@ -1,4 +1,4 @@
- <script setup lang="ts">
+<script setup lang="ts">
 import MapLibreMap from '@/components/MapLibreMap.vue'
 import ProjectFilters from '@/components/ProjectFilters.vue'
 import type { Parameters } from '@/utils/jsonWebMap'
@@ -41,15 +41,14 @@ const drawerHtml = ref('')
 const { mobile } = useDisplay()
 const scale = ref<string>()
 
-
 const isProjectDialogOpen = defineModel('isProjectDialogOpen', {
   type: Boolean,
   default: false
 })
 
-const project = defineModel<Project, string >('project', {
+const project = defineModel<Project, string>('project', {
   default: undefined,
-  type: Object,
+  type: Object
 })
 
 onMounted(() => {
@@ -59,7 +58,10 @@ onMounted(() => {
     .then((data) => {
       const newTileSize = 256 / (window.devicePixelRatio || 1)
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      data.sources = Object.keys(data.sources).reduce((acc: any, key: string) => { acc[key] = {...data.sources[key], tileSize: newTileSize}; return acc;}, {})
+      data.sources = Object.keys(data.sources).reduce((acc: any, key: string) => {
+        acc[key] = { ...data.sources[key], tileSize: newTileSize }
+        return acc
+      }, {})
       style.value = data
     })
     .then(() => {
@@ -141,7 +143,6 @@ watch(
 )
 
 const projects = storeToRefs(useProjectsStore()).projects
-
 </script>
 
 <template>
@@ -164,7 +165,7 @@ const projects = storeToRefs(useProjectsStore()).projects
             @click.stop="drawerRail = true"
           />
         </template>
-        <template v-if="drawerRail" #prepend >
+        <template v-if="drawerRail" #prepend>
           <v-btn
             :icon="mdiChevronRight"
             variant="flat"
@@ -179,7 +180,6 @@ const projects = storeToRefs(useProjectsStore()).projects
     <v-sheet v-if="!drawerRail" class="pa-0">
       <BarProjectEchart :projects="projects" />
     </v-sheet>
-
   </v-navigation-drawer>
   <v-navigation-drawer v-if="drawerRight" permanent location="right" :width="mobile ? 200 : 400">
     <v-list>
@@ -249,5 +249,4 @@ const projects = storeToRefs(useProjectsStore()).projects
     grid-gap: 1rem;
   }
 }
-
 </style>

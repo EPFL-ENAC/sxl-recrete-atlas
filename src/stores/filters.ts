@@ -3,9 +3,9 @@ import { computed, ref } from 'vue'
 import type { Filter, FilterKey, RangeFilterKey } from '@/types/Filter'
 
 export const stepsHash: Partial<Record<RangeFilterKey, number>> = {
-  distance_km: 10,
+  distance_km: 10
 }
-const currentYear = parseInt((new Date()).toISOString().substring(0,4),10);
+const currentYear = parseInt(new Date().toISOString().substring(0, 4), 10)
 export const valuesHash: Partial<Record<RangeFilterKey, number[]>> = {
   start_date_year: [1960, currentYear],
   distance_km: [0, 1000]
@@ -32,11 +32,11 @@ export function newFilter(): Filter {
 }
 
 export const useFiltersStore = defineStore('filters', () => {
-  function valueToLocalStorage(value: Filter): void{
-    localStorage.setItem("pinia_filters", JSON.stringify(value));
+  function valueToLocalStorage(value: Filter): void {
+    localStorage.setItem('pinia_filters', JSON.stringify(value))
   }
   function localStorageToValue(): Filter {
-    const pinia_filters = localStorage.getItem("pinia_filters")
+    const pinia_filters = localStorage.getItem('pinia_filters')
     return pinia_filters ? JSON.parse(pinia_filters) : newFilter()
   }
 
@@ -48,14 +48,14 @@ export const useFiltersStore = defineStore('filters', () => {
   })
 
   function setFilters(newFilters: Filter) {
-    (Object.keys(newFilters) as FilterKey[]).forEach((key: FilterKey) => {
-      (filters.value as Filter)[key] = newFilters[key] as never;
+    ;(Object.keys(newFilters) as FilterKey[]).forEach((key: FilterKey) => {
+      ;(filters.value as Filter)[key] = newFilters[key] as never
     })
     valueToLocalStorage(filters.value)
   }
 
   function setRangeFilters(value: number[], key: RangeFilterKey) {
-    filters.value[key] = value;
+    filters.value[key] = value
     setFilters({
       ...filters.value,
       [key]: value
@@ -63,9 +63,8 @@ export const useFiltersStore = defineStore('filters', () => {
   }
 
   function resetFilter(): void {
-    setFilters(newFilter());
+    setFilters(newFilter())
   }
-  
 
   return { filters, setFilters, setRangeFilters, getFilters, resetFilter }
 })
