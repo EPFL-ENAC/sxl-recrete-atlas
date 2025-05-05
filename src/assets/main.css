@@ -1,6 +1,10 @@
 html {
   overflow-y: auto;
 }
+/* stylelint-disable selector-class-pattern */
+.v-input__details, .v-input__details .v-messages {
+  min-height: 0 !important;
+}
 
 .marked ul,
 .marked ol {
