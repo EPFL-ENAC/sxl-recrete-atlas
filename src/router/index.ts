@@ -22,7 +22,8 @@ const router = createRouter({
       path: '/specialized-documentation',
       name: 'specialized-documentation',
       component: () => import('../views/DocumentationView.vue')
-    },{
+    },
+    {
       path: '/concrete-reuse-in-short',
       name: 'concrete-reuse-in-short',
       component: () => import('../views/ReuseView.vue')

@@ -8,22 +8,26 @@
     outlined
     tile
   >
-    <v-img class="align-end text-white" height="200" :src="`${item.images?.[0] ?? defaultImage}`" cover>
+    <v-img
+      class="align-end text-white"
+      height="200"
+      :src="`${item.images?.[0] ?? defaultImage}`"
+      cover
+    >
       <v-card-title>{{ item[`name_${locale as ProjectLang}`] }}</v-card-title>
     </v-img>
-    <v-card-text  class="text-overflow">
-      <span >
+    <v-card-text class="text-overflow">
+      <span>
         {{ item[`description_${locale as ProjectLang}`] }}
       </span>
     </v-card-text>
-
   </v-card>
 </template>
 
 <script setup lang="ts">
-import type { ProjectLang } from '@/types/Project';
-import { defaultImage } from '@/utils/default';
-import { useI18n } from 'vue-i18n';
+import type { ProjectLang } from '@/types/Project'
+import { defaultImage } from '@/utils/default'
+import { useI18n } from 'vue-i18n'
 defineProps({
   item: {
     type: Object,
@@ -32,11 +36,9 @@ defineProps({
 })
 
 const { locale } = useI18n({ useScope: 'global' })
-
 </script>
 
 <style>
-
 .text-overflow {
   --max-lines: 6;
   --lh: 1.425rem;
