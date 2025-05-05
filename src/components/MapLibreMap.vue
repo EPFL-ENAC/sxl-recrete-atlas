@@ -193,10 +193,7 @@ const computedData = computed<GeoJSON.GeoJSON | string>(() => {
       // Read the offset computed in the store
       const { offset } = project
       const [offsetX, offsetY] = offset
-      const currentCoordinates = project.receiver_coordinates
-      if (!currentCoordinates) {
-        return null
-      }
+      const currentCoordinates = project.receiver_coordinates!
       const newCoordinates = offsetToCoordinates(
         currentCoordinates[0],
         currentCoordinates[1],
@@ -263,9 +260,6 @@ function addProjects() {
       paint: genusPaint
     })
 
-    // map.on('zoomend', () => {
-    //     const radius = radiusToPixels(map); // 5 km radius
-    //     map.setPaintProperty('buildings-layer', 'circle-radius', radius);
     // The `e` parameter is a combination of `MapMouseEvent` and an optional `features` property.
     // The `features` property contains an array of `MapGeoJSONFeature` objects representing the features at the clicked location.
     map.on('click', 'buildings-layer', function (e: MapMouseEvent & { features?: MapGeoJSONFeature[] }) {
