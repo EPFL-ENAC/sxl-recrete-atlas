@@ -12,6 +12,7 @@ import {
   NavigationControl,
   Popup,
   type LngLatLike,
+  type MapGeoJSONFeature,
   type StyleSpecification
 } from 'maplibre-gl'
 import { onMounted, ref, watch, defineModel, computed } from 'vue'
@@ -268,8 +269,7 @@ function addProjects() {
     // map.on('zoomend', () => {
     //     const radius = radiusToPixels(map); // 5 km radius
     //     map.setPaintProperty('buildings-layer', 'circle-radius', radius);
-    // });
-    map.on('click', 'buildings-layer', function (e: MapMouseEvent) {
+    map.on('click', 'buildings-layer', function (e: MapMouseEvent & { features?: MapGeoJSONFeature[] }) {
       const feature = e.features?.[0];
       if (!feature) {
         console.error('Feature is undefined');
