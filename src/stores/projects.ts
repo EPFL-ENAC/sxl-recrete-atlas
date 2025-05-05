@@ -106,8 +106,8 @@ export const useProjectsStore = defineStore('projects', () => {
   const projectOffsets = ref<Record<string, [number, number]>>({})
   const projectsWithOffsets = computed(() => {
     return filteredProjects.value.map((project: Project) => {
-      // Use the localized project name as key
-      const key = project[`name_${locale.value as ProjectLang}`] || JSON.stringify(project)
+      // Use the unique project ID as key
+      const key = project._id
       if (!projectOffsets.value[key]) {
         projectOffsets.value[key] = randomOffset()
       }
