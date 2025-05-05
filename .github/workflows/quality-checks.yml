@@ -31,5 +31,5 @@ jobs:
         run: npm run format -- --check
 
       - name: Type check
-        run: npm run convert && npx quasar prepare && npm run type-check
+        run: npm run convert && npm run type-check
 
