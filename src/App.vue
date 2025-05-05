@@ -5,13 +5,13 @@ import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { RouterView } from 'vue-router'
 import { useCookies } from 'vue3-cookies'
-import { useLocale } from 'vuetify'
+// import { useLocale } from 'vuetify'
 import epflLogoUrl from '/EPFL_Logo_184X53.svg'
 import { defaultAppHeaderHeight } from '@/utils/default'
-import LocaleSelector from './components/LocaleSelector.vue'
+// import LocaleSelector from './components/LocaleSelector.vue'
 import { mdiWrench } from '@mdi/js'
 
-const { current } = useLocale()
+// const { current } = useLocale()
 const { locale } = useI18n({ useScope: 'global' })
 
 const { cookies } = useCookies()
@@ -31,11 +31,11 @@ function welcomeClosed() {
 const showProjectOpen = ref<boolean>(false)
 const addProjectOpened = computed<boolean>(() => showProjectOpen.value)
 
-function onLocale(lang: string) {
-  locale.value = lang
-  current.value = lang
-  cookies.set('locale', lang, '365d')
-}
+// function onLocale(lang: string) {
+//   locale.value = lang
+//   current.value = lang
+//   cookies.set('locale', lang, '365d')
+// }
 
 function addProjectClosed() {
   showProjectOpen.value = false
@@ -63,6 +63,7 @@ const appHeaderHeight = ref(defaultAppHeaderHeight)
           {{ $t('app_wip_subtitle') }}
         </div>
       </div>
+      <!--
       <v-menu activator="#locales-activator">
         <v-list>
           <v-list-item v-for="(lang, index) in $i18n.availableLocales" :key="index">
@@ -72,6 +73,7 @@ const appHeaderHeight = ref(defaultAppHeaderHeight)
           </v-list-item>
         </v-list>
       </v-menu>
+      -->
       <div class="main-group-btn">
         <v-tooltip location="bottom">
           <template #activator="{ props: activatorProps }">
@@ -154,7 +156,7 @@ const appHeaderHeight = ref(defaultAppHeaderHeight)
         </template>
         <span>{{ $t('faq') }} </span>
       </v-tooltip>
-      <LocaleSelector class="mr-5" />
+      <!-- <LocaleSelector class="mr-5" /> -->
 
       <template #append>
         <a href="https://www.epfl.ch/labs/sxl/" target="_blank">
