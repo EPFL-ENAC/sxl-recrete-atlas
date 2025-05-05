@@ -1,5 +1,5 @@
 import { createI18n, type MessageContext } from 'vue-i18n'
-import { useCookies } from 'vue3-cookies'
+// import { useCookies } from 'vue3-cookies'
 
 import en from '@/locales/en.json'
 import fr from '@/locales/fr.json'
@@ -7,8 +7,9 @@ import keys from '@/assets/data/keys.json'
 import project_values from '@/assets/data/project_values.json'
 import type { Key } from '@/types/Filter'
 
-const { cookies } = useCookies()
-const locale = cookies.get('locale')
+// const { cookies } = useCookies()
+// const locale = cookies.get('locale')
+const locale = 'en'; // cf issue #60
 
 type LangKeys = Record<string, string>
 const enKeys = (keys as Key[]).reduce((acc: LangKeys, filter: Key) => {

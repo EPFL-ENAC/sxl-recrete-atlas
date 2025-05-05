@@ -6,7 +6,7 @@ import type { EmojiToken } from 'marked-emoji'
 import DOMPurify from 'dompurify'
 import { useDisplay } from 'vuetify'
 
-import LocaleSelector from '../components/LocaleSelector.vue'
+// import LocaleSelector from '../components/LocaleSelector.vue'
 
 import { onMounted, ref } from 'vue'
 import { watch } from 'vue'
@@ -106,7 +106,7 @@ function close() {
         {{ name }}
       </v-card-title>
       <v-card-text>
-        <LocaleSelector class="locale-selector" />
+        <!-- <LocaleSelector class="locale-selector" /> -->
         <br v-if="!name" />
         <div class="marked" v-html="contentHtml"></div>
       </v-card-text>
