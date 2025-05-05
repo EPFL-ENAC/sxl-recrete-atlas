@@ -176,18 +176,6 @@ const genusPaint: any = {
   'circle-stroke-opacity': 0.5
 }
 
-// Cache to store each project's offset determined at startup only.
-const projectOffsets = ref<Record<string, [number, number]>>({})
-
-function randomOffset(): [number, number] {
-  const radius = 5 // 1 km
-  const distance = Math.random() * radius
-  const angle = Math.random() * 2 * Math.PI
-  const offsetX = distance * Math.cos(angle)
-  const offsetY = distance * Math.sin(angle)
-  return [offsetX, offsetY]
-}
-
 // Function to convert offsets to latitude and longitude changes
 function offsetToCoordinates(lon: number, lat: number, offsetX: number, offsetY: number): [number, number] {
   const earthRadius = 6371 // Earth's radius in km
@@ -202,13 +190,13 @@ const computedData = computed<GeoJSON.GeoJSON | string>(() => {
   const features = projects.value
     .filter((project) => project?.receiver_coordinates)
     .map((project: Project) => {
-      // Use the localized project name as a key; ensure a default key if undefined.
-      const key = project[`name_${locale.value as ProjectLang}`] || JSON.stringify(project)
-      if (!projectOffsets.value[key]) {
-        projectOffsets.value[key] = randomOffset()
+      // Read the offset computed in the store
+      const { offset } = project
+      const [offsetX, offsetY] = offset
+      const currentCoordinates = project.receiver_coordinates
+      if (!currentCoordinates) {
+        return null
       }
-      const [offsetX, offsetY] = projectOffsets.value[key]
-      const currentCoordinates = project?.receiver_coordinates ?? []
       const newCoordinates = offsetToCoordinates(
         currentCoordinates[0],
         currentCoordinates[1],
@@ -222,7 +210,9 @@ const computedData = computed<GeoJSON.GeoJSON | string>(() => {
           coordinates: newCoordinates
         },
         properties: {
-          [`name_${locale.value as ProjectLang}`]: project[`name_${locale.value as ProjectLang}`]
+          [`name_${locale.value as ProjectLang}`]: project[
+            `name_${locale.value as ProjectLang}`
+          ]
         }
       }
     })

@@ -1,6 +1,7 @@
 export type ProjectLang = 'fr' | 'en'
 export interface Project {
   _id: number
+  offset: [number, number]
   description_fr: string
   description_en: string
   name_fr: string
