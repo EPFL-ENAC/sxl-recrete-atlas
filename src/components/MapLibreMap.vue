@@ -269,13 +269,27 @@ function addProjects() {
     //     const radius = radiusToPixels(map); // 5 km radius
     //     map.setPaintProperty('buildings-layer', 'circle-radius', radius);
     // });
-    map.on('click', 'buildings-layer', function (e) {
-      isProjectDialogOpen.value = true
+    map.on('click', 'buildings-layer', function (e: MapMouseEvent) {
+      const feature = e.features?.[0];
+      if (!feature) {
+        console.error('Feature is undefined');
+        return;
+      }
+      if (feature.properties?.cluster) {
+        // Increase the zoom level by 2 when a cluster is clicked
+        const currentZoom = map!.getZoom();
+        map!.easeTo({
+          center: e.lngLat,
+          zoom: currentZoom + 2
+        });
+        return;
+      }
+      // Handle non-clustered feature click
+      isProjectDialogOpen.value = true;
       project.value = projects.value.find(
-        (x) =>
-          x[`name_${locale.value as ProjectLang}`] ===
-          e.features?.[0].properties[`name_${locale.value as ProjectLang}`]
-      )
+        (x: Project) =>
+          x[`name_${locale.value as ProjectLang}`] === feature.properties[`name_${locale.value as ProjectLang}`]
+      );
     })
     const popups: Popup[] = []
     map.on('mouseenter', 'buildings-layer', function (e) {
