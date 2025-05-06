@@ -12,6 +12,7 @@ import {
   NavigationControl,
   Popup,
   type LngLatLike,
+  type MapGeoJSONFeature,
   type StyleSpecification
 } from 'maplibre-gl'
 import { onMounted, ref, watch, defineModel, computed } from 'vue'
@@ -175,18 +176,8 @@ const genusPaint: any = {
   'circle-stroke-opacity': 0.5
 }
 
-function randomOffset() {
-  const radius = 5 // 1 km
-  const distance = Math.random() * radius
-  const angle = Math.random() * 2 * Math.PI
-  const offsetX = distance * Math.cos(angle)
-  const offsetY = distance * Math.sin(angle)
-
-  return [offsetX, offsetY]
-}
-
 // Function to convert offsets to latitude and longitude changes
-function offsetToCoordinates(lon: number, lat: number, offsetX: number, offsetY: number) {
+function offsetToCoordinates(lon: number, lat: number, offsetX: number, offsetY: number): [number, number] {
   const earthRadius = 6371 // Earth's radius in km
 
   const newLat = lat + (offsetY / earthRadius) * (180 / Math.PI)
@@ -197,10 +188,12 @@ function offsetToCoordinates(lon: number, lat: number, offsetX: number, offsetY:
 
 const computedData = computed<GeoJSON.GeoJSON | string>(() => {
   const features = projects.value
-    .filter((x) => x?.receiver_coordinates)
+    .filter((project) => project?.receiver_coordinates)
     .map((project: Project) => {
-      const [offsetX, offsetY] = randomOffset()
-      const currentCoordinates = project?.receiver_coordinates ?? []
+      // Read the offset computed in the store
+      const { offset } = project
+      const [offsetX, offsetY] = offset
+      const currentCoordinates = project.receiver_coordinates!
       const newCoordinates = offsetToCoordinates(
         currentCoordinates[0],
         currentCoordinates[1],
@@ -214,7 +207,9 @@ const computedData = computed<GeoJSON.GeoJSON | string>(() => {
           coordinates: newCoordinates
         },
         properties: {
-          [`name_${locale.value as ProjectLang}`]: project[`name_${locale.value as ProjectLang}`]
+          [`name_${locale.value as ProjectLang}`]: project[
+            `name_${locale.value as ProjectLang}`
+          ]
         }
       }
     })
@@ -265,17 +260,29 @@ function addProjects() {
       paint: genusPaint
     })
 
-    // map.on('zoomend', () => {
-    //     const radius = radiusToPixels(map); // 5 km radius
-    //     map.setPaintProperty('buildings-layer', 'circle-radius', radius);
-    // });
-    map.on('click', 'buildings-layer', function (e) {
-      isProjectDialogOpen.value = true
+    // The `e` parameter is a combination of `MapMouseEvent` and an optional `features` property.
+    // The `features` property contains an array of `MapGeoJSONFeature` objects representing the features at the clicked location.
+    map.on('click', 'buildings-layer', function (e: MapMouseEvent & { features?: MapGeoJSONFeature[] }) {
+      const feature = e.features?.[0];
+      if (!feature) {
+        console.error('Feature is undefined');
+        return;
+      }
+      if (feature.properties?.cluster) {
+        // Increase the zoom level by 2 when a cluster is clicked
+        const currentZoom = map!.getZoom();
+        map!.easeTo({
+          center: e.lngLat,
+          zoom: currentZoom + 2
+        });
+        return;
+      }
+      // Handle non-clustered feature click
+      isProjectDialogOpen.value = true;
       project.value = projects.value.find(
-        (x) =>
-          x[`name_${locale.value as ProjectLang}`] ===
-          e.features?.[0].properties[`name_${locale.value as ProjectLang}`]
-      )
+        (x: Project) =>
+          x[`name_${locale.value as ProjectLang}`] === feature.properties[`name_${locale.value as ProjectLang}`]
+      );
     })
     const popups: Popup[] = []
     map.on('mouseenter', 'buildings-layer', function (e) {
