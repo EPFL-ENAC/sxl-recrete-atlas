@@ -20,7 +20,7 @@ export interface SelectableSingleItem extends SelectableParentItem {
   label_fr: string
   legend?: string
   legendImage?: string
-  legendScaleId?: string,
+  legendScaleId?: string
   measures: string[]
 }
 export interface SelectableGroupItem extends SelectableParentItem {

@@ -15,16 +15,15 @@ export default createVuetify({
   locale: {
     locale: locale,
     fallback: 'en',
-    messages: { en, fr },
+    messages: { en, fr }
   },
   icons: {
     defaultSet: 'mdi',
     aliases: {
-      ...aliases,
-    
+      ...aliases
     },
     sets: {
-      mdi,
+      mdi
     }
   },
   theme: {

@@ -2,11 +2,11 @@
 import JsonWebMap from '@/components/JsonWebMap.vue'
 import ProjectDialog from '@/components/ProjectDialog.vue'
 import { useConfigurationStore } from '@/stores/configuration'
-import type { Project } from '@/types/Project';
+import type { Project } from '@/types/Project'
 import { ref } from 'vue'
 const { parametersUrl, styleUrl, cdnUrl, martinUrl } = useConfigurationStore()
 const isProjectDialogOpen = ref(false)
-const projectSelected = ref<Project|undefined>(undefined)
+const projectSelected = ref<Project | undefined>(undefined)
 </script>
 
 <template>
