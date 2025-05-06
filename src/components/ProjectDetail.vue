@@ -19,11 +19,13 @@
               <h3 class="text-decoration-underline">{{ t('about_the_receiving_project') }}</h3>
             </v-row>
             <v-row>
-              <b class="key">{{ $t('receiver_country') }}
+              <b class="key"
+                >{{ $t('receiver_country') }}
                 <span v-if="props.project.receiver_city">({{ $t('receiver_city') }})</span>
                 :
               </b>
-              <span>{{ $t('countryFn', [props.project.receiver_country]) }}
+              <span
+                >{{ $t('countryFn', [props.project.receiver_country]) }}
                 <span v-if="props.project.receiver_city">
                   ({{ props.project.receiver_city }})
                 </span>
@@ -32,44 +34,63 @@
             <v-row>
               <b class="key">{{ $t('start_date_year') }}: </b>
               <span
-:class="{
-                'font-italic': props.project.date_uncertainty,
-                'text-grey': props.project.date_uncertainty
-              }"> {{ props.project.start_date_year }} </span>
+                :class="{
+                  'font-italic': props.project.date_uncertainty,
+                  'text-grey': props.project.date_uncertainty
+                }"
+              >
+                {{ props.project.start_date_year }}
+              </span>
             </v-row>
           </v-col>
           <v-col :cols="6">
             <v-carousel
-v-if="(props.project.images?.length ?? 0) > 0" v-model="carouselIndex" height="90%"
+              v-if="(props.project.images?.length ?? 0) > 0"
+              v-model="carouselIndex"
+              height="90%"
               :show-arrows="false"
-              :interval="3000">
+              :interval="3000"
+            >
               <v-carousel-item
-v-for="(image, $key) in props.project.images" :key="$key" :src="image"
-                content-class="carousel-content" cover height="300px">
-                
+                v-for="(image, $key) in props.project.images"
+                :key="$key"
+                :src="image"
+                content-class="carousel-content"
+                cover
+                height="300px"
+              >
               </v-carousel-item>
             </v-carousel>
-            <v-img v-else class="align-end text-white" cover height="300px" :src="`${defaultImage}`">
-              
+            <v-img
+              v-else
+              class="align-end text-white"
+              cover
+              height="300px"
+              :src="`${defaultImage}`"
+            >
             </v-img>
-            <v-card-title class="image-title d-flex flex-spacebetween" style="gap: 1rem; align-items: center;">
-                <v-card-subtitle>
-                  <span v-if="props.project?.images_credits?.length ?? 0 > 0">
-                      {{ t("credits") }}:
-                      {{  props.project?.images_credits?.[carouselIndex] }}
-                  </span>
-                </v-card-subtitle>
+            <v-card-title
+              class="image-title d-flex flex-spacebetween"
+              style="gap: 1rem; align-items: center"
+            >
+              <v-card-subtitle>
+                <span v-if="props.project?.images_credits?.length ?? 0 > 0">
+                  {{ t('credits') }}:
+                  {{ props.project?.images_credits?.[carouselIndex] }}
+                </span>
+              </v-card-subtitle>
             </v-card-title>
-            
           </v-col>
         </v-row>
         <v-row>
           <v-col
-v-if="
-            props.project.distance_km ||
-            (props.project.donor_use?.length ?? 0) > 0 ||
-            project_construction_year > 0
-          " :cols="3">
+            v-if="
+              props.project.distance_km ||
+              (props.project.donor_use?.length ?? 0) > 0 ||
+              project_construction_year > 0
+            "
+            :cols="3"
+          >
             <v-row>
               <h3 class="text-decoration-underline">{{ t('about_the_donor_site') }}</h3>
             </v-row>
@@ -93,12 +114,14 @@ v-if="
             </v-row>
           </v-col>
           <v-col
-v-if="
-            props.project.quantity_reclaimed ||
-            (props.project.donor_element_type?.length ?? 0) > 0 ||
-            (props.project.receiver_element_type?.length ?? 0) > 0 ||
-            props.project.component_age
-          " :cols="3">
+            v-if="
+              props.project.quantity_reclaimed ||
+              (props.project.donor_element_type?.length ?? 0) > 0 ||
+              (props.project.receiver_element_type?.length ?? 0) > 0 ||
+              props.project.component_age
+            "
+            :cols="3"
+          >
             <v-row>
               <h3 class="text-decoration-underline">{{ t('about_the_reused_concrete') }}</h3>
             </v-row>
@@ -129,18 +152,24 @@ v-if="
               <ul class="comma-separated-list">
                 <li v-for="(concrete_type, $key) in props.project.main_concrete_type" :key="$key">
                   <span
-:class="{
-                    'font-italic': props.project?.main_concrete_type_uncertainty?.[$key],
-                    'text-grey': props.project?.main_concrete_type_uncertainty?.[$key]
-                  }">{{ $t(concrete_type) }}</span>
+                    :class="{
+                      'font-italic': props.project?.main_concrete_type_uncertainty?.[$key],
+                      'text-grey': props.project?.main_concrete_type_uncertainty?.[$key]
+                    }"
+                    >{{ $t(concrete_type) }}</span
+                  >
                 </li>
               </ul>
             </v-row>
           </v-col>
           <v-col
-v-if="props.project.impact_difference ||
-            props.project.cost_difference_max_percent ||
-            props.project?.other" :cols="3">
+            v-if="
+              props.project.impact_difference ||
+              props.project.cost_difference_max_percent ||
+              props.project?.other
+            "
+            :cols="3"
+          >
             <v-row>
               <h3 class="text-decoration-underline">{{ t('about_the_new_project') }}</h3>
             </v-row>
@@ -174,7 +203,8 @@ v-if="props.project.impact_difference ||
             </v-row>
 
             <v-row v-if="(props.project.actors?.length ?? 0) > 0">
-              <b class="key">{{ t("actors") }}:</b> {{ props.project.actors?.join(',') ?? $t("unknown") }}
+              <b class="key">{{ t('actors') }}:</b>
+              {{ props.project.actors?.join(',') ?? $t('unknown') }}
             </v-row>
           </v-col>
           <v-col :cols="3">
@@ -205,7 +235,7 @@ v-if="props.project.impact_difference ||
 
 <script setup lang="ts">
 import { mdiDomain, mdiInformationBoxOutline, mdiInformationSlabCircle } from '@mdi/js'
-import { computed, defineModel,ref  } from 'vue'
+import { computed, defineModel, ref } from 'vue'
 import { defaultImage } from '@/utils/default'
 import type { Project, ProjectLang } from '@/types/Project'
 import { useI18n } from 'vue-i18n'
@@ -280,13 +310,14 @@ const project_construction_year = computed(() => {
   }
 
   li:not(:last-child)::after {
-    content: ", ";
+    content: ', ';
   }
 }
 </style>
 
 <!-- construction_year, status, actors should be moved to keys.csv -->
-<i18n lang="json">{
+<i18n lang="json">
+{
   "en": {
     "about_the_receiving_project": "About the receiving project",
     "about_the_donor_site": "About the donor building",
@@ -315,4 +346,5 @@ const project_construction_year = computed(() => {
     "compared_to": "comparé à",
     "credits": "crédits"
   }
-}</i18n>
+}
+</i18n>

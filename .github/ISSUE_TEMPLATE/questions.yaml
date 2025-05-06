@@ -1,0 +1,56 @@
+name: ❓ User Questions
+description: Template for tracking user inquiries that need response
+title: "[USER QUESTIONS] "
+labels: ["user-inquiry", "needs-response"]
+assignees:
+  - PaolaCostanzaMiglietta
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Questions/Suggestions
+        Please provide your questions or suggestions below.
+
+  - type: textarea
+    id: questions
+    attributes:
+      label: Questions
+      description: List your questions or suggestions
+      placeholder: |
+        1.
+        2.
+        3.
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Any relevant background information or context that might help in addressing these questions, screenshots welcomed
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category
+      description: What type of inquiry is this?
+      options:
+        - Product Usage
+        - Technical
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: user-role
+    attributes:
+      label: About You
+      description: Your role
+      placeholder: e.g., Product Manager, Developer
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        **Remember**: All responses should follow our communication guidelines and be approved before sending to the user.

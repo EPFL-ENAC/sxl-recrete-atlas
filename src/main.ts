@@ -11,7 +11,7 @@ import 'floating-vue/dist/style.css'
 
 const app = createApp(App)
 
-app.use(FloatingVue);
+app.use(FloatingVue)
 app.use(createPinia())
 app.use(router)
 app.use(vuetify)
