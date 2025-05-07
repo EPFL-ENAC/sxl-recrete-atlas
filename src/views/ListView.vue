@@ -2,15 +2,14 @@
 import ProjectCard from '@/components/ProjectCard.vue'
 import ProjectDialog from '@/components/ProjectDialog.vue'
 import ProjectFilters from '@/components/ProjectFilters.vue'
-import BarProjectEchart from '@/components/BarProjectEchart.vue'
+// import BarProjectEchart from '@/components/BarProjectEchart.vue'
 import ReferenceList from '@/components/ReferenceList.vue'
 import { useProjectsStore } from '@/stores/projects'
-import { mdiChevronLeft, mdiChevronRight, mdiInformationSlabCircle } from '@mdi/js'
+import { mdiInformationSlabCircle } from '@mdi/js'
 import { storeToRefs } from 'pinia'
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
-import { useDisplay } from 'vuetify'
 import keys from '@/assets/data/keys.json'
 import type { Project, ProjectLang } from '@/types/Project'
 import { useRoute } from 'vue-router'
@@ -20,7 +19,6 @@ import { Dropdown as VDropdown } from 'floating-vue'
 
 const route = useRoute()
 const { t, locale } = useI18n({ useScope: 'global' })
-const { mobile } = useDisplay()
 const router = useRouter()
 const $route = router.currentRoute
 
@@ -37,7 +35,6 @@ const currentRowItem = ref<Project | undefined>(undefined)
 const projects = storeToRefs(useProjectsStore()).projects
 
 const data = projects
-const drawerRail = ref(false)
 
 const isProjectDialogOpen = ref(route.query?.projectId !== undefined)
 const projectSelectedId = ref<number | undefined>(
@@ -110,25 +107,7 @@ const showRowTooltip = ref(true)
 </script>
 
 <template>
-  <v-navigation-drawer
-    :rail="drawerRail"
-    permanent
-    :width="mobile ? 300 : 450"
-    class="permanent-drawer"
-    @click="drawerRail = false"
-  >
-    <v-list density="compact" nav>
-      <v-list-item :prepend-icon="drawerRail ? mdiChevronRight : undefined">
-        <template #append>
-          <v-btn :icon="mdiChevronLeft" variant="flat" @click.stop="drawerRail = true" />
-        </template>
-      </v-list-item>
-      <project-filters :is-visible="!drawerRail" />
-    </v-list>
-    <v-sheet v-if="!drawerRail" class="pa-0">
-      <BarProjectEchart :projects="data" />
-    </v-sheet>
-  </v-navigation-drawer>
+  <project-filters />
   <v-container v-if="listMode === 'list'" class="fill-height pa-0 align-baseline" fluid>
     <v-tooltip
       v-if="currentRowIndex !== undefined"
@@ -283,7 +262,7 @@ const showRowTooltip = ref(true)
   :deep(.v-navigation-drawer__content) {
     z-index: 1000;
     display: grid;
-    grid-template-rows: auto 100px;
+    grid-template-rows: auto;
     grid-gap: 1rem;
 
     .v-list {
