@@ -12,7 +12,7 @@
       </li>
     </ul>
     <div>
-      <v-btn icon size="small-x" @click="copy(source)">
+      <v-btn icon size="small-x" :class="{ wobble: isWobbling }" @click="handleCopy">
         <v-icon :icon="mdiContentCopy"></v-icon>
       </v-btn>
     </div>
@@ -46,9 +46,32 @@ const source = ref(
     .join('\n')
 )
 const { copy } = useClipboard({ source })
+const isWobbling = ref(false)
+
+function handleCopy() {
+  copy()
+  isWobbling.value = true
+  setTimeout(() => {
+    isWobbling.value = false
+  }, 500)
+}
 </script>
 
 <style scoped lang="scss">
+@keyframes wobble {
+  0%   { transform: rotate(0deg); }
+  15%  { transform: rotate(-15deg); }
+  30%  { transform: rotate(15deg); }
+  45%  { transform: rotate(-10deg); }
+  60%  { transform: rotate(10deg); }
+  75%  { transform: rotate(-5deg); }
+  90%  { transform: rotate(5deg); }
+  100% { transform: rotate(0deg); }
+}
+
+.wobble {
+  animation: wobble 0.5s;
+}
 ul {
   li {
     margin-bottom: 0.5rem;
