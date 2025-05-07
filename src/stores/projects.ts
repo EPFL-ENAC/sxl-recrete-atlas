@@ -112,7 +112,7 @@ export const useProjectsStore = defineStore('projects', () => {
       })
     })
     .sort((a: Project, b: Project) => {
-      return a.start_date_year - b.start_date_year;
+      return b.start_date_year - a.start_date_year;
     });
   })
 
