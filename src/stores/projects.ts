@@ -100,6 +100,9 @@ export const useProjectsStore = defineStore('projects', () => {
         return true
       })
     })
+    .sort((a: Project, b: Project) => {
+      return a.start_date_year - b.start_date_year;
+    });
   })
 
   // Precompute offsets outside of any computed that causes side effects.
