@@ -149,16 +149,26 @@ watch(
     class="permanent-drawer"
     @click="drawerRail = false"
   >
-    <v-list density="compact" nav :class="{ 'hide-all-but-first': drawerRail, 'sticky-header': !drawerRail }">
+    <v-list
+      density="compact"
+      nav
+      :class="{ 'hide-all-but-first': drawerRail, 'sticky-header': !drawerRail }"
+    >
       <v-list-item class="sticky-header" :append-icon="mdiChevronLeft">
         <v-list-item-title class="d-flex ga-2 align-center">
           <span :class="mobile ? 'text-subtitle-1' : 'text-h6'">{{ $t('filters') }}</span>
-          <v-btn
-            :icon="mdiFilterRemoveOutline"
-            :title="$t('clear-filters')"
-            size="smaller"
-            @click="resetFilter"
-          />
+
+          <v-tooltip :text="$t('clear-filters')" bottom>
+            <template #activator="{ props }">
+              <v-btn
+                v-bind="props"
+                :icon="mdiFilterRemoveOutline"
+                :title="$t('clear-filters')"
+                size="smaller"
+                @click="resetFilter"
+              />
+            </template>
+          </v-tooltip>
         </v-list-item-title>
         <template v-if="drawerRail" #prepend>
           <v-btn
@@ -193,7 +203,6 @@ watch(
         </v-row>
       </v-list-item>
       <v-list-item>
-
         <v-row>
           <template v-for="(filterSelect, $key) in filtersSelect" :key="$key">
             <v-col :cols="filterSelect.cols" :keys="$key">
