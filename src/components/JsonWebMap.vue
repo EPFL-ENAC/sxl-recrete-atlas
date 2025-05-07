@@ -7,23 +7,16 @@ import type {
   SelectableItem,
   SelectableSingleItem
 } from '@/utils/layerSelector'
-import { mdiChevronLeft, mdiChevronRight, mdiClose } from '@mdi/js'
+import { mdiClose } from '@mdi/js'
 import axios from 'axios'
 import type { StyleSpecification } from 'maplibre-gl'
 import { computed, defineModel, onMounted, ref, shallowRef, triggerRef, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useDisplay } from 'vuetify'
 import type { Project } from '@/types/Project'
-
-import { useProjectsStore } from '@/stores/projects'
-import BarProjectEchart from '@/components/BarProjectEchart.vue'
-import { storeToRefs } from 'pinia'
 
 const props = defineProps<{
   styleUrl: string
   parametersUrl: string
-  cdnUrl: string
-  martinUrl: string
 }>()
 
 const { t } = useI18n({ useScope: 'global' })
@@ -35,10 +28,6 @@ const parameters = shallowRef<Parameters>()
 const legendDialog = ref(false)
 const legendDialogTitle = ref<string>()
 const legendDialogImageSrc = ref<string>()
-const drawerRail = ref(false)
-const drawerRight = ref(false)
-const drawerHtml = ref('')
-const { mobile } = useDisplay()
 const scale = ref<string>()
 
 const isProjectDialogOpen = defineModel('isProjectDialogOpen', {
@@ -142,60 +131,10 @@ watch(
   }
 )
 
-const projects = storeToRefs(useProjectsStore()).projects
 </script>
 
 <template>
-  <!-- eslint-disable vue/no-v-text-v-html-on-component -->
-  <!-- eslint-disable vue/no-v-html -->
-  <v-navigation-drawer
-    :rail="drawerRail"
-    permanent
-    :width="mobile ? 300 : 450"
-    class="permanent-drawer"
-    @click="drawerRail = false"
-  >
-    <v-list density="compact" nav>
-      <v-list-item>
-        <template v-if="!drawerRail" #append>
-          <v-btn
-            :icon="mdiChevronLeft"
-            variant="flat"
-            density="compact"
-            @click.stop="drawerRail = true"
-          />
-        </template>
-        <template v-if="drawerRail" #prepend>
-          <v-btn
-            :icon="mdiChevronRight"
-            variant="flat"
-            density="compact"
-            @click.stop="drawerRail = false"
-          />
-        </template>
-      </v-list-item>
-      <project-filters :is-visible="!drawerRail" />
-    </v-list>
-
-    <v-sheet v-if="!drawerRail" class="pa-0">
-      <BarProjectEchart :projects="projects" />
-    </v-sheet>
-  </v-navigation-drawer>
-  <v-navigation-drawer v-if="drawerRight" permanent location="right" :width="mobile ? 200 : 400">
-    <v-list>
-      <v-list-item>
-        <template #append>
-          <v-btn :icon="mdiClose" variant="flat" @click.stop="drawerRight = false" />
-        </template>
-      </v-list-item>
-      <v-list-item>
-        <v-card>
-          // eslint-disable-next-line vue/no-v-html
-          <v-card-text class="marked" v-html="drawerHtml"> </v-card-text>
-        </v-card>
-      </v-list-item>
-    </v-list>
-  </v-navigation-drawer>
+  <project-filters />
   <v-container class="fill-height pa-0" fluid>
     <v-row class="fill-height">
       <v-col cols="12" class="py-0">
@@ -234,19 +173,8 @@ const projects = storeToRefs(useProjectsStore()).projects
   </v-container>
 </template>
 
-<style lang="scss">
-.v-navigation-drawer {
-  border-right: 1px solid rgb(var(--v-theme-primary)) !important;
-}
+<style scoped lang="scss">
 .v-card-image:not(.on-hover) {
   opacity: 0.6;
-}
-.permanent-drawer {
-  .v-navigation-drawer__content {
-    z-index: 1000;
-    display: grid;
-    grid-template-rows: auto 200px;
-    grid-gap: 1rem;
-  }
 }
 </style>
