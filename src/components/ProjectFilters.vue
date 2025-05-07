@@ -16,6 +16,7 @@ const { mobile } = useDisplay()
 
 interface FilterSelectValues {
   key: SelectFilterKey
+  cols: number
   values: (string | OptionValues)[]
 }
 // import { useProjectsStore } from '@/stores/projects'
@@ -58,6 +59,7 @@ const filtersSelect = computed<FilterSelectValues[]>(() =>
   filterSelectKeys.map((key: SelectFilterKey) => ({
     // example: { key: 'main_concrete_type', values: ['PC', 'CIP'] },
     key,
+    cols: key.includes('element_type') ? 12 : 6,
     values: getSelectValues(key)
   }))
 )
@@ -147,103 +149,115 @@ watch(
     class="permanent-drawer"
     @click="drawerRail = false"
   >
-    <v-list density="compact" nav>
-        <v-list-item :append-icon="mdiChevronLeft">
-          <v-list-item-title class="d-flex ga-2 align-center">
-            <span :class="mobile ? 'text-subtitle-1' : 'text-h6'">{{ $t('filters') }}</span>
-            <v-btn class="" :icon="mdiFilterRemoveOutline" :title="$t('clear-filters')" size="smaller" @click="resetFilter">
-             </v-btn>
-          </v-list-item-title>
-           <template  v-if="drawerRail" #prepend>
-            <!-- :prepend-icon="mdiMapLegend"  -->
-            <v-btn :icon="mdiChevronRight" variant="flat" size="smaller" @click.stop="drawerRail = false" />
-          </template>
-           <template v-if="!drawerRail" #append  >
-            <v-btn :icon="mdiChevronLeft" variant="flat" size="smaller" @click.stop="drawerRail = true" />
-          </template>
-        </v-list-item>
-        <v-list-item>
-          <v-row>
-            <!-- <v-col cols="6" :class="{ 'text-grey': filtersActivated.name }">
+    <v-list density="compact" nav :class="{ 'hide-all-but-first': drawerRail, 'sticky-header': !drawerRail }">
+      <v-list-item class="sticky-header" :append-icon="mdiChevronLeft">
+        <v-list-item-title class="d-flex ga-2 align-center">
+          <span :class="mobile ? 'text-subtitle-1' : 'text-h6'">{{ $t('filters') }}</span>
+          <v-btn
+            :icon="mdiFilterRemoveOutline"
+            :title="$t('clear-filters')"
+            size="smaller"
+            @click="resetFilter"
+          />
+        </v-list-item-title>
+        <template v-if="drawerRail" #prepend>
+          <v-btn
+            :icon="mdiChevronRight"
+            variant="flat"
+            size="smaller"
+            @click.stop="drawerRail = false"
+          />
+        </template>
+        <template v-if="!drawerRail" #append>
+          <v-btn
+            :icon="mdiChevronLeft"
+            variant="flat"
+            size="smaller"
+            @click.stop="drawerRail = true"
+          />
+        </template>
+      </v-list-item>
+      <v-list-item>
+        <v-row>
+          <!-- <v-col cols="6" :class="{ 'text-grey': filtersActivated.name }">
               {{ $t('search') }}
             </v-col> -->
-            <v-col cols="12">
-              <v-text-field
-                v-model="filters.name"
-                density="compact"
-                :clearable="true"
-                :label="$t('search')"
-              />
-            </v-col>
-          </v-row>
-        </v-list-item>
-        <v-row>
-          <!-- <v-list-item > -->
-          <!-- <v-col cols="6" :class="{ 'text-grey': filtersActivated[filterSelect.key] }">
-        {{ $t(filterSelect.key) }}
-      </v-col> -->
-          <v-col v-for="(filterSelect, $key) in filtersSelect" :key="$key" cols="6">
-            <v-select
-              v-model="filters[filterSelect.key]"
-              :clearable="true"
-              :label="$t(filterSelect.key)"
-              multiple
+          <v-col cols="12">
+            <v-text-field
+              v-model="filters.name"
               density="compact"
-              :clear-icon="mdiFilterRemoveOutline"
-              chips
-              :items="filterSelect.values"
-              @update:model-value="() => setFilters(filters)"
+              :clearable="true"
+              :label="$t('search')"
             />
           </v-col>
-          <!-- </v-list-item> -->
         </v-row>
-        <v-list-item v-for="(filterRange, $key) in filtersRange" :key="$key">
-          <v-row class="row-range">
-            <!-- <v-col cols="6" :class="{ 'text-grey': filtersActivated[filterRange.key] }">
-        {{ $t(filterRange.key) }}
-      </v-col> -->
-            <v-col class="d-flex align-end">
-              <v-range-slider
-                v-model="filters[filterRange.key]"
-                :thumb-label="!filtersActivated[filterRange.key] ? 'always' : undefined"
+      </v-list-item>
+      <v-list-item>
+
+        <v-row>
+          <template v-for="(filterSelect, $key) in filtersSelect" :key="$key">
+            <v-col :cols="filterSelect.cols" :keys="$key">
+              <v-select
+                v-model="filters[filterSelect.key]"
+                :clearable="true"
+                :label="$t(filterSelect.key)"
+                multiple
                 density="compact"
-                :label="$t(filterRange.key)"
-                :step="filterRange.step"
-                :min="filterRange.values[0]"
-                :max="filterRange.values[1]"
+                :clear-icon="mdiFilterRemoveOutline"
+                chips
+                :items="filterSelect.values"
+                @update:model-value="() => setFilters(filters)"
               />
             </v-col>
-          </v-row>
-        </v-list-item>
-        <v-list-item v-for="(filterBoolean, $key) in filtersBoolean" :key="$key">
-          <v-row class="row-range">
-            <v-col cols="6" :class="{ 'text-grey': filtersActivated[filterBoolean] }">
-              {{ $t(filterBoolean) }}
-            </v-col>
-            <v-col cols="6" class="d-flex justify-space-between align-center">
-              <v-switch
-                v-model="filters[filterBoolean]"
-                :indeterminate="filters[filterBoolean] === undefined"
-                density="compact"
-                color="primary"
-                label="on"
-                @update:model-value="() => setFilters(filters)"
-              >
-                <template #label>
-                  <span v-if="filters[filterBoolean] === undefined">
-                    {{ $t('indeterminate') }}
-                  </span>
-                  <span v-else>{{ filters[filterBoolean] ? $t('with') : $t('without') }}</span>
-                </template>
-              </v-switch>
-              <v-btn
-                :icon="mdiFilterRemoveOutline"
-                size="x-small"
-                @click="filters[filterBoolean] = undefined"
-              ></v-btn>
-            </v-col>
-          </v-row>
-        </v-list-item>
+          </template>
+        </v-row>
+      </v-list-item>
+      <v-list-item v-for="(filterRange, $key) in filtersRange" :key="$key">
+        <v-row class="row-range">
+          <v-col cols="6" :class="{ 'text-grey': filtersActivated[filterRange.key] }">
+            {{ $t(filterRange.key) }}
+          </v-col>
+          <v-col class="d-flex align-end">
+            <v-range-slider
+              v-model="filters[filterRange.key]"
+              :thumb-label="!filtersActivated[filterRange.key] ? 'always' : undefined"
+              density="compact"
+              :step="filterRange.step"
+              :min="filterRange.values[0]"
+              :max="filterRange.values[1]"
+            />
+          </v-col>
+        </v-row>
+      </v-list-item>
+      <v-list-item v-for="(filterBoolean, $key) in filtersBoolean" :key="$key">
+        <v-row class="row-range">
+          <v-col cols="6" :class="{ 'text-grey': filtersActivated[filterBoolean] }">
+            {{ $t(filterBoolean) }}
+          </v-col>
+          <v-col cols="6" class="d-flex justify-space-between align-center">
+            <v-switch
+              v-model="filters[filterBoolean]"
+              :indeterminate="filters[filterBoolean] === undefined"
+              density="compact"
+              color="primary"
+              label="on"
+              @update:model-value="() => setFilters(filters)"
+            >
+              <template #label>
+                <span v-if="filters[filterBoolean] === undefined">
+                  {{ $t('indeterminate') }}
+                </span>
+                <span v-else>{{ filters[filterBoolean] ? $t('with') : $t('without') }}</span>
+              </template>
+            </v-switch>
+            <v-btn
+              :icon="mdiFilterRemoveOutline"
+              size="x-small"
+              @click="filters[filterBoolean] = undefined"
+            ></v-btn>
+          </v-col>
+        </v-row>
+      </v-list-item>
     </v-list>
     <!-- <v-sheet v-if="!drawerRail" class="pa-0">
       <BarProjectEchart :projects="data" />
@@ -271,9 +285,23 @@ watch(
     grid-template-rows: auto;
     grid-gap: 1rem;
 
+    .hide-all-but-first {
+      > .v-list-item:not(:first-child) {
+        display: none;
+      }
+    }
+
     .v-list {
       overflow: auto;
+      padding-top: 0 !important;
     }
   }
+}
+.sticky-header {
+  position: sticky;
+  top: 0;
+  z-index: 1100;
+  background: inherit; // or a defined background color if needed
+  background-color: #fff;
 }
 </style>

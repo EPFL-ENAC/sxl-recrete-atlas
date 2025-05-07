@@ -277,6 +277,8 @@ const showRowTooltip = ref(true)
   grid-template-columns: repeat(auto-fill, minmax(var(--card-size), 1fr));
   grid-template-rows: repeat(auto-fill, minmax(var(--card-size), var(--card-size)));
   gap: 2rem;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
 }
 
 .comma-separated-list {
