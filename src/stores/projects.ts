@@ -32,6 +32,17 @@ export const useProjectsStore = defineStore('projects', () => {
     return (data as Project[]).filter((project: Project) => {
       return filterKeys.every((key: ProjectKey | FilterKey) => {
         const filterValue: FilterValue = filters.value[key as FilterKey] as FilterValue
+
+        // If filterValue is empty or undefined, skip filtering on this key
+        if (
+          filterValue === undefined ||
+          filterValue === null ||
+          (typeof filterValue === 'string' && filterValue.trim() === '') ||
+          (Array.isArray(filterValue) && filterValue.length === 0)
+        ) {
+          return true
+        }
+
         let projectValue = project[key as ProjectKey]
         if (key === 'name') {
           const projectName: string =
@@ -63,11 +74,11 @@ export const useProjectsStore = defineStore('projects', () => {
           // select filter for array and array
           return (
             projectValue !== undefined &&
-            filterValue.every((value: string) => (projectValue as string[]).includes(value))
+            filterValue.some((value: string) => (projectValue as string[]).includes(value))
           )
         }
 
-        if (Array.isArray(filterValue) && filterValue.length == 2) {
+        if (Array.isArray(filterValue) && filterValue.length === 2) {
           // range filterq
           const defaultFilterValue = defaultFilter[key as FilterKey] ?? []
           if (JSON.stringify(filterValue) === JSON.stringify(defaultFilterValue)) {
