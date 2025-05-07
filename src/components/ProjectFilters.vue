@@ -175,6 +175,7 @@ watch(
             :icon="mdiChevronRight"
             variant="flat"
             size="smaller"
+            style="padding-left:8px;"
             @click.stop="drawerRail = false"
           />
         </template>
