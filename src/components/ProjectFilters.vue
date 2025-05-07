@@ -183,7 +183,7 @@ watch(
           <!-- <v-col cols="6" :class="{ 'text-grey': filtersActivated[filterSelect.key] }">
         {{ $t(filterSelect.key) }}
       </v-col> -->
-          <v-col cols="6" v-for="(filterSelect, $key) in filtersSelect" :key="$key">
+          <v-col v-for="(filterSelect, $key) in filtersSelect" :key="$key" cols="6">
             <v-select
               v-model="filters[filterSelect.key]"
               :clearable="true"
