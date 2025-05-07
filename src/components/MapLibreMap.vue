@@ -43,7 +43,7 @@ const props = withDefaults(
     center: undefined,
     zoom: 4,
     aspectRatio: undefined,
-    minZoom: 4,
+    minZoom: 2,
     maxZoom: 10,
     popupLayerIds: () => [],
     areaLayerIds: () => [],
