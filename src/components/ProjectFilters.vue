@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { mdiMapLegend } from '@mdi/js'
 import { computed, watch, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useDisplay } from 'vuetify'
@@ -7,9 +6,8 @@ import { useFiltersStore, stepsHash, valuesHash, newFilter } from '@/stores/filt
 import { storeToRefs } from 'pinia'
 import type { Project, ProjectKey, ProjectLang } from '@/types/Project'
 import type { BooleanFilterKey, FilterKey, RangeFilterKey, SelectFilterKey } from '@/types/Filter'
-import { mdiChevronLeft, mdiChevronRight } from '@mdi/js'
+import { mdiChevronLeft, mdiChevronRight, mdiFilterRemoveOutline } from '@mdi/js'
 
-import { mdiClose } from '@mdi/js'
 import keys from '@/assets/data/keys.json'
 import data from '@/assets/data/data.json'
 
@@ -150,25 +148,26 @@ watch(
     @click="drawerRail = false"
   >
     <v-list density="compact" nav>
-      <v-list-item :prepend-icon="drawerRail ? mdiChevronRight : undefined">
-        <template #append>
-          <v-btn :icon="mdiChevronLeft" variant="flat" @click.stop="drawerRail = true" />
-        </template>
-      </v-list-item>
-
-      <template v-if="!drawerRail">
-        <v-list-item :prepend-icon="mdiMapLegend">
-          <v-list-item-title class="d-flex justify-space-between">
+        <v-list-item :append-icon="mdiChevronLeft">
+          <v-list-item-title class="d-flex ga-2 align-center">
             <span :class="mobile ? 'text-subtitle-1' : 'text-h6'">{{ $t('filters') }}</span>
-            <v-btn class="mb-4" size="x-small" :icon="mdiClose" @click="resetFilter"> </v-btn>
+            <v-btn class="" :icon="mdiFilterRemoveOutline" :title="$t('clear-filters')" size="smaller" @click="resetFilter">
+             </v-btn>
           </v-list-item-title>
+           <template  v-if="drawerRail" #prepend>
+            <!-- :prepend-icon="mdiMapLegend"  -->
+            <v-btn :icon="mdiChevronRight" variant="flat" size="smaller" @click.stop="drawerRail = false" />
+          </template>
+           <template v-if="!drawerRail" #append  >
+            <v-btn :icon="mdiChevronLeft" variant="flat" size="smaller" @click.stop="drawerRail = true" />
+          </template>
         </v-list-item>
         <v-list-item>
           <v-row>
-            <v-col cols="6" :class="{ 'text-grey': filtersActivated.name }">
+            <!-- <v-col cols="6" :class="{ 'text-grey': filtersActivated.name }">
               {{ $t('search') }}
-            </v-col>
-            <v-col cols="6">
+            </v-col> -->
+            <v-col cols="12">
               <v-text-field
                 v-model="filters.name"
                 density="compact"
@@ -190,6 +189,7 @@ watch(
               :label="$t(filterSelect.key)"
               multiple
               density="compact"
+              :clear-icon="mdiFilterRemoveOutline"
               chips
               :items="filterSelect.values"
               @update:model-value="() => setFilters(filters)"
@@ -237,14 +237,13 @@ watch(
                 </template>
               </v-switch>
               <v-btn
-                :icon="mdiClose"
+                :icon="mdiFilterRemoveOutline"
                 size="x-small"
                 @click="filters[filterBoolean] = undefined"
               ></v-btn>
             </v-col>
           </v-row>
         </v-list-item>
-      </template>
     </v-list>
     <!-- <v-sheet v-if="!drawerRail" class="pa-0">
       <BarProjectEchart :projects="data" />
@@ -263,6 +262,9 @@ watch(
 }
 
 .permanent-drawer {
+  :deep(.v-list-item) {
+    padding: 0 !important;
+  }
   :deep(.v-navigation-drawer__content) {
     z-index: 1000;
     display: grid;
