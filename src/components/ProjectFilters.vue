@@ -155,12 +155,12 @@ watch(
       :class="{ 'hide-all-but-first': drawerRail, 'sticky-header': !drawerRail }"
     >
       <v-list-item class="sticky-header" :append-icon="mdiChevronLeft">
-        <v-list-item-title class="d-flex ga-2 align-center">
-          <span :class="mobile ? 'text-subtitle-1' : 'text-h6'">{{ $t('filters') }}</span>
-
+        <v-list-item-title class="d-flex ga-2 align-center" :class="{ 'drawer-collapsed': drawerRail }">
+          <span class="filter-text " :class="mobile ? 'text-subtitle-1' : 'text-h6'">{{ $t('filters') }}</span>
           <v-tooltip :text="$t('clear-filters')" bottom>
             <template #activator="{ props }">
               <v-btn
+                class="filter-text"
                 v-bind="props"
                 :icon="mdiFilterRemoveOutline"
                 :title="$t('clear-filters')"
@@ -276,6 +276,15 @@ watch(
 </template>
 
 <style scoped lang="scss">
+.filter-text {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.drawer-collapsed .filter-text {
+  opacity: 0;
+  transform: translateX(-20px);
+}
+
 .row-range {
   min-height: 91px; // for the thumb-label
   padding-right: 12px; // for the thumb-label
@@ -307,6 +316,7 @@ watch(
     }
   }
 }
+
 .sticky-header {
   position: sticky;
   top: 0;
