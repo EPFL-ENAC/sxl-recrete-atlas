@@ -23,6 +23,8 @@ export type RangeFilterKey = keyof RangeFilter
 
 export interface BooleanFilter {
   impact_difference?: boolean
+  research_prototype?: boolean
+  unbuilt_with_construction_permission?: boolean
   cost_difference_min_percent?: boolean
 }
 export type BooleanFilterKey = keyof BooleanFilter
