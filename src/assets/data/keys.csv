@@ -1,4 +1,4 @@
-key,Filtres,List View,english,french
+﻿key,Filtres,List View,english,french
 _id,,,Case-study number,Numéro de l'étude de cas
 description_en,,overview,Case-study description,Description de l'étude de cas
 description_fr,,,Case-study description,Description de l'étude de cas
@@ -9,15 +9,6 @@ main_concrete_type_uncertainty,,main_concrete_type in itlaic if 1,Main concrete 
 receiver_country,oui,oui,Receiving-project country,Pays du projet receveur
 receiver_city,,oui,Receiving-project city,Ville du projet receveur
 receiver_coordinates,,,Receiving-project coordinates,Coordonnées du projet receveur
-receiver_nb_floor_smaller,,<= receiver_nb_floor if 1,Number of floors in receiving project smaller or equal to,Nombre d'étages dans le projet receveur plus petit ou égal à
-receiver_nb_floor_larger,,>= receiver_nb_floor if 1,Number of floors in receiving project larger or equal to,Nombre d'étages dans le projet receveur plus grand ou égal à
-receiver_nb_floor_uncertainty,,receiver_nb_floor in italic if 1,Number of floors in receiving project uncertainty,Nombre d'étages dans le projet receveur incertitude
-receiver_use,oui,oui,Receiving project use,Utilisation du projet receveur
-donor_use,oui,oui,Donor building use,Utilisation du bâtiment donneur
-receiver_element_type,oui,oui,Component type or use in receiving project,Type d'éléments ou utilisation dans le projet receveur
-donor_nb_floor,,,Number of floors in donor building,Nombre d'étages dans le bâtiment donneur
-donor_nb_floor_smaller,,<= donor_nb_floor if 1,Number of floors in donor building smaller or equal to,Nombre d'étages dans le bâtiment donneur plus petit ou égal à
-donor_element_type,oui,oui,Component type or use in donor building,Type d'éléments ou utilisation dans le bâtiment donneur
 location_uncertainty,,receiver_city in itlaic if 1,Receiving-project location uncertainty,Lieu du projet receveur_incertitude
 distance_km,range,oui,Distance from donor building (approx.) [km] ,Distance par rapport au bâtiment donneur (approx.) [km] 
 distance_smaller,,<= distance_km if 1,Distance from donor building smaller or equal to,Distance par rapport au bâtiment donneur plus petite ou égale à
@@ -25,13 +16,22 @@ distance_uncertainty,,distance_km in italic if 1,Distance from donor building un
 start_date_year,range,oui,Date of receiving project construction start,Date de début de la construction du projet receveur
 date_uncertainty,,start_date_year in italic if 1,Date of receiving project construction start uncertainty,Date de début de la construction du projet receveur incertitude
 component_age,range,oui,Component age at receiving project construction start (approx.),Âge des éléments au début de la construction du projet receveur (environ)
-receiver_nb_floor,range,,Number of floors in receiving project,Nombre d'étages dans le projet receveur
 age_smaller,,<= component_age if 1,Component age smaller or equal to,Âge des éléments plus petit ou égal à
 age_uncertainty,,component_age in italic if 1,Component age uncertainty,Âge des éléments incertitude
 quantity_reclaimed,,oui,Quantity of reclaimed components,Quantité d'éléments réemployés
 quantity_reclaimed_unit,,concatenate with quantity_reclaimed,Units for quantity of reclaimed components,Unités pour la quantité d'éléments réemployés
+donor_nb_floor,non,,Number of floors in donor building,Nombre d'étages dans le bâtiment donneur
+donor_nb_floor_smaller,,<= donor_nb_floor if 1,Number of floors in donor building smaller or equal to,Nombre d'étages dans le bâtiment donneur plus petit ou égal à
+donor_use,oui,oui,Donor-building use,Utilisation du bâtiment donneur
+donor_element_type,oui,oui,Component type or use in donor building,Type d'éléments ou utilisation dans le bâtiment donneur
+receiver_nb_floor,range,,Number of floors in receiving project,Nombre d'étages dans le projet receveur
+receiver_nb_floor_smaller,,<= receiver_nb_floor if 1,Number of floors in receiving project smaller or equal to,Nombre d'étages dans le projet receveur plus petit ou égal à
+receiver_nb_floor_larger,,>= receiver_nb_floor if 1,Number of floors in receiving project larger or equal to,Nombre d'étages dans le projet receveur plus grand ou égal à
+receiver_nb_floor_uncertainty,,receiver_nb_floor in italic if 1,Number of floors in receiving project uncertainty,Nombre d'étages dans le projet receveur incertitude
+receiver_use,oui,oui,Receiving-project use,Utilisation du projet receveur
+receiver_element_type,oui,oui,Component type or use in receiving project,Type d'éléments ou utilisation dans le projet receveur
 element_type_different,,,Different use between donor an receiving structures,Utilisation différente entre structure donneuse ou receveuse
-reference,,oui,Reference,Référence
+reference,,overview,Reference,Référence
 impact_design_alternative,,,Compared design alternative for environmental impact calculations,Alternative pour les calculs d'impact environnemental
 impact_difference,with/without,,Environment-impact available,Impact sur l'environnement disponible
 impact_source,,,Reference for environmental impacts calculations,Référence pour le calcul d'impact environnemental
@@ -41,4 +41,8 @@ cost_difference_max_percent,,,Maximal cost difference [%],Différence de coût m
 cost_source,,,Reference for cost calculations,Référence pour le calcul des coûts
 images,,,Images,Images
 images_credits,,,Images credits,Crédits des images
+actors,,oui,Case study actors,Case study actors
+fact_sheet_contibutors,,oui,Project factsheet contributors,Project factsheet contributors
+research_prototype,with/without,oui,Mock-up,Mock-up
+unbuilt_with_construction_permission,with/without,oui,Under construction,En construction
 clear-filters,,,Clear all filters,Supprimer les filtres
