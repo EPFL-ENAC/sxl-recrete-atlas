@@ -127,48 +127,17 @@ function update(center?: LngLatLike, zoom?: number) {
   }
 }
 
-const radiusInKm = 20
-function zoomToPixels(zoom: number, radiusKm = radiusInKm): number {
-  const scale = Math.pow(2, zoom)
-  const pixelTile = 256 / (window.devicePixelRatio || 1)
-  const metersPerPixel = 40075016.686 / scale / pixelTile
-  return (radiusKm * 1000) / metersPerPixel
-}
-// function radiusToPixels(map, radiusKm = radiusInKm) {
-//             const zoom = map.getZoom();
-//            return zoomToPixels(zoom, radiusKm);
-// }
-/* eslint-disable  @typescript-eslint/no-explicit-any */
-const genusPaint: any = {
-  'circle-radius': [
-    'interpolate',
-    ['linear'],
-    ['zoom'],
-    0,
-    0,
-    5,
-    zoomToPixels(5, 50),
-    6,
-    zoomToPixels(6, 40),
-    7,
-    zoomToPixels(7, 30),
-    8,
-    zoomToPixels(8, 20),
-    9,
-    zoomToPixels(9, 20),
-    10,
-    zoomToPixels(10, 5),
-    11,
-    zoomToPixels(11, 4),
-    12,
-    zoomToPixels(12, 3),
-    13,
-    zoomToPixels(13, 2),
-    14,
-    zoomToPixels(14, 1), // Radius in pixels at zoom level 13 (5 km)
-    15,
-    zoomToPixels(15, 0.5) // Adjust this based on desired scale
-  ],
+const effectiveCircleRadius = [
+      'interpolate',
+      ['exponential', 1.5],
+      ['get', 'point_count'],
+      1, 5,
+      2, 9,
+      4, 15,
+      10, 30,
+    ];
+const buildingPaint: any = {
+  'circle-radius': effectiveCircleRadius,
   'circle-color': 'red',
   'circle-opacity': 0.5,
   'circle-stroke-color': 'red',
@@ -247,8 +216,8 @@ function addProjects() {
     map.addSource('buildings', {
       type: 'geojson',
       cluster: true,
-      clusterMaxZoom: 6, // Max zoom to cluster points on
-      clusterRadius: 10, // Radius of each cluster when clustering poi
+      clusterMaxZoom: 9, // Max zoom to cluster points on
+      clusterRadius: 20, // Radius of each cluster when clustering poi
       data: computedData.value
     })
 
@@ -257,7 +226,7 @@ function addProjects() {
       id: 'buildings-layer',
       type: 'circle',
       source: 'buildings',
-      paint: genusPaint
+      paint: buildingPaint
     })
 
     // The `e` parameter is a combination of `MapMouseEvent` and an optional `features` property.
