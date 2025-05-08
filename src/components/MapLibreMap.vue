@@ -43,7 +43,7 @@ const props = withDefaults(
     center: undefined,
     zoom: 4,
     aspectRatio: undefined,
-    minZoom: 4,
+    minZoom: 2,
     maxZoom: 10,
     popupLayerIds: () => [],
     areaLayerIds: () => [],
@@ -127,48 +127,21 @@ function update(center?: LngLatLike, zoom?: number) {
   }
 }
 
-const radiusInKm = 20
-function zoomToPixels(zoom: number, radiusKm = radiusInKm): number {
-  const scale = Math.pow(2, zoom)
-  const pixelTile = 256 / (window.devicePixelRatio || 1)
-  const metersPerPixel = 40075016.686 / scale / pixelTile
-  return (radiusKm * 1000) / metersPerPixel
-}
-// function radiusToPixels(map, radiusKm = radiusInKm) {
-//             const zoom = map.getZoom();
-//            return zoomToPixels(zoom, radiusKm);
-// }
-/* eslint-disable  @typescript-eslint/no-explicit-any */
-const genusPaint: any = {
-  'circle-radius': [
-    'interpolate',
-    ['linear'],
-    ['zoom'],
-    0,
-    0,
-    5,
-    zoomToPixels(5, 50),
-    6,
-    zoomToPixels(6, 40),
-    7,
-    zoomToPixels(7, 30),
-    8,
-    zoomToPixels(8, 20),
-    9,
-    zoomToPixels(9, 20),
-    10,
-    zoomToPixels(10, 5),
-    11,
-    zoomToPixels(11, 4),
-    12,
-    zoomToPixels(12, 3),
-    13,
-    zoomToPixels(13, 2),
-    14,
-    zoomToPixels(14, 1), // Radius in pixels at zoom level 13 (5 km)
-    15,
-    zoomToPixels(15, 0.5) // Adjust this based on desired scale
-  ],
+const effectiveCircleRadius = [
+  'interpolate',
+  ['exponential', 1.5],
+  ['get', 'point_count'],
+  1,
+  5,
+  2,
+  9,
+  4,
+  15,
+  10,
+  30
+]
+const buildingPaint: any = {
+  'circle-radius': effectiveCircleRadius,
   'circle-color': 'red',
   'circle-opacity': 0.5,
   'circle-stroke-color': 'red',
@@ -177,7 +150,12 @@ const genusPaint: any = {
 }
 
 // Function to convert offsets to latitude and longitude changes
-function offsetToCoordinates(lon: number, lat: number, offsetX: number, offsetY: number): [number, number] {
+function offsetToCoordinates(
+  lon: number,
+  lat: number,
+  offsetX: number,
+  offsetY: number
+): [number, number] {
   const earthRadius = 6371 // Earth's radius in km
 
   const newLat = lat + (offsetY / earthRadius) * (180 / Math.PI)
@@ -207,9 +185,7 @@ const computedData = computed<GeoJSON.GeoJSON | string>(() => {
           coordinates: newCoordinates
         },
         properties: {
-          [`name_${locale.value as ProjectLang}`]: project[
-            `name_${locale.value as ProjectLang}`
-          ]
+          [`name_${locale.value as ProjectLang}`]: project[`name_${locale.value as ProjectLang}`]
         }
       }
     })
@@ -247,43 +223,126 @@ function addProjects() {
     map.addSource('buildings', {
       type: 'geojson',
       cluster: true,
-      clusterMaxZoom: 6, // Max zoom to cluster points on
-      clusterRadius: 10, // Radius of each cluster when clustering poi
+      clusterMaxZoom: 9, // Max zoom to cluster points on
+      clusterRadius: 20, // Radius of each cluster when clustering poi
       data: computedData.value
     })
 
-    // Now that we've added the source, we can create a layer that uses the 'buildings' source.
+    // Base layer for single-project markers (existing)
     map.addLayer({
       id: 'buildings-layer',
       type: 'circle',
       source: 'buildings',
-      paint: genusPaint
+      paint: buildingPaint
     })
 
-    // The `e` parameter is a combination of `MapMouseEvent` and an optional `features` property.
-    // The `features` property contains an array of `MapGeoJSONFeature` objects representing the features at the clicked location.
-    map.on('click', 'buildings-layer', function (e: MapMouseEvent & { features?: MapGeoJSONFeature[] }) {
-      const feature = e.features?.[0];
-      if (!feature) {
-        console.error('Feature is undefined');
-        return;
+    // For clusters with two or more projects, we render a doughnut.
+    // The inner circle represents pre‑cast and the outer ring (stroke) represents cast‑in‑place.
+    // Change to doughnut style only if cluster count >= 2.
+    // (You could further use feature properties if available to compute proportions.)
+    const innerRatio = 0.7 // Inner circle is 60% of the total outer radius.
+    const scaleFactor = 1.3 // Ripple scale factor.
+    const period = 5000 // 4 seconds period.
+
+    // Inner circle layer (pre‑cast, lighter red).
+    map.addLayer({
+      id: 'clusters-inner',
+      type: 'circle',
+      source: 'buildings',
+      filter: ['has', 'point_count'],
+      paint: {
+        'circle-radius': [
+          'interpolate',
+          ['linear'],
+          ['get', 'point_count'],
+          1, 5 * innerRatio,
+          2, 9 * innerRatio,
+          4, 15 * innerRatio,
+          10, 30 * innerRatio
+        ],
+        'circle-color': '#ff3333', // Lighter red.
+        'circle-opacity': 0.6
       }
-      if (feature.properties?.cluster) {
-        // Increase the zoom level by 2 when a cluster is clicked
-        const currentZoom = map!.getZoom();
-        map!.easeTo({
-          center: e.lngLat,
-          zoom: currentZoom + 2
-        });
-        return;
-      }
-      // Handle non-clustered feature click
-      isProjectDialogOpen.value = true;
-      project.value = projects.value.find(
-        (x: Project) =>
-          x[`name_${locale.value as ProjectLang}`] === feature.properties[`name_${locale.value as ProjectLang}`]
-      );
     })
+
+    // Start the animation loop for the doughnut (both layers).
+    const startTime = performance.now()
+    const animateClusters = () => {
+      const elapsed = performance.now() - startTime
+      // Progress (0 to 1) based on period.
+      const progress = (elapsed % period) / period
+      // Sine wave for smooth ripple (0 -> 1 -> 0).
+      const rippleFactor = Math.sin(progress * Math.PI)
+
+      // Animate outer radius with ripple.
+      // Base outer radius: 1,5; 2,9; 4,15; 10,30 multiplied by (1 + (scaleFactor - 1) * rippleFactor)
+
+      // // Inner radius is a fixed proportion.
+      const innerRadiusExpr = [
+        'interpolate',
+        ['linear'],
+        ['get', 'point_count'],
+        1, (5 * (1 + (scaleFactor - 1) * rippleFactor)) * innerRatio,
+        2, (9 * (1 + (scaleFactor - 1) * rippleFactor)) * innerRatio,
+        4, (15 * (1 + (scaleFactor - 1) * rippleFactor)) * innerRatio,
+        10, (30 * (1 + (scaleFactor - 1) * rippleFactor)) * innerRatio
+      ]
+
+      // Update the outer layer's circle radius.
+      // map?.setPaintProperty('clusters-outer', 'circle-radius', outerRadiusExpr)
+      // // Update the inner layer's circle radius.
+      map?.setPaintProperty('clusters-inner', 'circle-radius', innerRadiusExpr)
+
+      // Update the outer ring's stroke width as the difference between outer and inner radii.
+      // Since we are using data-driven expressions, we use similar expressions for stroke-width.
+      map?.setPaintProperty('clusters-outer', 'circle-stroke-width', [
+        'interpolate',
+        ['linear'],
+        ['get', 'point_count'],
+        1,
+        5 * (1 + (scaleFactor - 1) * rippleFactor) - (5 * (1 + (scaleFactor - 1) * rippleFactor)) * innerRatio,
+        2,
+        9 * (1 + (scaleFactor - 1) * rippleFactor) - (9 * (1 + (scaleFactor - 1) * rippleFactor)) * innerRatio,
+        4,
+        15 * (1 + (scaleFactor - 1) * rippleFactor) - (15 * (1 + (scaleFactor - 1) * rippleFactor)) * innerRatio,
+        10,
+        30 * (1 + (scaleFactor - 1) * rippleFactor) - (30 * (1 + (scaleFactor - 1) * rippleFactor)) * innerRatio
+      ])
+
+      // Fade the outer ring opacity with the ripple.
+      map?.setPaintProperty('clusters-outer', 'circle-opacity', 0.6 * (1 - rippleFactor))
+      requestAnimationFrame(animateClusters)
+    }
+    animateClusters()
+
+    // Existing event bindings remain unchanged.
+    map.on(
+      'click',
+      'buildings-layer',
+      function (e: MapMouseEvent & { features?: MapGeoJSONFeature[] }) {
+        const feature = e.features?.[0]
+        if (!feature) {
+          console.error('Feature is undefined')
+          return
+        }
+        if (feature.properties?.cluster) {
+          // Increase the zoom level by 2 when a cluster is clicked.
+          const currentZoom = map!.getZoom()
+          map!.easeTo({
+            center: e.lngLat,
+            zoom: currentZoom + 2
+          })
+          return
+        }
+        // Handle non-clustered feature click.
+        isProjectDialogOpen.value = true
+        project.value = projects.value.find(
+          (x: Project) =>
+            x[`name_${locale.value as ProjectLang}`] ===
+            feature.properties[`name_${locale.value as ProjectLang}`]
+        )
+      }
+    )
     const popups: Popup[] = []
     map.on('mouseenter', 'buildings-layer', function (e) {
       if (map !== undefined) {
@@ -292,14 +351,22 @@ function addProjects() {
           closeOnClick: false,
           anchor: 'bottom'
         })
-          .setLngLat((e.features?.[0].geometry as GeoJSON.Point)?.coordinates as LngLatLike)
+          .setLngLat(
+            (e.features?.[0].geometry as GeoJSON.Point)
+              ?.coordinates as LngLatLike
+          )
           .setHTML(
             (() => {
               const property = e.features?.[0].properties
               if (property?.cluster) {
-                return `<h3>${property.point_count_abbreviated} ${t('receiver_title', property.point_count_abbreviated)}</h3>`
+                return `<h3>${property.point_count_abbreviated} ${t(
+                  'receiver_title',
+                  property.point_count_abbreviated
+                )}</h3>`
               } else {
-                const name = e.features?.[0].properties[`name_${locale.value as ProjectLang}`]
+                const name = e.features?.[0].properties[
+                  `name_${locale.value as ProjectLang}`
+                ]
                 return `<h3>${name}</h3>`
               }
             })()
