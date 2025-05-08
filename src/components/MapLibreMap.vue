@@ -229,29 +229,82 @@ function addProjects() {
       paint: buildingPaint
     })
 
-    // The `e` parameter is a combination of `MapMouseEvent` and an optional `features` property.
-    // The `features` property contains an array of `MapGeoJSONFeature` objects representing the features at the clicked location.
+    // Additional effectScatter-like layer for clusters
+    map.addLayer({
+  id: 'clusters-effect',
+  type: 'circle',
+  source: 'buildings',
+  filter: ['has', 'point_count'],
+  paint: {
+    // Base circle radius from eCharts config - your base values
+    'circle-radius': [
+      'interpolate',
+      ['linear'],
+      ['get', 'point_count'],
+      1, 5,
+      2, 9,
+      4, 15,
+      10, 30
+    ],
+    'circle-color': '#ff0000',
+    // Set a constant base opacity for fill effect (can be animated below)
+    'circle-opacity': 0.6
+  }
+})
+
+// eCharts ripple config defaults
+const period = 4000 // period in ms (4 seconds)
+const scaleFactor = 1.5
+
+// Start the animation loop for the clusters-effect layer.
+const startTime = performance.now()
+const animateClusters = () => {
+  const elapsed = performance.now() - startTime
+  // Calculate the progress of the ripple within one period (0 to 1)
+  const progress = (elapsed % period) / period
+  // Use a sine wave to have a smooth 0->1->0 ripple effect.
+  const rippleFactor = Math.sin(progress * Math.PI)
+  // For each feature, we adapt the base circle radius by multiplying with ripple.
+  // Since our base is defined as:
+  // 1, 5; 2, 9; 4, 15; 10, 30,
+  // we multiply the base value by (1 + (scaleFactor - 1) * rippleFactor)
+  map?.setPaintProperty('clusters-effect', 'circle-radius', [
+    'interpolate',
+    ['linear'],
+    ['get', 'point_count'],
+    1, 5 * (1 + (scaleFactor - 1) * rippleFactor),
+    2, 9 * (1 + (scaleFactor - 1) * rippleFactor),
+    4, 15 * (1 + (scaleFactor - 1) * rippleFactor),
+    10, 30 * (1 + (scaleFactor - 1) * rippleFactor)
+  ])
+  // Fade the fill opacity according to the ripple. As the circle expands,
+  // have it fade out (brushType is 'fill' per eCharts default).
+  map?.setPaintProperty('clusters-effect', 'circle-opacity', 0.6 * (1 - rippleFactor))
+  requestAnimationFrame(animateClusters)
+}
+animateClusters()
+
+    // Existing event bindings remain unchanged
     map.on('click', 'buildings-layer', function (e: MapMouseEvent & { features?: MapGeoJSONFeature[] }) {
-      const feature = e.features?.[0];
+      const feature = e.features?.[0]
       if (!feature) {
-        console.error('Feature is undefined');
-        return;
+        console.error('Feature is undefined')
+        return
       }
       if (feature.properties?.cluster) {
         // Increase the zoom level by 2 when a cluster is clicked
-        const currentZoom = map!.getZoom();
+        const currentZoom = map!.getZoom()
         map!.easeTo({
           center: e.lngLat,
           zoom: currentZoom + 2
-        });
-        return;
+        })
+        return
       }
       // Handle non-clustered feature click
-      isProjectDialogOpen.value = true;
+      isProjectDialogOpen.value = true
       project.value = projects.value.find(
-        (x: Project) =>
-          x[`name_${locale.value as ProjectLang}`] === feature.properties[`name_${locale.value as ProjectLang}`]
-      );
+        (x: Project) => x[`name_${locale.value as ProjectLang}`] === feature.properties[`name_${locale.value as ProjectLang}`]
+      )
     })
     const popups: Popup[] = []
     map.on('mouseenter', 'buildings-layer', function (e) {
