@@ -288,29 +288,7 @@ function addProjects() {
         10, (30 * (1 + (scaleFactor - 1) * rippleFactor)) * innerRatio
       ]
 
-      // Update the outer layer's circle radius.
-      // map?.setPaintProperty('clusters-outer', 'circle-radius', outerRadiusExpr)
-      // // Update the inner layer's circle radius.
       map?.setPaintProperty('clusters-inner', 'circle-radius', innerRadiusExpr)
-
-      // Update the outer ring's stroke width as the difference between outer and inner radii.
-      // Since we are using data-driven expressions, we use similar expressions for stroke-width.
-      map?.setPaintProperty('clusters-outer', 'circle-stroke-width', [
-        'interpolate',
-        ['linear'],
-        ['get', 'point_count'],
-        1,
-        5 * (1 + (scaleFactor - 1) * rippleFactor) - (5 * (1 + (scaleFactor - 1) * rippleFactor)) * innerRatio,
-        2,
-        9 * (1 + (scaleFactor - 1) * rippleFactor) - (9 * (1 + (scaleFactor - 1) * rippleFactor)) * innerRatio,
-        4,
-        15 * (1 + (scaleFactor - 1) * rippleFactor) - (15 * (1 + (scaleFactor - 1) * rippleFactor)) * innerRatio,
-        10,
-        30 * (1 + (scaleFactor - 1) * rippleFactor) - (30 * (1 + (scaleFactor - 1) * rippleFactor)) * innerRatio
-      ])
-
-      // Fade the outer ring opacity with the ripple.
-      map?.setPaintProperty('clusters-outer', 'circle-opacity', 0.6 * (1 - rippleFactor))
       requestAnimationFrame(animateClusters)
     }
     animateClusters()
