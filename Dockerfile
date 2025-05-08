@@ -1,4 +1,5 @@
-FROM node:20-alpine as build-stage
+FROM node:22-alpine AS build-stage
+
 WORKDIR /app
 COPY package*.json ./
 COPY .npmrc ./
@@ -16,7 +17,7 @@ COPY index.html ./index.html
 COPY .env ./
 RUN npm run build
 
-FROM nginx:stable-alpine as production-stage
+FROM nginx:stable-alpine AS production-stage
 
 RUN apk add --update bash && rm -rf /var/cache/apk/*
 
