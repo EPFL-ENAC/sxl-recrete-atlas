@@ -9,6 +9,9 @@ name: deploy
 
 jobs:
   deploy:
+    permissions:
+      contents: read
+      pull-requests: write
     uses: EPFL-ENAC/epfl-enac-build-push-deploy-action/.github/workflows/deploy.yml@v2.3.0
     secrets:
       token: ${{ secrets.CD_TOKEN }}
