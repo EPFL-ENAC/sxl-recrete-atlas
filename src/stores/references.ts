@@ -5,7 +5,7 @@ import referencesJson from '@/assets/data/references.json'
 export interface Reference {
   key: string
   text: string
-  url: string
+  url?: string
 }
 
 export type ReferenceMap = Record<string, Omit<Reference, 'key'>>
