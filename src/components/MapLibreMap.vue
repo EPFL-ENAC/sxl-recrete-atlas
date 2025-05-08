@@ -228,7 +228,7 @@ function addProjects() {
       data: computedData.value
     })
 
-    // Now that we've added the source, we can create a layer that uses the 'buildings' source.
+    // Base layer for single-project markers (existing)
     map.addLayer({
       id: 'buildings-layer',
       type: 'circle',
@@ -236,70 +236,121 @@ function addProjects() {
       paint: buildingPaint
     })
 
-    // Additional effectScatter-like layer for clusters
+    // For clusters with two or more projects, we render a doughnut.
+    // The inner circle represents pre‑cast and the outer ring (stroke) represents cast‑in‑place.
+    // Change to doughnut style only if cluster count >= 2.
+    // (You could further use feature properties if available to compute proportions.)
+    const innerRatio = 0.6 // Inner circle is 60% of the total outer radius.
+    const scaleFactor = 1.5 // Ripple scale factor.
+    const period = 4000 // 4 seconds period.
+
+    // Outer ring layer (cast‑in‑place, darker red) with transparent fill.
+    // map.addLayer({
+    //   id: 'clusters-outer',
+    //   type: 'circle',
+    //   source: 'buildings',
+    //   filter: ['has', 'point_count'],
+    //   paint: {
+    //     // Start with base outer radius from: 1,5; 2,9; 4,15; 10,30
+    //     'circle-radius': [
+    //       'interpolate',
+    //       ['linear'],
+    //       ['get', 'point_count'],
+    //       1, 5,
+    //       2, 9,
+    //       4, 15,
+    //       10, 30
+    //     ],
+    //     // Transparent fill.
+    //     'circle-color': 'rgba(0,0,0,0)',
+    //     // Stroke will form the outer ring.
+    //     'circle-stroke-color': '#cc0000', // Darker red for cast‑in‑place.
+    //     'circle-stroke-width': 2, // Placeholder, will be updated in animation.
+    //     'circle-opacity': 0.6
+    //   }
+    // })
+
+    // Inner circle layer (pre‑cast, lighter red).
     map.addLayer({
-      id: 'clusters-effect',
+      id: 'clusters-inner',
       type: 'circle',
       source: 'buildings',
       filter: ['has', 'point_count'],
       paint: {
-        // Base circle radius from eCharts config - your base values
         'circle-radius': [
           'interpolate',
           ['linear'],
           ['get', 'point_count'],
-          1,
-          5,
-          2,
-          9,
-          4,
-          15,
-          10,
-          30
+          1, 5 * innerRatio,
+          2, 9 * innerRatio,
+          4, 15 * innerRatio,
+          10, 30 * innerRatio
         ],
-        'circle-color': '#ff0000',
-        // Set a constant base opacity for fill effect (can be animated below)
+        'circle-color': '#ff0000', // Lighter red.
         'circle-opacity': 0.6
       }
     })
 
-    // eCharts ripple config defaults
-    const period = 4000 // period in ms (4 seconds)
-    const scaleFactor = 1.5
-
-    // Start the animation loop for the clusters-effect layer.
+    // Start the animation loop for the doughnut (both layers).
     const startTime = performance.now()
     const animateClusters = () => {
       const elapsed = performance.now() - startTime
-      // Calculate the progress of the ripple within one period (0 to 1)
+      // Progress (0 to 1) based on period.
       const progress = (elapsed % period) / period
-      // Use a sine wave to have a smooth 0->1->0 ripple effect.
+      // Sine wave for smooth ripple (0 -> 1 -> 0).
       const rippleFactor = Math.sin(progress * Math.PI)
-      // For each feature, we adapt the base circle radius by multiplying with ripple.
-      // Since our base is defined as:
-      // 1, 5; 2, 9; 4, 15; 10, 30,
-      // we multiply the base value by (1 + (scaleFactor - 1) * rippleFactor)
-      map?.setPaintProperty('clusters-effect', 'circle-radius', [
+
+      // Animate outer radius with ripple.
+      // Base outer radius: 1,5; 2,9; 4,15; 10,30 multiplied by (1 + (scaleFactor - 1) * rippleFactor)
+      // const outerRadiusExpr = [
+      //   'interpolate',
+      //   ['linear'],
+      //   ['get', 'point_count'],
+      //   1, 5 * (1 + (scaleFactor - 1) * rippleFactor),
+      //   2, 9 * (1 + (scaleFactor - 1) * rippleFactor),
+      //   4, 15 * (1 + (scaleFactor - 1) * rippleFactor),
+      //   10, 30 * (1 + (scaleFactor - 1) * rippleFactor)
+      // ]
+
+      // // Inner radius is a fixed proportion.
+      const innerRadiusExpr = [
         'interpolate',
         ['linear'],
         ['get', 'point_count'],
-        1,
-        5 * (1 + (scaleFactor - 1) * rippleFactor),
-        2,
-        9 * (1 + (scaleFactor - 1) * rippleFactor),
-        4,
-        15 * (1 + (scaleFactor - 1) * rippleFactor),
-        10,
-        30 * (1 + (scaleFactor - 1) * rippleFactor)
-      ])
-      // Fade the fill opacity according to the ripple. As the circle expands,
-      // have it fade out (brushType is 'fill' per eCharts default).
-      map?.setPaintProperty('clusters-effect', 'circle-opacity', 0.6 * (1 - rippleFactor))
+        1, (5 * (1 + (scaleFactor - 1) * rippleFactor)) * innerRatio,
+        2, (9 * (1 + (scaleFactor - 1) * rippleFactor)) * innerRatio,
+        4, (15 * (1 + (scaleFactor - 1) * rippleFactor)) * innerRatio,
+        10, (30 * (1 + (scaleFactor - 1) * rippleFactor)) * innerRatio
+      ]
+
+      // Update the outer layer's circle radius.
+      // map?.setPaintProperty('clusters-outer', 'circle-radius', outerRadiusExpr)
+      // // Update the inner layer's circle radius.
+      map?.setPaintProperty('clusters-inner', 'circle-radius', innerRadiusExpr)
+
+      // Update the outer ring's stroke width as the difference between outer and inner radii.
+      // Since we are using data-driven expressions, we use similar expressions for stroke-width.
+      // map?.setPaintProperty('clusters-outer', 'circle-stroke-width', [
+      //   'interpolate',
+      //   ['linear'],
+      //   ['get', 'point_count'],
+      //   1,
+      //   5 * (1 + (scaleFactor - 1) * rippleFactor) - (5 * (1 + (scaleFactor - 1) * rippleFactor)) * innerRatio,
+      //   2,
+      //   9 * (1 + (scaleFactor - 1) * rippleFactor) - (9 * (1 + (scaleFactor - 1) * rippleFactor)) * innerRatio,
+      //   4,
+      //   15 * (1 + (scaleFactor - 1) * rippleFactor) - (15 * (1 + (scaleFactor - 1) * rippleFactor)) * innerRatio,
+      //   10,
+      //   30 * (1 + (scaleFactor - 1) * rippleFactor) - (30 * (1 + (scaleFactor - 1) * rippleFactor)) * innerRatio
+      // ])
+
+      // Fade the outer ring opacity with the ripple.
+      // map?.setPaintProperty('clusters-outer', 'circle-opacity', 0.6 * (1 - rippleFactor))
       requestAnimationFrame(animateClusters)
     }
     animateClusters()
 
-    // Existing event bindings remain unchanged
+    // Existing event bindings remain unchanged.
     map.on(
       'click',
       'buildings-layer',
@@ -310,7 +361,7 @@ function addProjects() {
           return
         }
         if (feature.properties?.cluster) {
-          // Increase the zoom level by 2 when a cluster is clicked
+          // Increase the zoom level by 2 when a cluster is clicked.
           const currentZoom = map!.getZoom()
           map!.easeTo({
             center: e.lngLat,
@@ -318,7 +369,7 @@ function addProjects() {
           })
           return
         }
-        // Handle non-clustered feature click
+        // Handle non-clustered feature click.
         isProjectDialogOpen.value = true
         project.value = projects.value.find(
           (x: Project) =>
@@ -335,14 +386,22 @@ function addProjects() {
           closeOnClick: false,
           anchor: 'bottom'
         })
-          .setLngLat((e.features?.[0].geometry as GeoJSON.Point)?.coordinates as LngLatLike)
+          .setLngLat(
+            (e.features?.[0].geometry as GeoJSON.Point)
+              ?.coordinates as LngLatLike
+          )
           .setHTML(
             (() => {
               const property = e.features?.[0].properties
               if (property?.cluster) {
-                return `<h3>${property.point_count_abbreviated} ${t('receiver_title', property.point_count_abbreviated)}</h3>`
+                return `<h3>${property.point_count_abbreviated} ${t(
+                  'receiver_title',
+                  property.point_count_abbreviated
+                )}</h3>`
               } else {
-                const name = e.features?.[0].properties[`name_${locale.value as ProjectLang}`]
+                const name = e.features?.[0].properties[
+                  `name_${locale.value as ProjectLang}`
+                ]
                 return `<h3>${name}</h3>`
               }
             })()
