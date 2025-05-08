@@ -26,6 +26,8 @@ export function newFilter(): Filter {
     donor_nb_floor: [0, 100],
     receiver_nb_floor: [0, 100],
     impact_difference: undefined,
+    research_prototype: undefined,
+    unbuilt_with_construction_permission: undefined,
     cost_difference_min_percent: undefined,
     name: null
   }
