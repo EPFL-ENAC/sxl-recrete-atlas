@@ -35,6 +35,7 @@ csv({
     donor_use: arraySplitter,
     receiver_use: arraySplitter,
     reference: arraySplitter,
+    actors: arraySplitter,
     images: function (item) {
       return sanitizeValue(item)
         .split(',')
