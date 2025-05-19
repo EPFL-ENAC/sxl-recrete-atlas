@@ -54,4 +54,3 @@ async function downloadFilteredData(filteredDataArray: Project[]) {
 }
 export { downloadFilteredData }
 export default downloadBundle
-export { downloadBundle }
