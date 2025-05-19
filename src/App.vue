@@ -1,17 +1,31 @@
 <script setup lang="ts">
 import MarkdownDialog from '@/components/MarkdownDialog.vue'
-import { mdiInformation, mdiPlusBox, mdiListBox, mdiGrid, mdiMapOutline, mdiCrane } from '@mdi/js'
+import {
+  mdiWrench,
+  mdiInformation,
+  mdiDownload,
+  mdiPlusBox,
+  mdiListBox,
+  mdiGrid,
+  mdiMapOutline,
+  mdiCrane
+} from '@mdi/js'
+import data from '@/assets/data/data.json'
+
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { RouterView } from 'vue-router'
 import { useCookies } from 'vue3-cookies'
+import { useProjectsStore } from '@/stores/projects'
 // import { useLocale } from 'vuetify'
 import epflLogoUrl from '/EPFL_Logo_184X53.svg'
 // import LocaleSelector from './components/LocaleSelector.vue'
 import { useUiStore } from '@/stores/ui'
 import { storeToRefs } from 'pinia'
-import { mdiWrench } from '@mdi/js'
 import { defaultAppHeaderHeight } from '@/utils/default'
+import { downloadBundle, downloadFilteredData } from '@/utils/downloadBundle'
+
+const projects = storeToRefs(useProjectsStore()).projects
 
 // const { current } = useLocale()
 const { locale } = useI18n({ useScope: 'global' })
@@ -27,8 +41,10 @@ function welcomeClosed() {
 }
 
 const showProjectOpen = ref<boolean>(false)
+const showDownloadOpen = ref<boolean>(false)
 const addProjectOpened = computed<boolean>(() => showProjectOpen.value)
 
+const downloadDataOpened = computed<boolean>(() => showDownloadOpen.value)
 
 function addProjectClosed() {
   showProjectOpen.value = false
@@ -38,9 +54,26 @@ function addProjectOpen() {
   showProjectOpen.value = true
 }
 
+function downloadDataClosed() {
+  showDownloadOpen.value = false
+}
+function downloadDataOpen() {
+  showDownloadOpen.value = true
+}
+
 const uiStore = useUiStore()
 const { drawerRail } = storeToRefs(uiStore)
 
+
+function downloadAllData() {
+
+  // const filtered = getCurrentFilteredData(); // however you store it
+  downloadBundle(data).catch(alert);
+}
+function downloadFilteredDataBtn() {
+  // const filtered = getCurrentFilteredData(); // however you store it
+  downloadFilteredData(projects.value).catch(alert);
+}
 </script>
 
 <template>
@@ -130,6 +163,19 @@ const { drawerRail } = storeToRefs(uiStore)
           <v-btn
             size="small"
             v-bind="activatorProps"
+            :icon="mdiDownload"
+            class="mr-3"
+            :title="$t('download_data_filtered')"
+            @click="downloadDataOpen()"
+          ></v-btn>
+        </template>
+        <span>{{ $t('download_data_filtered') }} </span>
+      </v-tooltip>
+      <v-tooltip location="bottom">
+        <template #activator="{ props: activatorProps }">
+          <v-btn
+            size="small"
+            v-bind="activatorProps"
             to="/about"
             :icon="mdiInformation"
             class="mr-3"
@@ -182,6 +228,31 @@ const { drawerRail } = storeToRefs(uiStore)
         @dialog-close="addProjectClosed"
       >
       </markdown-dialog>
+
+      <v-dialog
+        v-model="downloadDataOpened"
+        :width="800"
+        :max-width="'90vw'"
+        :style="{ 'z-index': 1000 }"
+        :transition="false"
+      >
+        <v-card>
+          <v-card-title class="text-h5">
+            {{ $t('download_data') }}
+          </v-card-title>
+          <v-card-text>
+            <v-btn @click="downloadAllData"> {{ $t('download_all_data') }}</v-btn>
+          </v-card-text>
+          <v-card-text>
+            <v-btn @click="downloadFilteredDataBtn"> {{ $t('download_data_filtered') }}</v-btn>
+          </v-card-text>
+          <v-card-actions>
+            <v-btn :text="$t('close')" @click="downloadDataClosed">
+              {{ $t('close') }}
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </v-main>
   </v-app>
 </template>
