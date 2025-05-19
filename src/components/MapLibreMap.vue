@@ -244,6 +244,11 @@ function addProjects() {
     const scaleFactor = 1.3 // Ripple scale factor.
     const period = 5000 // 4 seconds period.
 
+    const innerRatio5 =  5 * innerRatio;
+    const innerRatio9 =  9 * innerRatio;
+    const innerRatio15 =  15 * innerRatio;
+    const innerRatio30 =  30 * innerRatio;
+
     // Inner circle layer (pre‑cast, lighter red).
     map.addLayer({
       id: 'clusters-inner',
@@ -255,10 +260,10 @@ function addProjects() {
           'interpolate',
           ['linear'],
           ['get', 'point_count'],
-          1, 5 * innerRatio,
-          2, 9 * innerRatio,
-          4, 15 * innerRatio,
-          10, 30 * innerRatio
+          1, innerRatio5,
+          2, innerRatio9,
+          4, innerRatio15,
+          10, innerRatio30
         ],
         'circle-color': '#ff3333', // Lighter red.
         'circle-opacity': 0.6
@@ -282,10 +287,10 @@ function addProjects() {
         'interpolate',
         ['linear'],
         ['get', 'point_count'],
-        1, (5 * (1 + (scaleFactor - 1) * rippleFactor)) * innerRatio,
-        2, (9 * (1 + (scaleFactor - 1) * rippleFactor)) * innerRatio,
-        4, (15 * (1 + (scaleFactor - 1) * rippleFactor)) * innerRatio,
-        10, (30 * (1 + (scaleFactor - 1) * rippleFactor)) * innerRatio
+        1, (innerRatio5 * (1 + (scaleFactor - 1) * rippleFactor)),
+        2, (innerRatio9 * (1 + (scaleFactor - 1) * rippleFactor)),
+        4, (innerRatio15 * (1 + (scaleFactor - 1) * rippleFactor)),
+        10, (innerRatio30 * (1 + (scaleFactor - 1) * rippleFactor))
       ]
 
       map?.setPaintProperty('clusters-inner', 'circle-radius', innerRadiusExpr)
