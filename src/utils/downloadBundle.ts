@@ -52,5 +52,4 @@ async function downloadFilteredData(filteredDataArray: Project[]) {
     alert('Failed to download the bundle. Please try again.')
   }
 }
-export { downloadFilteredData }
-export default downloadBundle
+export { downloadFilteredData, downloadBundle }
