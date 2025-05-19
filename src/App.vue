@@ -11,7 +11,7 @@ import {
   mdiCrane
 } from '@mdi/js'
 import data from '@/assets/data/data.json'
-
+import type { Project } from '@/types/Project'
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { RouterView } from 'vue-router'
@@ -68,7 +68,7 @@ const { drawerRail } = storeToRefs(uiStore)
 function downloadAllData() {
 
   // const filtered = getCurrentFilteredData(); // however you store it
-  downloadBundle(data).catch(alert);
+  downloadBundle(data as Project[]).catch(alert);
 }
 function downloadFilteredDataBtn() {
   // const filtered = getCurrentFilteredData(); // however you store it
