@@ -101,7 +101,6 @@ const mouseLeaveRow = () => {
   currentRowIndex.value = undefined
   currentRowItem.value = undefined
 }
-const appHeaderHeight = ref(`${defaultAppHeaderHeight}px`)
 
 const showRowTooltip = ref(true)
 </script>
@@ -284,6 +283,6 @@ const showRowTooltip = ref(true)
 }
 
 .recrete-list-data-table {
-  height: calc(100vh - v-bind(appHeaderHeight));
+  height: calc(100vh - v-bind(defaultAppHeaderHeight));
 }
 </style>
