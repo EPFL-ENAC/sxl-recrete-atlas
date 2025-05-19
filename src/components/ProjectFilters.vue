@@ -9,7 +9,7 @@ import { useUiStore } from '@/stores/ui'
 import type { Project, ProjectKey, ProjectLang } from '@/types/Project'
 import type { BooleanFilterKey, FilterKey, RangeFilterKey, SelectFilterKey } from '@/types/Filter'
 import { mdiChevronLeft, mdiChevronRight, mdiFilterRemoveOutline } from '@mdi/js'
-
+import { defaultAppHeaderHeight } from '@/utils/default'
 import keys from '@/assets/data/keys.json'
 import data from '@/assets/data/data.json'
 
@@ -148,7 +148,7 @@ watch(
   <v-navigation-drawer
     :rail="drawerRail"
     permanent
-    :style="{ width: !drawerRail ? 'max(450px,25vw)': '64px', height: 'calc(100vh - max(10vh, 64px))', top: 'max(10vh, 64px)' }"
+    :style="{ width: !drawerRail ? 'max(450px,25vw)': '64px', height: `calc(100vh - ${defaultAppHeaderHeight})`, top: defaultAppHeaderHeight }"
     class="permanent-drawer"
     @click="setDrawerRail(false)"
   >
