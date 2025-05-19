@@ -59,7 +59,7 @@ const filtersSelect = computed<FilterSelectValues[]>(() =>
   filterSelectKeys.map((key: SelectFilterKey) => ({
     // example: { key: 'main_concrete_type', values: ['PC', 'CIP'] },
     key,
-    cols: key.includes('element_type') ? 12 : 6,
+    cols: key.includes('element_type') ? 12 : 12,
     values: getSelectValues(key)
   }))
 )
