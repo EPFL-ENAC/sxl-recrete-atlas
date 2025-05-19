@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { computed, watch, ref } from 'vue'
+import { computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useDisplay } from 'vuetify'
 import { useFiltersStore, stepsHash, valuesHash, newFilter } from '@/stores/filters'
 import { storeToRefs } from 'pinia'
+import { useUiStore } from '@/stores/ui'
+
 import type { Project, ProjectKey, ProjectLang } from '@/types/Project'
 import type { BooleanFilterKey, FilterKey, RangeFilterKey, SelectFilterKey } from '@/types/Filter'
 import { mdiChevronLeft, mdiChevronRight, mdiFilterRemoveOutline } from '@mdi/js'
@@ -14,15 +16,16 @@ import data from '@/assets/data/data.json'
 const { t, locale } = useI18n({ useScope: 'global' })
 const { mobile } = useDisplay()
 
+
+const uiStore = useUiStore();
+const { drawerRail } = storeToRefs(uiStore);
+const { setDrawerRail } = uiStore;
+
 interface FilterSelectValues {
   key: SelectFilterKey
   cols: number
   values: (string | OptionValues)[]
 }
-// import { useProjectsStore } from '@/stores/projects'
-// import BarProjectEchart from '@/components/BarProjectEchart.vue'
-
-const drawerRail = ref(false)
 
 const projects = data as Project[]
 interface OptionValues {
@@ -145,9 +148,9 @@ watch(
   <v-navigation-drawer
     :rail="drawerRail"
     permanent
-    :width="mobile ? 300 : 450"
+    :style="{ width: !drawerRail ? 'max(450px,25vw)': '64px', height: 'calc(100vh - max(10vh, 64px))', top: 'max(10vh, 64px)' }"
     class="permanent-drawer"
-    @click="drawerRail = false"
+    @click="setDrawerRail(false)"
   >
     <v-list
       density="compact"
@@ -175,8 +178,7 @@ watch(
             :icon="mdiChevronRight"
             variant="flat"
             size="smaller"
-            style="padding-left:8px;"
-            @click.stop="drawerRail = false"
+            @click.stop="setDrawerRail(false)"
           />
         </template>
         <template v-if="!drawerRail" #append>
@@ -184,7 +186,7 @@ watch(
             :icon="mdiChevronLeft"
             variant="flat"
             size="smaller"
-            @click.stop="drawerRail = true"
+            @click.stop="setDrawerRail(true)"
           />
         </template>
       </v-list-item>
@@ -276,6 +278,10 @@ watch(
 </template>
 
 <style scoped lang="scss">
+:root{
+  --v-layout-left: 25vw;
+  --v-layout-top: 10vh;
+}
 .filter-text {
   transition: opacity 0.3s ease, transform 0.3s ease;
 }
@@ -298,6 +304,7 @@ watch(
   :deep(.v-list-item) {
     padding: 0 !important;
   }
+ 
   :deep(.v-navigation-drawer__content) {
     z-index: 1000;
     display: grid;
@@ -310,10 +317,21 @@ watch(
       }
     }
 
+    
     .v-list {
       overflow: auto;
       padding-top: 0 !important;
+      padding-left: 1.25rem !important;
+      @media screen and (min-width: 1900px) {
+        padding: 2.5rem !important;
+      }
     }
+  }
+}
+
+.permanent-drawer.v-navigation-drawer--rail {
+  :deep(.v-list) {
+    padding: 1.25rem !important;
   }
 }
 
