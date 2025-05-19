@@ -17,6 +17,24 @@ Two external json files to load configuration in [`.env`](.env) :
 - **VITE_PARAMETERS_URL**: Webmap parameters following [this JSON Schema](schema/parameters.schema.json)
 - **VITE_STYLE_URL**: [MapLibre style](https://maplibre.org/maplibre-style-spec)
 
+## Development Guidelines
+
+### Conventional Commits
+
+This project uses [Conventional Commits](https://www.conventionalcommits.org/) for standardized commit messages. The format helps with automated versioning and changelog generation:
+
+```
+<type>[optional scope]: <description>
+
+[optional body]
+
+[optional footer(s)]
+```
+
+Types include: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, and `chore`.
+
+A commit template is available (`.gitmessage`) with examples of correctly formatted commit messages.
+
 ## Recommended IDE Setup
 
 [VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).

@@ -18,7 +18,8 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
     "format": "prettier --write src/",
     "schema": "typescript-json-schema --esModuleInterop -o schema/parameters.schema.json src/utils/*.ts Parameters",
-    "install-hooks": "lefthook install"
+    "install-hooks": "lefthook install",
+    "commitlint": "commitlint --edit --config commitlint.config.mjs"
   },
   "dependencies": {
     "@types/dompurify": "^3.0.2",
@@ -42,6 +43,8 @@
     "vuetify": "^3.6.5"
   },
   "devDependencies": {
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
     "@intlify/unplugin-vue-i18n": "^4.0.0",
     "@intlify/vue-i18n-loader": "^4.2.0",
     "@mdi/font": "^7.4.47",

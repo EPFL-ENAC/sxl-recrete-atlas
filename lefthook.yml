@@ -12,6 +12,11 @@ pre-push:
       tags: frontend typescript
       run: npm run type-check
 
+commit-msg:
+  commands:
+    commitlint:
+      run: npx commitlint --edit {1} --config commitlint.config.mjs
+
 pre-commit:
   parallel: true
   commands:
