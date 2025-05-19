@@ -65,14 +65,19 @@ const uiStore = useUiStore()
 const { drawerRail } = storeToRefs(uiStore)
 
 
+function handleError(error: unknown) {
+  const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred.';
+  alert(errorMessage);
+}
+
 function downloadAllData() {
 
   // const filtered = getCurrentFilteredData(); // however you store it
-  downloadBundle(data as Project[]).catch(alert);
+  downloadBundle(data as Project[]).catch(handleError);
 }
 function downloadFilteredDataBtn() {
   // const filtered = getCurrentFilteredData(); // however you store it
-  downloadFilteredData(projects.value).catch(alert);
+  downloadFilteredData(projects.value).catch(handleError);
 }
 </script>
 
