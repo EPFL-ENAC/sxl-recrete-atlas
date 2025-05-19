@@ -101,7 +101,6 @@ const mouseLeaveRow = () => {
   currentRowIndex.value = undefined
   currentRowItem.value = undefined
 }
-const appHeaderHeight = ref(`${defaultAppHeaderHeight}px`)
 
 const showRowTooltip = ref(true)
 </script>
@@ -258,18 +257,6 @@ const showRowTooltip = ref(true)
 }
 </style>
 <style scoped lang="scss">
-.permanent-drawer {
-  :deep(.v-navigation-drawer__content) {
-    z-index: 1000;
-    display: grid;
-    grid-template-rows: auto;
-    grid-gap: 1rem;
-
-    .v-list {
-      overflow: auto;
-    }
-  }
-}
 
 .grid-list {
   --card-size: 350px;
@@ -296,6 +283,6 @@ const showRowTooltip = ref(true)
 }
 
 .recrete-list-data-table {
-  height: calc(100vh - v-bind(appHeaderHeight));
+  height: calc(100vh - v-bind(defaultAppHeaderHeight));
 }
 </style>

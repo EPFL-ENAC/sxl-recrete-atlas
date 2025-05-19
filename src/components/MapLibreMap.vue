@@ -72,10 +72,11 @@ onMounted(() => {
     style: props.styleSpec || '',
     center: props.center,
     zoom: props.zoom,
-    minZoom: props.minZoom,
+    minZoom: window.innerWidth > 1900 ? 3 : props.minZoom,
     maxZoom: props.maxZoom,
     trackResize: true,
     attributionControl: false,
+    renderWorldCopies: false, // 👈 disables repeating the world
     pixelRatio: window.devicePixelRatio || 1
   })
   map.addControl(new NavigationControl({}))
@@ -244,10 +245,10 @@ function addProjects() {
     const scaleFactor = 1.3 // Ripple scale factor.
     const period = 5000 // 4 seconds period.
 
-    const innerRatio5 =  5 * innerRatio;
-    const innerRatio9 =  9 * innerRatio;
-    const innerRatio15 =  15 * innerRatio;
-    const innerRatio30 =  30 * innerRatio;
+    const innerRatio5 = 5 * innerRatio
+    const innerRatio9 = 9 * innerRatio
+    const innerRatio15 = 15 * innerRatio
+    const innerRatio30 = 30 * innerRatio
 
     // Inner circle layer (pre‑cast, lighter red).
     map.addLayer({
@@ -260,10 +261,14 @@ function addProjects() {
           'interpolate',
           ['linear'],
           ['get', 'point_count'],
-          1, innerRatio5,
-          2, innerRatio9,
-          4, innerRatio15,
-          10, innerRatio30
+          1,
+          innerRatio5,
+          2,
+          innerRatio9,
+          4,
+          innerRatio15,
+          10,
+          innerRatio30
         ],
         'circle-color': '#ff3333', // Lighter red.
         'circle-opacity': 0.6
@@ -287,10 +292,14 @@ function addProjects() {
         'interpolate',
         ['linear'],
         ['get', 'point_count'],
-        1, (innerRatio5 * (1 + (scaleFactor - 1) * rippleFactor)),
-        2, (innerRatio9 * (1 + (scaleFactor - 1) * rippleFactor)),
-        4, (innerRatio15 * (1 + (scaleFactor - 1) * rippleFactor)),
-        10, (innerRatio30 * (1 + (scaleFactor - 1) * rippleFactor))
+        1,
+        innerRatio5 * (1 + (scaleFactor - 1) * rippleFactor),
+        2,
+        innerRatio9 * (1 + (scaleFactor - 1) * rippleFactor),
+        4,
+        innerRatio15 * (1 + (scaleFactor - 1) * rippleFactor),
+        10,
+        innerRatio30 * (1 + (scaleFactor - 1) * rippleFactor)
       ]
 
       map?.setPaintProperty('clusters-inner', 'circle-radius', innerRadiusExpr)
@@ -334,10 +343,7 @@ function addProjects() {
           closeOnClick: false,
           anchor: 'bottom'
         })
-          .setLngLat(
-            (e.features?.[0].geometry as GeoJSON.Point)
-              ?.coordinates as LngLatLike
-          )
+          .setLngLat((e.features?.[0].geometry as GeoJSON.Point)?.coordinates as LngLatLike)
           .setHTML(
             (() => {
               const property = e.features?.[0].properties
@@ -347,9 +353,7 @@ function addProjects() {
                   property.point_count_abbreviated
                 )}</h3>`
               } else {
-                const name = e.features?.[0].properties[
-                  `name_${locale.value as ProjectLang}`
-                ]
+                const name = e.features?.[0].properties[`name_${locale.value as ProjectLang}`]
                 return `<h3>${name}</h3>`
               }
             })()
