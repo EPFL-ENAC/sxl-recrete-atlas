@@ -148,7 +148,7 @@ function downloadFilteredDataBtn() {
       <v-tooltip location="bottom">
         <template #activator="{ props: activatorProps }">
           <v-btn
-            size="small"
+            size="default"
             v-bind="activatorProps"
             :icon="mdiPlusBox"
             class="mr-3"
@@ -161,7 +161,7 @@ function downloadFilteredDataBtn() {
       <v-tooltip location="bottom">
         <template #activator="{ props: activatorProps }">
           <v-btn
-            size="small"
+            size="default"
             v-bind="activatorProps"
             :icon="mdiDownload"
             class="mr-3"
@@ -174,7 +174,7 @@ function downloadFilteredDataBtn() {
       <v-tooltip location="bottom">
         <template #activator="{ props: activatorProps }">
           <v-btn
-            size="small"
+            size="default"
             v-bind="activatorProps"
             to="/about"
             :icon="mdiInformation"
