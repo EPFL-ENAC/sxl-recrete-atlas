@@ -7,9 +7,11 @@ import { RouterView } from 'vue-router'
 import { useCookies } from 'vue3-cookies'
 // import { useLocale } from 'vuetify'
 import epflLogoUrl from '/EPFL_Logo_184X53.svg'
-import { defaultAppHeaderHeight } from '@/utils/default'
 // import LocaleSelector from './components/LocaleSelector.vue'
+import { useUiStore } from '@/stores/ui'
+import { storeToRefs } from 'pinia'
 import { mdiWrench } from '@mdi/js'
+import { defaultAppHeaderHeight } from '@/utils/default'
 
 // const { current } = useLocale()
 const { locale } = useI18n({ useScope: 'global' })
@@ -24,18 +26,9 @@ function welcomeClosed() {
   showWelcome.value = false
 }
 
-// function welcomeOpen() {
-//   showWelcome.value = true
-// }
-
 const showProjectOpen = ref<boolean>(false)
 const addProjectOpened = computed<boolean>(() => showProjectOpen.value)
 
-// function onLocale(lang: string) {
-//   locale.value = lang
-//   current.value = lang
-//   cookies.set('locale', lang, '365d')
-// }
 
 function addProjectClosed() {
   showProjectOpen.value = false
@@ -45,12 +38,14 @@ function addProjectOpen() {
   showProjectOpen.value = true
 }
 
-const appHeaderHeight = ref(defaultAppHeaderHeight)
+const uiStore = useUiStore()
+const { drawerRail } = storeToRefs(uiStore)
+
 </script>
 
 <template>
   <v-app>
-    <v-app-bar flat :height="appHeaderHeight">
+    <v-app-bar flat :style="`height: ${defaultAppHeaderHeight}`" class="justify-center">
       <v-app-bar-title class="flex-1-1">
         <div class="text-h5">{{ $t('app_title') }}</div>
         <div class="text-subtitle-2">{{ $t('app_subtitle') }}</div>
@@ -164,7 +159,12 @@ const appHeaderHeight = ref(defaultAppHeaderHeight)
         </a>
       </template>
     </v-app-bar>
-    <v-main>
+    <v-main
+      :style="`--v-layout-left: ${!drawerRail ? 'max(450px, 25vw)' : '64px'};
+      --v-layout-right: 0px;
+      --v-layout-top: ${defaultAppHeaderHeight};
+      --v-layout-bottom: 0px;`"
+    >
       <RouterView />
       <markdown-dialog
         :button-text="$t('close')"
