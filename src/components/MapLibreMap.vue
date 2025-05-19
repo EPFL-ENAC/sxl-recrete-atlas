@@ -72,7 +72,7 @@ onMounted(() => {
     style: props.styleSpec || '',
     center: props.center,
     zoom: props.zoom,
-    minZoom: window.outerWidth > 1900 ? 3 : props.minZoom,
+    minZoom: window.innerWidth > 1900 ? 3 : props.minZoom,
     maxZoom: props.maxZoom,
     trackResize: true,
     attributionControl: false,
