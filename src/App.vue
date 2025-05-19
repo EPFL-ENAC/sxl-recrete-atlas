@@ -11,6 +11,7 @@ import epflLogoUrl from '/EPFL_Logo_184X53.svg'
 import { useUiStore } from '@/stores/ui'
 import { storeToRefs } from 'pinia'
 import { mdiWrench } from '@mdi/js'
+import { defaultAppHeaderHeight } from '@/utils/default'
 
 // const { current } = useLocale()
 const { locale } = useI18n({ useScope: 'global' })
@@ -39,11 +40,12 @@ function addProjectOpen() {
 
 const uiStore = useUiStore()
 const { drawerRail } = storeToRefs(uiStore)
+
 </script>
 
 <template>
-  <v-app style="height: 44vh">
-    <v-app-bar flat style="height: max(10vh, 64px)" class="justify-center">
+  <v-app>
+    <v-app-bar flat :style="`height: ${defaultAppHeaderHeight}`" class="justify-center">
       <v-app-bar-title class="flex-1-1">
         <div class="text-h5">{{ $t('app_title') }}</div>
         <div class="text-subtitle-2">{{ $t('app_subtitle') }}</div>
@@ -160,7 +162,7 @@ const { drawerRail } = storeToRefs(uiStore)
     <v-main
       :style="`--v-layout-left: ${!drawerRail ? 'max(450px, 25vw)' : '64px'};
       --v-layout-right: 0px;
-      --v-layout-top: max(10vh, 64px);
+      --v-layout-top: ${defaultAppHeaderHeight};
       --v-layout-bottom: 0px;`"
     >
       <RouterView />
