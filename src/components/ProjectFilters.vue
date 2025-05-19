@@ -133,6 +133,17 @@ const filtersActivated = computed<FilterActivated>(() => {
   )
 })
 
+const drawerStyle = computed(() => {
+  return {
+    width: mobile.value 
+      ? (!drawerRail.value ? '100vw' : '56px')
+      : (!drawerRail.value ? 'max(450px,25vw)' : '64px'),
+    height: `calc(100vh - ${defaultAppHeaderHeight})`,
+    top: defaultAppHeaderHeight,
+    zIndex: mobile.value ? 1200 : 1000
+  }
+})
+
 watch(
   filters,
   (newVal) => {
@@ -148,7 +159,7 @@ watch(
   <v-navigation-drawer
     :rail="drawerRail"
     permanent
-    :style="{ width: !drawerRail ? 'max(450px,25vw)': '64px', height: `calc(100vh - ${defaultAppHeaderHeight})`, top: defaultAppHeaderHeight }"
+    :style="drawerStyle"
     class="permanent-drawer"
     @click="setDrawerRail(false)"
   >
