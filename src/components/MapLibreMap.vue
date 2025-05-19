@@ -76,11 +76,6 @@ onMounted(() => {
     maxZoom: props.maxZoom,
     trackResize: true,
     attributionControl: false,
-    constraintInView: 'unconstrained',
-    bounds: [
-      [-180, -85.051129],
-      [180, 85.051129]
-    ],
     renderWorldCopies: false, // 👈 disables repeating the world
     pixelRatio: window.devicePixelRatio || 1
   })
