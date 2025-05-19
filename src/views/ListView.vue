@@ -258,18 +258,6 @@ const showRowTooltip = ref(true)
 }
 </style>
 <style scoped lang="scss">
-.permanent-drawer {
-  :deep(.v-navigation-drawer__content) {
-    z-index: 1000;
-    display: grid;
-    grid-template-rows: auto;
-    grid-gap: 1rem;
-
-    .v-list {
-      overflow: auto;
-    }
-  }
-}
 
 .grid-list {
   --card-size: 350px;
