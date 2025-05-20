@@ -46,6 +46,7 @@ export interface Project {
   images_credits?: string[]
   status?: string
   actors?: string[]
+  fact_sheet_contributors?: string[]
   other?: string
 }
 
