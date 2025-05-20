@@ -238,7 +238,7 @@
         v-if="props.project.fact_sheet_contributors"
         class="text-grey text-caption text-right mt-4"
       >
-        {{ t('project_sheet_contributors') }}: {{ props.project.fact_sheet_contributors }}
+        {{ t('project_sheet_contributors') }}: {{ props.project.fact_sheet_contributors?.join(', ') ?? $t('unknown') }}
       </div>
     </template>
   </v-card>
