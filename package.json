@@ -6,9 +6,10 @@
   "type": "module",
   "scripts": {
     "convert": "node scripts/convert.js",
-    "predev": "npm run convert",
+    "optimize-images": "bash scripts/optimize-images.sh",
+    "predev": "npm run optimize-images && npm run convert",
     "dev": "vite",
-    "prebuild": "npm run convert",
+    "prebuild": "npm run optimize-images && npm run convert",
     "build": "run-p type-check build-only",
     "preview": "vite preview",
     "test:unit": "vitest",
