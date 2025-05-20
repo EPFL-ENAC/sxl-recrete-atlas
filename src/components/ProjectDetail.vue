@@ -1,5 +1,5 @@
 <template>
-  <v-card v-if="props.project">
+  <v-card v-if="props.project" class="project-detail-card">
     <v-card-item :prepend-icon="mdiDomain">
       <v-card-title class="d-flex">
         <span>{{ props.project[`name_${locale as ProjectLang}`] }}</span>
@@ -225,11 +225,22 @@
                 </template>
               </VDropdown>
             </v-row>
+            <v-row v-if="(props.project.actors?.length ?? 0) > 0">
+              <b class="key">{{ t('case_study_actors') }}:</b>
+              {{ props.project.actors?.join(', ') ?? $t('unknown') }}
+            </v-row>
           </v-col>
         </v-row>
       </v-card-text>
     </v-card-item>
-    <template #actions> </template>
+    <template #actions>
+      <div
+        v-if="props.project.fact_sheet_contributors"
+        class="text-grey text-caption text-right mt-4"
+      >
+        {{ t('project_sheet_contributors') }}: {{ props.project.fact_sheet_contributors }}
+      </div>
+    </template>
   </v-card>
 </template>
 
@@ -287,6 +298,11 @@ const project_construction_year = computed(() => {
   display: flex;
 }
 
+.project-detail-card {
+  margin: auto;
+  justify-content: space-between;
+}
+
 .image-title {
   /* text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white; */
   font-family: sans;
@@ -327,6 +343,8 @@ const project_construction_year = computed(() => {
     "construction_year": "Construction year",
     "status": "Project status",
     "actors": "Actors",
+    "case_study_actors": "Case study actors",
+    "project_sheet_contributors": "Project sheet's contributors",
     "impact_source_tooltip": "Source",
     "cost_source_tooltip": "Source",
     "compared_to": "compared to",
@@ -337,10 +355,12 @@ const project_construction_year = computed(() => {
     "about_the_donor_site": "À propos du site du donneur",
     "about_the_reused_concrete": "À propos du réemploi du béton",
     "about_the_new_project": "À propos du nouveau cas d'étude",
-    "more_information": "plus d'information",
+    "more_information": "Plus d'information",
     "construction_year": "Année de construction",
     "status": "État du projet",
     "actors": "Acteurs",
+    "case_study_actors": "Acteurs de l'étude de cas",
+    "project_sheet_contributors": "Contributeurs de la fiche projet",
     "impact_source_tooltip": "Source",
     "cost_source_tooltip": "Source",
     "compared_to": "comparé à",
