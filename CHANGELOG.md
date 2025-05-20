@@ -1,5 +1,54 @@
 # Changelog
 
+## [1.6.0](https://github.com/EPFL-ENAC/sxl-recrete-atlas/compare/v1.5.0...v1.6.0) (2025-05-19)
+
+
+### Features
+
+* add new filter options for research prototypes and construction permissions [#50](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/50) ([65dc773](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/65dc773b5afeacc5cd2947d37d6e080b7670c6b2))
+* add temporary xlsx export ([c8beb03](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/c8beb030dd85bdabf7aa3827075d4951771bb232))
+
+
+### Bug Fixes
+
+* add animated ripple effect for clusters in MapLibreMap component ([44339b8](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/44339b832cfa7e9361414a893873110bbc750449))
+* add column configuration for filter selects and improve layout in ProjectFilters component ([5cf2a34](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/5cf2a34c89929b87cdd27f045a08ec23a0e6a7af))
+* add padding to the icon in ProjectFilters component for improved layout ([3bed0e5](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/3bed0e57d632dfbab75accebba657c253be6164a))
+* add permissions for contents and pull-requests in deploy job ([4b19539](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/4b19539d0b9bc8ba2a9ea0d0f0b7403df687b16f))
+* add sanitization logic for actors field in CSV conversion ([b7cd5a6](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/b7cd5a6f25bdb2de40174b582264a19e61e42c5c))
+* add stylelint directive and ensure minimum height for input details ([dd32fd9](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/dd32fd91b35d7c1e6eae4a34df04ea29c514bfba))
+* add tooltip for clear filters button and improve layout in ProjectFilters component Rendre icône "Clear filters" plus visible [#49](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/49) ([0d6112a](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/0d6112a4e1304676a5c130babd7ab9f8447bbdad))
+* add write permission for packages in deploy job ([fa253f4](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/fa253f4fbd3d9e1a8b548061f68e19970a1e3bcf))
+* adjust column order in filtersSelect v-for loop for consistent layout ([48b9249](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/48b9249eebaaff4d6613685cd7dfc7fecdd896f6))
+* comment out unused LocaleSelector imports and related code [#60](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/60) ([6ffa5f9](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/6ffa5f9709dcb5dfffa2ec2a297e5ddc2fc9e42b))
+* correct typo in README regarding secret configuration ([bf73545](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/bf735456df33ce17dd13ce3411d6398af8e007f0))
+* downgrade TypeScript version from 5.8.3 to 5.4.5 for compatibility ([400bf95](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/400bf95f3f1b9ba31d3b13d41350939c6a27b5c0))
+* enhance click event handling on buildings layer to support GeoJSON feature types ([fe42cd5](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/fe42cd55b01f4333101056c3d80d7be8fae6a73c))
+* enhance click handling on buildings layer to support clustering and improve error handling ([e0214c2](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/e0214c287247ec5c157733435bafcfa50ab50e9d))
+* enhance cluster rendering with doughnut style for multiple projects in MapLibreMap component ([a0a7b43](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/a0a7b433f471483a1f75161492949053d6c3e22a))
+* enhance CSV conversion by adding sanitization logic for all fields ([f56aa2a](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/f56aa2a35b464680adced5d53900d517e15674db))
+* enhance filter visibility with transition effects in ProjectFilters component ([bbc07aa](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/bbc07aa2c903b5a41320e8f76ca3e918676c8925))
+* ensure filtered projects are sorted by start date in useProjectsStore [#14](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/14) ([cdac61f](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/cdac61ffe9ccef705cc7e228d43ec72ffdeaf536))
+* implement copy functionality with wobble animation in ReferenceList component ([882e752](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/882e752591e13f5f94d48e69138cfcf66ce088fb))
+* improve filtering logic to handle empty filter values and adjust array filter condition [#32](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/32) ([4385fbc](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/4385fbcf91b5018b94671882d8ea124592350c42))
+* improve random offset handling and cache project offsets for consistent positioning ([dec881c](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/dec881cec03ce987edd5298f46060cf93adcc3c9))
+* lower minimum zoom level in MapLibreMap component to enhance map accessibility to handle united states ([60d2c02](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/60d2c024ed8b3dcdb1c9eb069c858bd7564fbeb6))
+* make url field optional in Reference interface ([3092252](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/30922521d2b53f517553c3be9c01d043fac4eae3))
+* refactor circle radius calculations and enhance animation for clusters in MapLibreMap component ([279e0f7](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/279e0f74c22eacdf87bedfdfda5411c5d02a23b9))
+* refactor inner ratio calculations in addProjects function ([96e135d](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/96e135db4d2ebc1bdcf28d65523da8ce58367f65))
+* refactor project offset handling to utilize store for consistent positioning ([295d185](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/295d185728bf6a9df3c4cf6b1bc2c4e59c8bc5e0))
+* remove pull-requests write permission from deploy job ([6965a85](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/6965a856ed5049c263bb0ee644b781cc2c2dfb36))
+* remove unused outer cluster properties in addProjects function ([68f7294](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/68f729439f3d851082670dc2f2a3d82de110c179))
+* reverse project sorting order by start date in useProjectsStore ([f11a453](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/f11a45371630b6f6b0bb7d146c84cc72124e0b0d))
+* update circle radius calculations for building layer in MapLibreMap component [MAP] aggregation improvement [#53](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/53) ([dd2ff60](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/dd2ff603e0563b3fdd5ac87f96edba6fc631b81d))
+* update cluster rendering to use doughnut style with adjusted inner ratio and ripple effect in MapLibreMap component ([04a6773](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/04a6773caf61e6dd33ffe048b9fec536a8e3a00e))
+* update filter icons and improve drawer layout in ProjectFilters component ([d7b1d97](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/d7b1d97d6aad0fc914db72dec319f49b8eca91ce))
+* update Node.js version constraint to exclude 23.x ([48b7d4b](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/48b7d4b2701ef8a619d3fb895208dd1de923f41a))
+* update Node.js version constraints in package.json and Dockerfile ([c33712b](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/c33712bafa53717d7c5570c51b263d62d4ab4e1d))
+* update project PDF files and create backup copies for versioning [#13](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/13) ([d1137cd](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/d1137cdff54bfbce4f874cec0f5e2f6ab7cd2308))
+* update TypeScript version to 5.8.3 and refactor project key handling in store ([5eaf407](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/5eaf40703306197e6588d8fb8207b29773c684c6))
+* use unique project ID for gps offset ([17b04af](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/17b04af83f842308e3b3a43e5dd51549a5ba7c62))
+
 ## [1.5.0](https://github.com/EPFL-ENAC/sxl-recrete-atlas/compare/v1.4.1...v1.5.0) (2024-09-26)
 
 
