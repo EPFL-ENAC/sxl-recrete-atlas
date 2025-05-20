@@ -40,7 +40,11 @@ csv({
     images: function (item) {
       return sanitizeValue(item)
         .split(',')
-        .map((image) => `/images/${image.trim()}`)
+        .map((image) => {
+          const trimmed = image.trim()
+          // Replace extension with -512.webp
+          return `/images/${trimmed.replace(/\.(jpg|jpeg|png|webp)$/i, '-512.webp')}`
+        })
     },
     images_credits: function (item) {
       return sanitizeValue(item)
