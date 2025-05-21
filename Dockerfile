@@ -5,7 +5,7 @@ COPY package*.json ./
 COPY .npmrc ./
 COPY npm-shrinkwrap.json ./
 # Install bash and imagemagick for image optimization script
-RUN apk add --no-cache bash imagemagick
+RUN apk add --no-cache bash imagemagick libjpeg-turbo
 RUN npm ci
 COPY public ./public
 COPY src ./src
