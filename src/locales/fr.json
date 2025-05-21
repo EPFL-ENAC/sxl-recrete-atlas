@@ -14,6 +14,8 @@
   "download_data": "Télécharger les données",
   "download_data_description": "Télécharger les données au format CSV",
   "close": "fermer",
+  "click_to_zoom": "Cliquez pour zoomer",
+  "click_to_detail": "Cliquez pour voir les détails",
   "list": "Liste",
   "grid": "Grille",
   "map": "Carte",

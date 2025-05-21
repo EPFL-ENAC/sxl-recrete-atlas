@@ -3,7 +3,6 @@ import MapLibreMap from '@/components/MapLibreMap.vue'
 import ProjectFilters from '@/components/ProjectFilters.vue'
 import type { Parameters } from '@/utils/jsonWebMap'
 import type {
-  SelectableGroupItem,
   SelectableItem,
   SelectableSingleItem
 } from '@/utils/layerSelector'
@@ -72,14 +71,7 @@ const singleItems = computed<SelectableSingleItem[]>(() =>
     .flatMap((item: SelectableItem) => ('children' in item ? item.children : [item]))
 )
 
-const themeItems = computed<SelectableSingleItem[]>(() => {
-  const themeGroup = parameters.value?.selectableItems?.find(
-    (item: SelectableItem) => item.id === 'theme'
-  ) as SelectableGroupItem
-  return themeGroup ? themeGroup.children : []
-})
 
-const selectableLayerIds = computed<string[]>(() => singleItems.value.map((item) => item.id))
 const selectedItemWithLegend = computed(() =>
   singleItems.value
     .filter((item: SelectableSingleItem) =>
@@ -94,14 +86,6 @@ const selectedItemWithLegend = computed(() =>
     )
     .pop()
 )
-const extendedSelectedLayerIds = computed<string[]>(() => {
-  const addtionalIds: string[] = []
-  const measureLayerIds: string[] = selectedLayerIds.value.map((id) => `${id}_${scale.value}`)
-  const ids: string[] = [selectedLayerIds.value, measureLayerIds, addtionalIds]
-    .flat()
-    .filter((value, index, array) => array.indexOf(value) === index)
-  return ids
-})
 
 const scaleItems = computed<{ id: string; title: string }[] | undefined>(() =>
   parameters.value?.legendScales
@@ -147,12 +131,7 @@ watch(
           :max-zoom="parameters?.maxZoom"
           :min-zoom="parameters?.minZoom"
           :style-spec="style"
-          :themes="themeItems"
-          :scales="parameters?.legendScales"
-          :selectable-layer-ids="selectableLayerIds"
-          :selected-layer-ids="extendedSelectedLayerIds"
           :popup-layer-ids="parameters?.popupLayerIds"
-          :selected-scale-id="scale"
         />
       </v-col>
     </v-row>
