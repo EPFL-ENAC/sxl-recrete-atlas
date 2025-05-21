@@ -253,7 +253,7 @@ watch(
         </v-row>
       </v-list-item>
       <v-list-item v-for="(filterBoolean, $key) in filtersBoolean" :key="$key">
-        <v-row class="row-range">
+        <v-row class="filters-boolean">
           <v-col cols="6" :class="{ 'text-grey': filtersActivated[filterBoolean] }">
             {{ $t(filterBoolean) }}
           </v-col>
