@@ -213,7 +213,7 @@
             </v-row>
             <v-row>
               <b class="key">{{ $t('reference') }}:</b> {{ props.project.reference?.join(', ') }}
-              <VDropdown :distance="6" popper-class="popper-class" placement="bottom">
+              <VDropdown :distance="6" popper-class="popper-class" :placement="'top-end'">
                 <!-- This will be the popover reference (for the events and position) -->
                 <button>
                   <v-icon :icon="mdiInformationSlabCircle"></v-icon>
