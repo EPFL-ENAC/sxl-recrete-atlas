@@ -246,16 +246,6 @@ const showRowTooltip = ref(true)
   <project-dialog v-model="isProjectDialogOpen" :project="projectSelected" />
 </template>
 
-<style>
-.popper-class {
-  width: 800px;
-  .v-popper__inner {
-    padding: 1.5rem;
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
-  }
-}
-</style>
 <style scoped lang="scss">
 
 .grid-list {
