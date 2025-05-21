@@ -41,7 +41,7 @@ csv({
     images: function (item) {
       return sanitizeValue(item)
         .split(',')
-        .map(toWebp512)
+        .map((image) => toWebp512(`/images/${image.trim()}`))
     },
     images_credits: function (item) {
       return sanitizeValue(item)
