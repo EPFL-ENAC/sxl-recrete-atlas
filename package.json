@@ -35,7 +35,6 @@
     "maplibre-gl": "^3.5.1",
     "marked": "^5.1.2",
     "marked-emoji": "^1.4.0",
-    "papaparse": "^5.4.1",
     "pinia": "^2.0.32",
     "vue": "^v3.4.25",
     "vue-i18n": "^9.13.1",
