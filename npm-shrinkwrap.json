@@ -20,7 +20,6 @@
         "maplibre-gl": "^3.5.1",
         "marked": "^5.1.2",
         "marked-emoji": "^1.4.0",
-        "papaparse": "^5.4.1",
         "pinia": "^2.0.32",
         "vue": "^v3.4.25",
         "vue-i18n": "^9.13.1",
@@ -7041,11 +7040,6 @@
       "resolved": "https://registry.npmjs.org/pako/-/pako-1.0.11.tgz",
       "integrity": "sha512-4hLB8Py4zZce5s4yd9XzopqwVv/yGNhV1Bl8NTmCq1763HeK2+EwVTv+leGeL13Dnh2wfbqowVPXCIO0z4taYw==",
       "license": "(MIT AND Zlib)"
-    },
-    "node_modules/papaparse": {
-      "version": "5.4.1",
-      "resolved": "https://registry.npmjs.org/papaparse/-/papaparse-5.4.1.tgz",
-      "integrity": "sha512-HipMsgJkZu8br23pW15uvo6sib6wne/4woLZPlFf3rpDyMe9ywEXUsuD7+6K9PRkJlVT51j/sCOYDKGGS3ZJrw=="
     },
     "node_modules/parent-module": {
       "version": "1.0.1",
