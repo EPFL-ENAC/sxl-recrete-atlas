@@ -108,6 +108,14 @@ const showRowTooltip = ref(true)
 <template>
   <project-filters />
   <v-container v-if="listMode === 'list'" class="fill-height pa-0 align-baseline" fluid>
+    <v-alert
+      v-if="data.length === 0"
+      type="info"
+      variant="tonal"
+      class="mt-4"
+    >
+      {{ $t('No elements selected') }}
+    </v-alert>
     <v-tooltip
       v-if="currentRowIndex !== undefined"
       :width="500"
@@ -120,6 +128,8 @@ const showRowTooltip = ref(true)
       {{ currentRowItem?.[`description_${locale as ProjectLang}`] }}
     </v-tooltip>
     <v-data-table
+      v-if="data.length > 0"
+      :key="data.length"
       class="recrete-list-data-table"
       :items="data"
       :headers="headers"
@@ -232,7 +242,15 @@ const showRowTooltip = ref(true)
       <template #bottom />
     </v-data-table>
   </v-container>
-  <v-container v-if="listMode === 'grid'" class="pa-0 grid-list" fluid>
+  <v-container v-if="listMode === 'grid'" :class="`${data.length !== 0 ? 'pa-0 grid-list': 'pa-0'}`" fluid>
+    <v-alert
+      v-if="data.length === 0"
+      type="info"
+      variant="tonal"
+      class="mt-4"
+    >
+      {{ $t('No elements selected') }}
+    </v-alert>
     <project-card
       v-for="(item, $key) in data"
       :key="$key"
