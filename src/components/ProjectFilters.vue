@@ -217,7 +217,7 @@ watch(
         </v-row>
       </v-list-item>
       <v-list-item>
-        <v-row>
+        <v-row class="filters">
           <template v-for="(filterSelect, $key) in filtersSelect" :key="$key">
             <v-col :cols="filterSelect.cols" :keys="$key">
               <v-select
@@ -292,6 +292,9 @@ watch(
 :root{
   --v-layout-left: 25vw;
   --v-layout-top: 10vh;
+}
+.v-row.filters > .v-col {
+    padding: 4px;
 }
 .filter-text {
   transition: opacity 0.3s ease, transform 0.3s ease;
