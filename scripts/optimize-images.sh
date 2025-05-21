@@ -1,7 +1,7 @@
 #!/bin/bash
 # scripts/optimize-images.sh
 # Resize and convert images in public/images/ to webp (1920px and 512px max-width)
-# Only processes changed images. Keeps originals for fallback.
+# Processes all images but skips reprocessing if the output file is up-to-date based on timestamp comparison. Keeps originals for fallback.
 
 set -e
 
