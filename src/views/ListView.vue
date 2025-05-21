@@ -208,6 +208,16 @@ const showRowTooltip = ref(true)
           {{ item.component_age }}
         </span>
       </template>
+      <template #[`item.actors`]="{ item }">
+        <span
+          :class="{
+            'font-italic': item?.age_uncertainty,
+            'text-grey': item?.age_uncertainty
+          }"
+        >
+          {{ item.actors?.join(', ') }}  
+        </span>
+      </template>
       <template #[`item.distance_km`]="{ item }">
         <span
           :class="{
