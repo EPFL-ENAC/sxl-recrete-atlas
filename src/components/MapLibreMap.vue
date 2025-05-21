@@ -11,6 +11,7 @@ import {
   MapMouseEvent,
   NavigationControl,
   Popup,
+  type Callback,
   type LngLatLike,
   type MapGeoJSONFeature,
   type StyleSpecification
@@ -186,6 +187,7 @@ const computedData = computed<GeoJSON.GeoJSON | string>(() => {
           coordinates: newCoordinates
         },
         properties: {
+          main_concrete_type: project.main_concrete_type,
           [`name_${locale.value as ProjectLang}`]: project[`name_${locale.value as ProjectLang}`]
         }
       }
@@ -336,31 +338,90 @@ function addProjects() {
       }
     )
     const popups: Popup[] = []
-    map.on('mouseenter', 'buildings-layer', function (e) {
-      if (map !== undefined) {
-        const a = new Popup({
-          closeButton: false,
-          closeOnClick: false,
-          anchor: 'bottom'
-        })
-          .setLngLat((e.features?.[0].geometry as GeoJSON.Point)?.coordinates as LngLatLike)
-          .setHTML(
-            (() => {
-              const property = e.features?.[0].properties
-              if (property?.cluster) {
-                return `<h3>${property.point_count_abbreviated} ${t(
-                  'receiver_title',
-                  property.point_count_abbreviated
-                )}</h3>`
-              } else {
-                const name = e.features?.[0].properties[`name_${locale.value as ProjectLang}`]
-                return `<h3>${name}</h3>`
-              }
-            })()
-          )
-          .addTo(map)
-        popups.push(a)
-        map.getCanvas().style.cursor = 'pointer'
+    map.on('mouseenter', 'buildings-layer', async function (e) {
+      const property = e.features?.[0].properties
+      if (property?.cluster && map) {
+        const clusterId = property?.cluster_id
+        const source = map.getSource('buildings') as GeoJSONSource
+        source.getClusterLeaves(
+          clusterId,
+          Infinity,
+          0,
+          callbackOnLeaves as Callback<Array<GeoJSON.Feature>>
+        )
+        return // Exit early when handling a cluster
+      } else {
+        // Handle non-clustered feature
+        callbackOnLeaves(null, e.features as MapGeoJSONFeature[])
+      }
+
+      function countConcreteTypes(
+        features: Array<{ properties: { main_concrete_type?: string[] } }>
+      ) {
+        let pc = 0
+        let cip = 0
+        for (const feature of features) {
+          const types = feature.properties.main_concrete_type
+          if (Array.isArray(types)) {
+            pc += types.filter((t) => t === 'PC').length
+            cip += types.filter((t) => t === 'CIP').length
+          }
+        }
+        return { PC: pc, CIP: cip }
+      }
+      function callbackOnLeaves(
+        error: Error | null | undefined,
+        features: MapGeoJSONFeature[]
+      ): void {
+        if (error) {
+          console.error('Error getting cluster leaves:', error)
+          return
+        }
+        console.log('Cluster leaves:', features)
+        if (map !== undefined) {
+          const a = new Popup({
+            closeButton: false,
+            closeOnClick: false,
+            anchor: 'bottom'
+          })
+            .setLngLat((e.features?.[0].geometry as GeoJSON.Point)?.coordinates as LngLatLike)
+            .setHTML(
+              (() => {
+                const property = e.features?.[0].properties
+                // Retrieve all leaves of cluster if it's a cluster
+                // const clusterId = property?.cluster_id
+                // const source = map.getSource('buildings') as GeoJSONSource
+                if (property?.cluster && map) {
+                  console.log('Cluster leaves:', features)
+                  const { PC, CIP } = countConcreteTypes(features)
+                  return `<h3>${property.point_count_abbreviated} ${t(
+                    'receiver_title',
+                    property.point_count_abbreviated
+                  )}:</h3>
+                <!-- display PC and CIP counts -->
+                <p>${t('PC')}: ${PC}</p>
+                <p>${t('CIP')}: ${CIP}</p>
+                <i class="text-sm">${t('click_to_zoom')}</i>`
+                } else {
+                  // Handle non-clustered feature
+                  const name = e.features?.[0].properties[`name_${locale.value as ProjectLang}`]
+                  const property = e.features?.[0].properties
+                  if (!name) {
+                    console.error('Name is undefined')
+                    return ''
+                  }
+                  return `<h3>${name}:</h3>
+                  <p>${t('main_concrete_type')}: ${JSON.parse(property?.main_concrete_type || [])
+                    .map((type: string) => t(type))
+                    .join(', ')}</p>
+                  <i class="text-sm">${t('click_to_detail')}</i>`
+                }
+              })()
+            )
+            .addTo(map)
+          popups.push(a)
+          map.getCanvas().style.cursor = 'pointer'
+        }
       }
     })
 
