@@ -4,6 +4,8 @@ WORKDIR /app
 COPY package*.json ./
 COPY .npmrc ./
 COPY npm-shrinkwrap.json ./
+# Install bash and imagemagick for image optimization script
+RUN apk add --no-cache bash imagemagick
 RUN npm ci
 COPY public ./public
 COPY src ./src
@@ -15,6 +17,8 @@ COPY *.conf ./
 COPY *.json ./
 COPY index.html ./index.html
 COPY .env ./
+# Run image optimization before build
+RUN npm run optimize-images
 RUN npm run build
 
 FROM nginx:stable-alpine AS production-stage

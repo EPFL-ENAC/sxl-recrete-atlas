@@ -1,0 +1,2 @@
+# Ignore all generated webp images in public/images
+*.webp

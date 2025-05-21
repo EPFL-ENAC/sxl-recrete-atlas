@@ -235,10 +235,14 @@
     </v-card-item>
     <template #actions>
       <div
-        v-if="props.project.fact_sheet_contributors"
+        v-if="props.project?.fact_sheet_contributors"
         class="text-grey text-caption text-right mt-4"
       >
-        {{ t('project_sheet_contributors') }}: {{ props.project.fact_sheet_contributors?.join(', ') ?? $t('unknown') }}
+        {{ t('project_sheet_contributors') }}: {{ 
+          Array.isArray(props.project.fact_sheet_contributors) 
+            ? props.project.fact_sheet_contributors.join(', ')
+            : props.project.fact_sheet_contributors || $t('unknown') 
+        }}
       </div>
     </template>
   </v-card>
