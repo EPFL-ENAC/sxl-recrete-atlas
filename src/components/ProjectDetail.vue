@@ -8,7 +8,7 @@
     </v-card-item>
     <v-card-item>
       <v-card-text>
-        <v-row>
+        <v-row class="mb-4">
           <v-col :cols="6">
             <v-row>
               <b class="key">{{ $t(`description_${locale as ProjectLang}`) }}: </b>
@@ -82,7 +82,7 @@
             </v-card-title>
           </v-col>
         </v-row>
-        <v-row>
+        <v-row class="ga-3">
           <v-col
             v-if="
               props.project.distance_km ||
