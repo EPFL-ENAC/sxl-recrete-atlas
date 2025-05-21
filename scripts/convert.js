@@ -1,5 +1,6 @@
 import csv from 'csvtojson'
 import { writeFileSync } from 'fs'
+import { toWebp512 } from '../src/utils/image.js'
 
 // Helper function to sanitize the value.
 const sanitizeValue = (value) => value.replace(/^"+|"+$/g, '')
@@ -40,11 +41,7 @@ csv({
     images: function (item) {
       return sanitizeValue(item)
         .split(',')
-        .map((image) => {
-          const trimmed = image.trim()
-          // Replace extension with -512.webp
-          return `/images/${trimmed.replace(/\.(jpg|jpeg|png|webp)$/i, '-512.webp')}`
-        })
+        .map(toWebp512)
     },
     images_credits: function (item) {
       return sanitizeValue(item)
