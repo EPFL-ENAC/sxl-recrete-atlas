@@ -258,7 +258,7 @@ function downloadFilteredDataBtn() {
 
 <style lang="scss" scoped>
 .v-app-bar {
-  border-bottom: 1px solid rgb(var(--v-theme-primary));
+  border-bottom: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
 }
 .main-group-btn {
   justify-content: end;
