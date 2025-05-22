@@ -74,8 +74,8 @@
             >
               <v-card-subtitle style="width: 100%" class="d-flex flex-column">
                 <span
-                  class="d-flex justify-end font-italic"
                   v-if="props.project?.images_credits?.length ?? 0 > 0"
+                  class="d-flex justify-end font-italic"
                 >
                   {{ t('credits') }}:
                   {{ props.project?.images_credits?.[carouselIndex] }}
