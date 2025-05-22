@@ -1,28 +1,30 @@
 <script setup lang="ts">
-import { computed, watch, ref } from 'vue'
+import { computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useDisplay } from 'vuetify'
 import { useFiltersStore, stepsHash, valuesHash, newFilter } from '@/stores/filters'
 import { storeToRefs } from 'pinia'
+import { useUiStore } from '@/stores/ui'
+
 import type { Project, ProjectKey, ProjectLang } from '@/types/Project'
 import type { BooleanFilterKey, FilterKey, RangeFilterKey, SelectFilterKey } from '@/types/Filter'
 import { mdiChevronLeft, mdiChevronRight, mdiFilterRemoveOutline } from '@mdi/js'
-
+import { defaultAppHeaderHeight } from '@/utils/default'
 import keys from '@/assets/data/keys.json'
 import data from '@/assets/data/data.json'
 
 const { t, locale } = useI18n({ useScope: 'global' })
 const { mobile } = useDisplay()
 
+const uiStore = useUiStore()
+const { drawerRail } = storeToRefs(uiStore)
+const { setDrawerRail } = uiStore
+
 interface FilterSelectValues {
   key: SelectFilterKey
   cols: number
   values: (string | OptionValues)[]
 }
-// import { useProjectsStore } from '@/stores/projects'
-// import BarProjectEchart from '@/components/BarProjectEchart.vue'
-
-const drawerRail = ref(false)
 
 const projects = data as Project[]
 interface OptionValues {
@@ -130,6 +132,21 @@ const filtersActivated = computed<FilterActivated>(() => {
   )
 })
 
+const drawerStyle = computed(() => {
+  return {
+    width: mobile.value
+      ? !drawerRail.value
+        ? '100vw'
+        : '64px'
+      : !drawerRail.value
+        ? 'max(450px,25vw)'
+        : '64px',
+    height: `calc(100vh - ${defaultAppHeaderHeight})`,
+    top: defaultAppHeaderHeight,
+    zIndex: mobile.value ? 1200 : 1000
+  }
+})
+
 watch(
   filters,
   (newVal) => {
@@ -145,9 +162,9 @@ watch(
   <v-navigation-drawer
     :rail="drawerRail"
     permanent
-    :width="mobile ? 300 : 450"
+    :style="drawerStyle"
     class="permanent-drawer"
-    @click="drawerRail = false"
+    @click="setDrawerRail(false)"
   >
     <v-list
       density="compact"
@@ -155,15 +172,19 @@ watch(
       :class="{ 'hide-all-but-first': drawerRail, 'sticky-header': !drawerRail }"
     >
       <v-list-item class="sticky-header" :append-icon="mdiChevronLeft">
-        <v-list-item-title class="d-flex ga-2 align-center" :class="{ 'drawer-collapsed': drawerRail }">
-          <span class="filter-text " :class="mobile ? 'text-subtitle-1' : 'text-h6'">{{ $t('filters') }}</span>
+        <v-list-item-title
+          class="d-flex ga-2 align-center"
+          :class="{ 'drawer-collapsed': drawerRail }"
+        >
+          <span class="filter-text" :class="mobile ? 'text-subtitle-1' : 'text-h6'">{{
+            $t('filters')
+          }}</span>
           <v-tooltip :text="$t('clear-filters')" bottom>
             <template #activator="{ props }">
               <v-btn
                 class="filter-text"
                 v-bind="props"
                 :icon="mdiFilterRemoveOutline"
-                :title="$t('clear-filters')"
                 size="smaller"
                 @click="resetFilter"
               />
@@ -171,21 +192,30 @@ watch(
           </v-tooltip>
         </v-list-item-title>
         <template v-if="drawerRail" #prepend>
-          <v-btn
-            :icon="mdiChevronRight"
-            variant="flat"
-            size="smaller"
-            style="padding-left:8px;"
-            @click.stop="drawerRail = false"
-          />
+          <v-tooltip :text="$t('open-filters')" bottom>
+            <template #activator="{ props }">
+              <v-btn
+                :icon="mdiChevronRight"
+                v-bind="props"
+                variant="flat"
+                size="smaller"
+                @click.stop="setDrawerRail(false)"
+              />
+            </template>
+          </v-tooltip>
         </template>
         <template v-if="!drawerRail" #append>
-          <v-btn
-            :icon="mdiChevronLeft"
-            variant="flat"
-            size="smaller"
-            @click.stop="drawerRail = true"
-          />
+          <v-tooltip :text="$t('close-filters')" bottom>
+            <template #activator="{ props }">
+              <v-btn
+                v-bind="props"
+                :icon="mdiChevronLeft"
+                variant="flat"
+                size="smaller"
+                @click.stop="setDrawerRail(true)"
+              />
+            </template>
+          </v-tooltip>
         </template>
       </v-list-item>
       <v-list-item>
@@ -204,7 +234,7 @@ watch(
         </v-row>
       </v-list-item>
       <v-list-item>
-        <v-row>
+        <v-row class="filters">
           <template v-for="(filterSelect, $key) in filtersSelect" :key="$key">
             <v-col :cols="filterSelect.cols" :keys="$key">
               <v-select
@@ -240,7 +270,7 @@ watch(
         </v-row>
       </v-list-item>
       <v-list-item v-for="(filterBoolean, $key) in filtersBoolean" :key="$key">
-        <v-row class="row-range">
+        <v-row class="filters-boolean">
           <v-col cols="6" :class="{ 'text-grey': filtersActivated[filterBoolean] }">
             {{ $t(filterBoolean) }}
           </v-col>
@@ -276,8 +306,17 @@ watch(
 </template>
 
 <style scoped lang="scss">
+:root {
+  --v-layout-left: 25vw;
+  --v-layout-top: 10vh;
+}
+.v-row.filters > .v-col {
+  padding: 4px;
+}
 .filter-text {
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
 }
 
 .drawer-collapsed .filter-text {
@@ -291,13 +330,14 @@ watch(
 }
 
 .v-navigation-drawer {
-  border-right: 1px solid rgb(var(--v-theme-primary)) !important;
+  border-right: 1px solid rgba(var(--v-border-color), var(--v-border-opacity)) !important;
 }
 
 .permanent-drawer {
   :deep(.v-list-item) {
     padding: 0 !important;
   }
+
   :deep(.v-navigation-drawer__content) {
     z-index: 1000;
     display: grid;
@@ -313,7 +353,17 @@ watch(
     .v-list {
       overflow: auto;
       padding-top: 0 !important;
+      padding-left: 1.25rem !important;
+      @media screen and (min-width: 1900px) {
+        padding: 2.5rem !important;
+      }
     }
+  }
+}
+
+.permanent-drawer.v-navigation-drawer--rail {
+  :deep(.v-list) {
+    padding: 1.25rem !important;
   }
 }
 

@@ -1,15 +1,33 @@
 <script setup lang="ts">
 import MarkdownDialog from '@/components/MarkdownDialog.vue'
-import { mdiInformation, mdiPlusBox, mdiListBox, mdiGrid, mdiMapOutline, mdiCrane } from '@mdi/js'
+import {
+  mdiWrench,
+  mdiInformation,
+  mdiDownload,
+  mdiPlusBox,
+  mdiListBox,
+  mdiGrid,
+  mdiMapOutline,
+  mdiCommentQuestionOutline,
+  mdiClose
+} from '@mdi/js'
+import data from '@/assets/data/data.json'
+import type { Project } from '@/types/Project'
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { RouterView } from 'vue-router'
 import { useCookies } from 'vue3-cookies'
+import { useProjectsStore } from '@/stores/projects'
 // import { useLocale } from 'vuetify'
+import { useDisplay } from 'vuetify'
 import epflLogoUrl from '/EPFL_Logo_184X53.svg'
-import { defaultAppHeaderHeight } from '@/utils/default'
 // import LocaleSelector from './components/LocaleSelector.vue'
-import { mdiWrench } from '@mdi/js'
+import { useUiStore } from '@/stores/ui'
+import { storeToRefs } from 'pinia'
+import { defaultAppHeaderHeight } from '@/utils/default'
+import { downloadBundle, downloadFilteredData } from '@/utils/downloadBundle'
+
+const projects = storeToRefs(useProjectsStore()).projects
 
 // const { current } = useLocale()
 const { locale } = useI18n({ useScope: 'global' })
@@ -24,18 +42,11 @@ function welcomeClosed() {
   showWelcome.value = false
 }
 
-// function welcomeOpen() {
-//   showWelcome.value = true
-// }
-
 const showProjectOpen = ref<boolean>(false)
+const showDownloadOpen = ref<boolean>(false)
 const addProjectOpened = computed<boolean>(() => showProjectOpen.value)
 
-// function onLocale(lang: string) {
-//   locale.value = lang
-//   current.value = lang
-//   cookies.set('locale', lang, '365d')
-// }
+const downloadDataOpened = computed<boolean>(() => showDownloadOpen.value)
 
 function addProjectClosed() {
   showProjectOpen.value = false
@@ -45,17 +56,41 @@ function addProjectOpen() {
   showProjectOpen.value = true
 }
 
-const appHeaderHeight = ref(defaultAppHeaderHeight)
+function downloadDataClosed() {
+  showDownloadOpen.value = false
+}
+function downloadDataOpen() {
+  showDownloadOpen.value = true
+}
+
+const uiStore = useUiStore()
+const { drawerRail } = storeToRefs(uiStore)
+
+function handleError(error: unknown) {
+  const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred.'
+  alert(errorMessage)
+}
+
+function downloadAllData() {
+  // const filtered = getCurrentFilteredData(); // however you store it
+  downloadBundle(data as Project[]).catch(handleError)
+}
+function downloadFilteredDataBtn() {
+  // const filtered = getCurrentFilteredData(); // however you store it
+  downloadFilteredData(projects.value).catch(handleError)
+}
+const { mobile } = useDisplay()
+
 </script>
 
 <template>
   <v-app>
-    <v-app-bar flat :height="appHeaderHeight">
+    <v-app-bar flat :style="`height: ${defaultAppHeaderHeight}`" class="justify-center">
       <v-app-bar-title class="flex-1-1">
         <div class="text-h5">{{ $t('app_title') }}</div>
         <div class="text-subtitle-2">{{ $t('app_subtitle') }}</div>
       </v-app-bar-title>
-      <div class="flex-shrink-1 flex-grow-1">
+      <div v-if="!mobile" class="flex-shrink-1 flex-grow-1" >
         <div class="text-h5">
           {{ $t('app_wip_title') }}<v-icon class="ml-5"> {{ mdiWrench }}</v-icon>
         </div>
@@ -120,7 +155,7 @@ const appHeaderHeight = ref(defaultAppHeaderHeight)
       <v-tooltip location="bottom">
         <template #activator="{ props: activatorProps }">
           <v-btn
-            size="small"
+            size="default"
             v-bind="activatorProps"
             :icon="mdiPlusBox"
             class="mr-3"
@@ -133,7 +168,20 @@ const appHeaderHeight = ref(defaultAppHeaderHeight)
       <v-tooltip location="bottom">
         <template #activator="{ props: activatorProps }">
           <v-btn
-            size="small"
+            size="default"
+            v-bind="activatorProps"
+            :icon="mdiDownload"
+            class="mr-3"
+            :title="$t('download_data_filtered')"
+            @click="downloadDataOpen()"
+          ></v-btn>
+        </template>
+        <span>{{ $t('download_data_filtered') }} </span>
+      </v-tooltip>
+      <v-tooltip location="bottom">
+        <template #activator="{ props: activatorProps }">
+          <v-btn
+            size="default"
             v-bind="activatorProps"
             to="/about"
             :icon="mdiInformation"
@@ -146,10 +194,10 @@ const appHeaderHeight = ref(defaultAppHeaderHeight)
       <v-tooltip location="bottom">
         <template #activator="{ props: activatorProps }">
           <v-btn
-            size="small"
+            size="default"
             v-bind="activatorProps"
             to="/faq"
-            :icon="mdiCrane"
+            :icon="mdiCommentQuestionOutline"
             class="mr-3"
             :title="$t('faq')"
           ></v-btn>
@@ -159,12 +207,17 @@ const appHeaderHeight = ref(defaultAppHeaderHeight)
       <!-- <LocaleSelector class="mr-5" /> -->
 
       <template #append>
-        <a href="https://www.epfl.ch/labs/sxl/" target="_blank">
+        <a href="https://www.epfl.ch/labs/sxl/" target="_blank" class="pl-10 pr-5">
           <v-img :src="epflLogoUrl" width="100px" />
         </a>
       </template>
     </v-app-bar>
-    <v-main>
+    <v-main
+      :style="`--v-layout-left: ${!drawerRail ? 'max(450px, 25vw)' : '64px'};
+      --v-layout-right: 0px;
+      --v-layout-top: ${defaultAppHeaderHeight};
+      --v-layout-bottom: 0px;`"
+    >
       <RouterView />
       <markdown-dialog
         :button-text="$t('close')"
@@ -182,13 +235,33 @@ const appHeaderHeight = ref(defaultAppHeaderHeight)
         @dialog-close="addProjectClosed"
       >
       </markdown-dialog>
+
+      <v-dialog
+        v-model="downloadDataOpened"
+        :width="800"
+        :max-width="'fit-content'"
+        :style="{ 'z-index': 1000 }"
+        :transition="false"
+      >
+        <v-card>
+          <v-card-actions>
+            <v-btn :text="$t('close')" :icon="mdiClose" @click="downloadDataClosed"> </v-btn>
+          </v-card-actions>
+          <v-card-text class="d-flex justify-center">
+            <v-btn @click="downloadAllData"> {{ $t('download_all_data') }}</v-btn>
+          </v-card-text>
+          <v-card-text class="d-flex justify-center">
+            <v-btn @click="downloadFilteredDataBtn"> {{ $t('download_data_filtered') }}</v-btn>
+          </v-card-text>
+        </v-card>
+      </v-dialog>
     </v-main>
   </v-app>
 </template>
 
 <style lang="scss" scoped>
 .v-app-bar {
-  border-bottom: 1px solid rgb(var(--v-theme-primary));
+  border-bottom: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
 }
 .main-group-btn {
   justify-content: end;

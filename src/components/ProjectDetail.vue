@@ -1,63 +1,62 @@
 <template>
-  <v-card v-if="props.project">
-    <v-card-item :prepend-icon="mdiDomain">
-      <v-card-title class="d-flex">
-        <span>{{ props.project[`name_${locale as ProjectLang}`] }}</span>
-        <v-btn size="small" class="ml-auto" text="Close" @click="closeDialog"></v-btn>
+  <v-card v-if="props.project" class="project-detail-card">
+    <v-card-item class="project-title-border">
+      <v-card-title class="d-flex justify-center align-center">
+        <p class="d-flex justify-center" style="width: 100%">
+          <span class="font-weight-bold">{{ props.project[`name_${locale as ProjectLang}`] }}</span>
+        </p>
+        <v-btn
+          variant="plain"
+          size="small"
+          :icon="mdiClose"
+          class="ml-auto"
+          text="Close"
+          @click="closeDialog"
+        ></v-btn>
       </v-card-title>
     </v-card-item>
     <v-card-item>
       <v-card-text>
-        <v-row>
-          <v-col :cols="6">
-            <v-row>
-              <b class="key">{{ $t(`description_${locale as ProjectLang}`) }}: </b>
-              {{ props.project[`description_${locale as ProjectLang}`] }}
-            </v-row>
-
-            <v-row>
-              <h3 class="text-decoration-underline">{{ t('about_the_receiving_project') }}</h3>
-            </v-row>
-            <v-row>
-              <b class="key"
-                >{{ $t('receiver_country') }}
-                <span v-if="props.project.receiver_city">({{ $t('receiver_city') }})</span>
-                :
-              </b>
-              <span
-                >{{ $t('countryFn', [props.project.receiver_country]) }}
-                <span v-if="props.project.receiver_city">
-                  ({{ props.project.receiver_city }})
-                </span>
-              </span>
-            </v-row>
-            <v-row>
-              <b class="key">{{ $t('start_date_year') }}: </b>
-              <span
-                :class="{
-                  'font-italic': props.project.date_uncertainty,
-                  'text-grey': props.project.date_uncertainty
-                }"
-              >
-                {{ props.project.start_date_year }}
-              </span>
-            </v-row>
-          </v-col>
-          <v-col :cols="6">
+        <v-row class="mb-4">
+          <v-col :cols="12">
             <v-carousel
               v-if="(props.project.images?.length ?? 0) > 0"
               v-model="carouselIndex"
-              height="90%"
-              :show-arrows="false"
+              height="100%"
+              variant="plain"
+              :show-arrows="true"
+              :hide-delimiter-background="true"
+              :hide-delimiters="true"
               :interval="3000"
             >
+              <template #prev>
+                <v-btn
+                  variant="plain"
+                  class="carousel-icon"
+                  :icon="mdiChevronLeft"
+                  @click.stop="
+                    carouselIndex =
+                      (carouselIndex - 1 + (props.project.images?.length ?? 0)) %
+                      (props.project.images?.length ?? 1)
+                  "
+                ></v-btn>
+              </template>
+              <template #next>
+                <v-btn
+                  variant="plain"
+                  class="carousel-icon"
+                  :icon="mdiChevronRight"
+                  @click.stop="
+                    carouselIndex = (carouselIndex + 1) % (props.project.images?.length ?? 1)
+                  "
+                ></v-btn>
+              </template>
               <v-carousel-item
                 v-for="(image, $key) in props.project.images"
                 :key="$key"
                 :src="image"
                 content-class="carousel-content"
-                cover
-                height="300px"
+                height="512px"
               >
               </v-carousel-item>
             </v-carousel>
@@ -73,8 +72,11 @@
               class="image-title d-flex flex-spacebetween"
               style="gap: 1rem; align-items: center"
             >
-              <v-card-subtitle>
-                <span v-if="props.project?.images_credits?.length ?? 0 > 0">
+              <v-card-subtitle style="width: 100%" class="d-flex flex-column">
+                <span
+                  v-if="props.project?.images_credits?.length ?? 0 > 0"
+                  class="d-flex justify-end font-italic"
+                >
                   {{ t('credits') }}:
                   {{ props.project?.images_credits?.[carouselIndex] }}
                 </span>
@@ -82,35 +84,79 @@
             </v-card-title>
           </v-col>
         </v-row>
-        <v-row>
+        <v-row class="ga-3 mb-4">
+          <v-col :cols="6">
+            <v-row class="mb-4">
+              <h3 class="text-font-bold">{{ $t(`description_${locale as ProjectLang}`) }}</h3>
+              {{ props.project[`description_${locale as ProjectLang}`] }}
+            </v-row>
+
+            <v-row>
+              <h3 class="text-font-bold">{{ t('about_the_receiving_project') }}</h3>
+            </v-row>
+            <v-row>
+              <span class="key"
+                >{{ $t('receiver_country') }}
+                <span v-if="props.project.receiver_city">({{ $t('receiver_city') }})</span>
+                :
+              </span>
+              <span
+                >{{ $t('countryFn', [props.project.receiver_country]) }}
+                <span v-if="props.project.receiver_city">
+                  ({{ props.project.receiver_city }})
+                </span>
+              </span>
+            </v-row>
+            <v-row>
+              <span class="key">{{ $t('start_date_year') }}: </span>
+              <span
+                :class="{
+                  'font-italic': props.project.date_uncertainty,
+                  'text-grey': props.project.date_uncertainty
+                }"
+              >
+                {{ props.project.start_date_year }}
+              </span>
+            </v-row>
+          </v-col>
+        </v-row>
+        <v-row class="">
           <v-col
             v-if="
               props.project.distance_km ||
               (props.project.donor_use?.length ?? 0) > 0 ||
               project_construction_year > 0
             "
+            :sm="12"
+            :md="6"
+            :lg="3"
             :cols="3"
           >
             <v-row>
-              <h3 class="text-decoration-underline">{{ t('about_the_donor_site') }}</h3>
-            </v-row>
-            <v-row v-if="props.project.distance_km">
-              <b class="key">{{ $t('distance_km') }}:</b>
+              <v-col>
+                <v-row>
+                  <h3 class="text-font-bold">{{ t('about_the_donor_site') }}</h3>
+                </v-row>
+                <v-row v-if="props.project.distance_km">
+                  <span class="key">{{ $t('distance_km') }}:</span>
 
-              <i v-if="props.project.distance_uncertainty">
-                {{ props.project.distance_km }}
-              </i>
-              <span v-else>{{ props.project.distance_km }}</span>
-            </v-row>
-            <v-row v-if="(props.project.donor_use?.length ?? 0) > 0">
-              <b class="key">{{ $t('donor_use') }}:</b> {{ props.project.donor_use?.join(', ') }}
-            </v-row>
-            <v-row v-if="project_construction_year > 0">
-              <b class="key">{{ t('construction_year') }}:</b>
-              <i v-if="props.project.age_uncertainty || props.project.date_uncertainty">
-                {{ project_construction_year }}
-              </i>
-              <span v-else>{{ project_construction_year }}</span>
+                  <i v-if="props.project.distance_uncertainty">
+                    {{ props.project.distance_km }}
+                  </i>
+                  <span v-else>{{ props.project.distance_km }}</span>
+                </v-row>
+                <v-row v-if="(props.project.donor_use?.length ?? 0) > 0">
+                  <span class="key">{{ $t('donor_use') }}:</span>
+                  {{ props.project.donor_use?.join(', ') }}
+                </v-row>
+                <v-row v-if="project_construction_year > 0">
+                  <span class="key">{{ t('construction_year') }}:</span>
+                  <i v-if="props.project.age_uncertainty || props.project.date_uncertainty">
+                    {{ project_construction_year }}
+                  </i>
+                  <span v-else>{{ project_construction_year }}</span>
+                </v-row>
+              </v-col>
             </v-row>
           </v-col>
           <v-col
@@ -120,26 +166,29 @@
               (props.project.receiver_element_type?.length ?? 0) > 0 ||
               props.project.component_age
             "
+            :sm="12"
+            :md="6"
+            :lg="3"
             :cols="3"
           >
             <v-row>
-              <h3 class="text-decoration-underline">{{ t('about_the_reused_concrete') }}</h3>
+              <h3 class="text-font-bold">{{ t('about_the_reused_concrete') }}</h3>
             </v-row>
             <v-row v-if="props.project.quantity_reclaimed">
-              <b class="key">{{ $t('quantity_reclaimed') }}:</b>
+              <span class="key">{{ $t('quantity_reclaimed') }}:</span>
               {{ props.project.quantity_reclaimed }} ({{ props.project.quantity_reclaimed_unit }})
             </v-row>
 
             <v-row v-if="(props.project.donor_element_type?.length ?? 0) > 0">
-              <b class="key">{{ $t('donor_element_type') }}:</b>
+              <span class="key">{{ $t('donor_element_type') }}:</span>
               {{ props.project.donor_element_type?.join(', ') }}
             </v-row>
             <v-row v-if="(props.project.receiver_element_type?.length ?? 0) > 0">
-              <b class="key">{{ $t('receiver_element_type') }}:</b>
+              <span class="key">{{ $t('receiver_element_type') }}:</span>
               {{ props.project.receiver_element_type?.join(', ') }}
             </v-row>
             <v-row v-if="props.project.component_age">
-              <b class="key">{{ $t('component_age') }}:</b>
+              <span class="key">{{ $t('component_age') }}:</span>
               <i v-if="props.project.age_uncertainty">
                 {{ props.project.component_age }}
               </i>
@@ -148,7 +197,7 @@
 
             <v-row>
               <!-- TODO: CIP for instance: use equivalent Cast in Place text for i18n-->
-              <b class="key">{{ $t('main_concrete_type') }}:</b>
+              <span class="key">{{ $t('main_concrete_type') }}:</span>
               <ul class="comma-separated-list">
                 <li v-for="(concrete_type, $key) in props.project.main_concrete_type" :key="$key">
                   <span
@@ -168,13 +217,16 @@
               props.project.cost_difference_max_percent ||
               props.project?.other
             "
+            :sm="12"
+            :md="12"
+            :lg="3"
             :cols="3"
           >
             <v-row>
-              <h3 class="text-decoration-underline">{{ t('about_the_new_project') }}</h3>
+              <h3 class="text-font-bold">{{ t('about_the_new_project') }}</h3>
             </v-row>
             <v-row v-if="props.project.impact_difference">
-              <b class="key">{{ $t('impact_design_alternative') }}:</b>
+              <span class="key">{{ $t('impact_design_alternative') }}:</span>
               {{ props.project.impact_difference }}
               <!-- {{ props.project.impact_unit }} -->
               {{ t('compared_to') }} {{ props.project.cost_design_alternative }}
@@ -187,7 +239,7 @@
             </v-row>
 
             <v-row v-if="props.project.cost_difference_max_percent">
-              <b class="key">{{ $t('cost_difference_max_percent') }}:</b>
+              <span class="key">{{ $t('cost_difference_max_percent') }}:</span>
               {{ props.project.cost_difference_max_percent }} % {{ t('compared_to') }}
               {{ props.project.cost_design_alternative }}
               <v-tooltip v-if="props.project.cost_source" text="Tooltip">
@@ -199,21 +251,22 @@
             </v-row>
 
             <v-row v-if="props.project?.other">
-              <b class="key">{{ $t('other') }}:</b> {{ props.project.other }}
+              <span class="key">{{ $t('other') }}:</span> {{ props.project.other }}
             </v-row>
 
             <v-row v-if="(props.project.actors?.length ?? 0) > 0">
-              <b class="key">{{ t('actors') }}:</b>
+              <span class="key">{{ t('actors') }}:</span>
               {{ props.project.actors?.join(',') ?? $t('unknown') }}
             </v-row>
           </v-col>
-          <v-col :cols="3">
+          <v-col :sm="12" :md="6" :lg="3" :cols="3">
             <v-row>
-              <h3 class="text-decoration-underline">{{ t('more_information') }}</h3>
+              <h3 class="text-font-bold">{{ t('more_information') }}</h3>
             </v-row>
             <v-row>
-              <b class="key">{{ $t('reference') }}:</b> {{ props.project.reference?.join(', ') }}
-              <VDropdown :distance="6" popper-class="popper-class" placement="bottom">
+              <span class="key">{{ $t('reference') }}:</span>
+              {{ props.project.reference?.join(', ') }}
+              <VDropdown :distance="6" popper-class="popper-class" :placement="'top-end'">
                 <!-- This will be the popover reference (for the events and position) -->
                 <button>
                   <v-icon :icon="mdiInformationSlabCircle"></v-icon>
@@ -225,16 +278,38 @@
                 </template>
               </VDropdown>
             </v-row>
+            <v-row v-if="(props.project.actors?.length ?? 0) > 0">
+              <span class="key">{{ t('case_study_actors') }}:</span>
+              {{ props.project.actors?.join(', ') ?? $t('unknown') }}
+            </v-row>
           </v-col>
         </v-row>
       </v-card-text>
     </v-card-item>
-    <template #actions> </template>
+    <template #actions>
+      <div
+        v-if="props.project?.fact_sheet_contributors"
+        class="text-grey text-caption text-right mt-4"
+      >
+        {{ t('project_sheet_contributors') }}:
+        {{
+          Array.isArray(props.project.fact_sheet_contributors)
+            ? props.project.fact_sheet_contributors.join(', ')
+            : props.project.fact_sheet_contributors || $t('unknown')
+        }}
+      </div>
+    </template>
   </v-card>
 </template>
 
 <script setup lang="ts">
-import { mdiDomain, mdiInformationBoxOutline, mdiInformationSlabCircle } from '@mdi/js'
+import {
+  mdiClose,
+  mdiInformationBoxOutline,
+  mdiInformationSlabCircle,
+  mdiChevronLeft,
+  mdiChevronRight
+} from '@mdi/js'
 import { computed, defineModel, ref } from 'vue'
 import { defaultImage } from '@/utils/default'
 import type { Project, ProjectLang } from '@/types/Project'
@@ -281,10 +356,19 @@ const project_construction_year = computed(() => {
 </script>
 
 <style scoped>
+.project-title-border {
+  border-bottom: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
+}
+
 :deep(.carousel-content) {
   justify-content: flex-start;
   align-items: end;
   display: flex;
+}
+
+.project-detail-card {
+  margin: auto;
+  justify-content: space-between;
 }
 
 .image-title {
@@ -327,6 +411,8 @@ const project_construction_year = computed(() => {
     "construction_year": "Construction year",
     "status": "Project status",
     "actors": "Actors",
+    "case_study_actors": "Case study actors",
+    "project_sheet_contributors": "Project sheet's contributors",
     "impact_source_tooltip": "Source",
     "cost_source_tooltip": "Source",
     "compared_to": "compared to",
@@ -337,10 +423,12 @@ const project_construction_year = computed(() => {
     "about_the_donor_site": "À propos du site du donneur",
     "about_the_reused_concrete": "À propos du réemploi du béton",
     "about_the_new_project": "À propos du nouveau cas d'étude",
-    "more_information": "plus d'information",
+    "more_information": "Plus d'information",
     "construction_year": "Année de construction",
     "status": "État du projet",
     "actors": "Acteurs",
+    "case_study_actors": "Acteurs de l'étude de cas",
+    "project_sheet_contributors": "Contributeurs de la fiche projet",
     "impact_source_tooltip": "Source",
     "cost_source_tooltip": "Source",
     "compared_to": "comparé à",

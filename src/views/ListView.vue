@@ -101,7 +101,6 @@ const mouseLeaveRow = () => {
   currentRowIndex.value = undefined
   currentRowItem.value = undefined
 }
-const appHeaderHeight = ref(`${defaultAppHeaderHeight}px`)
 
 const showRowTooltip = ref(true)
 </script>
@@ -109,6 +108,14 @@ const showRowTooltip = ref(true)
 <template>
   <project-filters />
   <v-container v-if="listMode === 'list'" class="fill-height pa-0 align-baseline" fluid>
+    <v-alert
+      v-if="data.length === 0"
+      type="info"
+      variant="tonal"
+      class="mt-4"
+    >
+      {{ $t('No elements selected') }}
+    </v-alert>
     <v-tooltip
       v-if="currentRowIndex !== undefined"
       :width="500"
@@ -121,6 +128,8 @@ const showRowTooltip = ref(true)
       {{ currentRowItem?.[`description_${locale as ProjectLang}`] }}
     </v-tooltip>
     <v-data-table
+      v-if="data.length > 0"
+      :key="data.length"
       class="recrete-list-data-table"
       :items="data"
       :headers="headers"
@@ -199,6 +208,16 @@ const showRowTooltip = ref(true)
           {{ item.component_age }}
         </span>
       </template>
+      <template #[`item.actors`]="{ item }">
+        <span
+          :class="{
+            'font-italic': item?.age_uncertainty,
+            'text-grey': item?.age_uncertainty
+          }"
+        >
+          {{ item.actors?.join(', ') }}  
+        </span>
+      </template>
       <template #[`item.distance_km`]="{ item }">
         <span
           :class="{
@@ -233,7 +252,15 @@ const showRowTooltip = ref(true)
       <template #bottom />
     </v-data-table>
   </v-container>
-  <v-container v-if="listMode === 'grid'" class="pa-0 grid-list" fluid>
+  <v-container v-if="listMode === 'grid'" :class="`${data.length !== 0 ? 'pa-0 grid-list': 'pa-0'}`" fluid>
+    <v-alert
+      v-if="data.length === 0"
+      type="info"
+      variant="tonal"
+      class="mt-4"
+    >
+      {{ $t('No elements selected') }}
+    </v-alert>
     <project-card
       v-for="(item, $key) in data"
       :key="$key"
@@ -247,29 +274,7 @@ const showRowTooltip = ref(true)
   <project-dialog v-model="isProjectDialogOpen" :project="projectSelected" />
 </template>
 
-<style>
-.popper-class {
-  width: 800px;
-  .v-popper__inner {
-    padding: 1.5rem;
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
-  }
-}
-</style>
 <style scoped lang="scss">
-.permanent-drawer {
-  :deep(.v-navigation-drawer__content) {
-    z-index: 1000;
-    display: grid;
-    grid-template-rows: auto;
-    grid-gap: 1rem;
-
-    .v-list {
-      overflow: auto;
-    }
-  }
-}
 
 .grid-list {
   --card-size: 350px;
@@ -296,6 +301,6 @@ const showRowTooltip = ref(true)
 }
 
 .recrete-list-data-table {
-  height: calc(100vh - v-bind(appHeaderHeight));
+  height: calc(100vh - v-bind(defaultAppHeaderHeight));
 }
 </style>
