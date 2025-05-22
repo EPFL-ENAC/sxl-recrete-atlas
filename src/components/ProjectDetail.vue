@@ -1,9 +1,18 @@
 <template>
   <v-card v-if="props.project" class="project-detail-card">
-    <v-card-item :prepend-icon="mdiDomain">
-      <v-card-title class="d-flex">
-        <span>{{ props.project[`name_${locale as ProjectLang}`] }}</span>
-        <v-btn size="small" class="ml-auto" text="Close" @click="closeDialog"></v-btn>
+    <v-card-item class="project-title-border">
+      <v-card-title class="d-flex justify-center align-center">
+        <p class="d-flex justify-center" style="width: 100%">
+          <span class="font-weight-bold">{{ props.project[`name_${locale as ProjectLang}`] }}</span>
+        </p>
+        <v-btn
+          variant="plain"
+          size="small"
+          :icon="mdiClose"
+          class="ml-auto"
+          text="Close"
+          @click="closeDialog"
+        ></v-btn>
       </v-card-title>
     </v-card-item>
     <v-card-item>
@@ -58,7 +67,6 @@
                 :key="$key"
                 :src="image"
                 content-class="carousel-content"
-                
                 height="512px"
               >
               </v-carousel-item>
@@ -240,10 +248,11 @@
         v-if="props.project?.fact_sheet_contributors"
         class="text-grey text-caption text-right mt-4"
       >
-        {{ t('project_sheet_contributors') }}: {{ 
-          Array.isArray(props.project.fact_sheet_contributors) 
+        {{ t('project_sheet_contributors') }}:
+        {{
+          Array.isArray(props.project.fact_sheet_contributors)
             ? props.project.fact_sheet_contributors.join(', ')
-            : props.project.fact_sheet_contributors || $t('unknown') 
+            : props.project.fact_sheet_contributors || $t('unknown')
         }}
       </div>
     </template>
@@ -251,7 +260,7 @@
 </template>
 
 <script setup lang="ts">
-import { mdiDomain, mdiInformationBoxOutline, mdiInformationSlabCircle } from '@mdi/js'
+import { mdiClose, mdiInformationBoxOutline, mdiInformationSlabCircle } from '@mdi/js'
 import { computed, defineModel, ref } from 'vue'
 import { defaultImage } from '@/utils/default'
 import type { Project, ProjectLang } from '@/types/Project'
@@ -298,6 +307,10 @@ const project_construction_year = computed(() => {
 </script>
 
 <style scoped>
+.project-title-border {
+  border-bottom: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
+}
+
 :deep(.carousel-content) {
   justify-content: flex-start;
   align-items: end;
