@@ -1,5 +1,67 @@
 # Changelog
 
+## [1.7.0](https://github.com/EPFL-ENAC/sxl-recrete-atlas/compare/v1.6.0...v1.7.0) (2025-05-22)
+
+
+### Features
+
+* add actors display to ListView with conditional styling ([6b12952](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/6b129524f55cca861a511fd765bd189a8d559164))
+* add computed drawerStyle for responsive navigation drawer dimensions ([45bbeb0](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/45bbeb0b1232e21613af7d07c57a65907795175f))
+* add download functionality for filtered data and update localization files [#36](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/36) ([a98601c](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/a98601cf26c1dafc33052358b1421c8bbc146728))
+* add empty state alert to ListView for improved user feedback ([7af8b87](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/7af8b87fa5d0305e2dafae5eb30213c840b63f60))
+* add filters class to v-row in ProjectFilters for improved styling [#67](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/67) ([0923147](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/09231471d2aa6cf6848861fc073c0dfd7e0dd503))
+* add image optimization script and update Dockerfile and package… ([#74](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/74)) ([50c5820](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/50c58207e3579a47f9ef4db0687c04c2daa142e9))
+* add image optimization script and update Dockerfile and package.json for integration ([e5a1276](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/e5a1276fc9baa44d2d2495e01dacaba3b165dbde))
+* add image path conversion utility and clean-up scripts for image optimization [#68](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/68) ([b69d301](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/b69d301e137f1815ceb22e8b625f2f07883d0fed))
+* add jszip dependency to package.json and npm-shrinkwrap.json [#36](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/36) ([0c3973f](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/0c3973f3dd727fd083d2a033f063fb9940f57ffe))
+* add libjpeg-turbo to Dockerfile for enhanced image processing ([78e9555](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/78e955599287d882e23d1c4065baad4d39bd3fcc))
+* add libwebp-tools to Dockerfile for enhanced image processing capabilities ([0b7dbb1](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/0b7dbb11499045fc3a8446659043f035c5653606))
+* add margin and gap classes to rows in ProjectDetail for improved layout [#67](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/67) ([8a17f8b](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/8a17f8b4c5d2a69e130247749dc55abf66800990))
+* add settings.scss for Vuetify configuration and update vite.config.ts to reference it ([235ef6e](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/235ef6e5e36bc18573c1fcc17213304bbe94c5d8))
+* enhance popup functionality in MapLibreMap component and add new localization strings ([165a3b4](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/165a3b4c13601db43c2a198dc2d400a9317602fe))
+* enhance project detail view with additional actor and contributor information ([2a0db7e](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/2a0db7efa127a1cdfd77e3a2acafa3ba4bc9a907))
+* implement download functionality for filtered data with CSV and PDF export [#36](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/36) ([24ca4e9](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/24ca4e9df6820082bdd0fe76472ed5db84c67ef0))
+* implement image path conversion to -512.webp format and update default image handling ([d0a5e81](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/d0a5e8135c4a88d096445b91b9c063326ea57dc8))
+* implement UI store for managing drawer state; refactor layout styles in components ([44d7d92](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/44d7d92a166ac1afc5dabc398276d8f7d488ca7e))
+* **project-detail:** update src/components/ProjectDetail.vue with better contributors display ([7a2cc88](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/7a2cc88536100e8554af7c849a93e1ec0290e2b1))
+* remove echarts and related components to streamline dependencies [#66](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/66) ([5a2947f](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/5a2947f9051ddf6285a892c1b2d10f94ee7f4469))
+* remove papaparse dependency to streamline package management ([a4191f6](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/a4191f61127c20335bc318add1ea0016e8a99d1a))
+* update popper-class styles for responsive design and adjust dropdown placement  [#67](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/67) ([b342078](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/b3420789bea8c6745e9bbbb95dc0100613e2caed))
+* update project dependencies overview in README.md for clarity and completeness ([5ed76a5](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/5ed76a55dd3ac6c14b72c31e698ccd2f0b0082c4))
+* update v-row class for boolean filters to improve styling ([a4552b5](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/a4552b51ba7c5030ca3e328ca40d41eb5f495a96))
+
+
+### Bug Fixes
+
+* add Barlow font and correct HTML syntax and formatting in index.html for consistency ([70989d3](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/70989d303407b3fc78def380f61bc893c953821d))
+* add tooltip and translations for open and close filters in English and French  [#77](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/77) ([c485a95](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/c485a9565233e170a168e5c077d5a9f250d6bbd6))
+* adjust carousel height and visibility settings for improved user experience ([1add716](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/1add7168c6d507e441c9aa3448cf2e6ed0c70602))
+* **alert:** update src/App.vue ([4e264ef](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/4e264eff125102a0a0d82a5302dea70c8fcfeb21))
+* correct typo in 'fact_sheet_contributors' in data.csv ([33a3eb4](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/33a3eb4b68c47796c829edddc4fc04679e2f4251))
+* enforce offset property as required in Project interface and update download function type [#36](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/36) ([dce494e](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/dce494eaa6ae4b0c5416efe70044ece93881cc27))
+* enhance carousel navigation and improve image credits display in project detail [#78](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/78) ([f7e0a22](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/f7e0a22a61075cdd81c85ccb63ead06e6f6a239f))
+* enhance project detail layout with improved headings and spacing ([8bf8679](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/8bf8679e868a66551eeda432075290ae29a06117))
+* ensure 'fact_sheet_contributors' is included in Project interface ([8988817](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/89888175ae26c026b8115ef0ac1f945cd13f44eb))
+* export both downloadFilteredData and downloadBundle functions ([5995728](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/599572847b98ce8f194a6213fc6188cbc6a0b97e))
+* hide work in progress when responsive is not working properly ([c022146](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/c02214691c5b8efb29e4245dd4f2ba457abdb243))
+* make offset property optional in Project interface [#36](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/36) ([1d81f81](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/1d81f815f2748b14a4a6212a548895945024c103))
+* remove title attribute from filter reset button for improved accessibility ([b672a93](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/b672a93c8b9c78ce621b8cdd760e4184a810bf05))
+* remove unrecognised properties ([008635f](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/008635f7221ed5d2052e0eb8a31f05b9d1d705d9))
+* rewrite project detail header layout and improve button accessibility [#78](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/78) ([d45d689](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/d45d689f885df5c98e74be096f44d8adf19af628))
+* standardize app header height across components using defaultAppHeaderHeight ([1494bce](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/1494bce13058f553b9f4384f6362545b7a5d86e0))
+* update app_title in localization files for consistency Title of the website [#54](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/54) ([8dc473b](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/8dc473b49f947e795c492d0b153ab4f6a52df27c))
+* update border styles for navigation drawer and app bar for consistency [#77](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/77) [#78](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/78) ([65fca8c](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/65fca8c8fda12eba87189a12319fc26b42be9dfc))
+* update button size from small to default for better visibility in download options [#36](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/36) ([11f9975](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/11f9975f862bd3fa752a571add7c4136c461d833))
+* update deploy action version to v2.4.0 ([9fe1336](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/9fe1336d0de258d6a988b7c881f905797f5a10cb))
+* update icon usage and improve dialog layout in App.vue for better UX ([7b695c7](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/7b695c7d1ef73164cf40a74d829cb5ed5bcbe4dc))
+* update image credits display to ensure proper alignment in project detail ([3fbabba](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/3fbabbad71e39817be53d0c6b81c7fbaa5f51a54))
+* update image path handling in convert.js to ensure correct formatting for WebP conversion ([13f61d5](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/13f61d5a48660695559cca8d93ed7df4a119dc42))
+* update image processing functions to use toWebp1920 for improved image quality ([706e5a0](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/706e5a0f8cd9ff537c9f3e5957d283efdc79e50d))
+* update minZoom calculation to use window.innerWidth for better responsiveness ([a42aebf](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/a42aebf5c68de167b04a1fecea6b81f5e0926564))
+* update project details display in addProjects function for clarity [#53](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/53) ([2fd9bd2](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/2fd9bd23540b974f3bdf3674dbf52ed0af6c3a56))
+* update research_prototype label for clarity in keys.csv 2 New binary filters [#50](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/50) ([0c5a624](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/0c5a624f7adea115be92885d9c9544e5eb95266f))
+* update vuetify and vite-plugin-vuetify versions; adjust import paths in vuetify plugin ([a8ee055](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/a8ee05551f6d504e7416d13bf9437a8f7006d3a9))
+
 ## [1.6.0](https://github.com/EPFL-ENAC/sxl-recrete-atlas/compare/v1.5.0...v1.6.0) (2025-05-19)
 
 
