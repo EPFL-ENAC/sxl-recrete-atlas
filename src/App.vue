@@ -8,7 +8,8 @@ import {
   mdiListBox,
   mdiGrid,
   mdiMapOutline,
-  mdiCrane
+  mdiCommentQuestionOutline,
+  mdiClose
 } from '@mdi/js'
 import data from '@/assets/data/data.json'
 import type { Project } from '@/types/Project'
@@ -64,20 +65,18 @@ function downloadDataOpen() {
 const uiStore = useUiStore()
 const { drawerRail } = storeToRefs(uiStore)
 
-
 function handleError(error: unknown) {
-  const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred.';
-  alert(errorMessage);
+  const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred.'
+  alert(errorMessage)
 }
 
 function downloadAllData() {
-
   // const filtered = getCurrentFilteredData(); // however you store it
-  downloadBundle(data as Project[]).catch(handleError);
+  downloadBundle(data as Project[]).catch(handleError)
 }
 function downloadFilteredDataBtn() {
   // const filtered = getCurrentFilteredData(); // however you store it
-  downloadFilteredData(projects.value).catch(handleError);
+  downloadFilteredData(projects.value).catch(handleError)
 }
 </script>
 
@@ -192,10 +191,10 @@ function downloadFilteredDataBtn() {
       <v-tooltip location="bottom">
         <template #activator="{ props: activatorProps }">
           <v-btn
-            size="small"
+            size="default"
             v-bind="activatorProps"
             to="/faq"
-            :icon="mdiCrane"
+            :icon="mdiCommentQuestionOutline"
             class="mr-3"
             :title="$t('faq')"
           ></v-btn>
@@ -205,7 +204,7 @@ function downloadFilteredDataBtn() {
       <!-- <LocaleSelector class="mr-5" /> -->
 
       <template #append>
-        <a href="https://www.epfl.ch/labs/sxl/" target="_blank">
+        <a href="https://www.epfl.ch/labs/sxl/" target="_blank" class="pl-10 pr-5">
           <v-img :src="epflLogoUrl" width="100px" />
         </a>
       </template>
@@ -237,25 +236,20 @@ function downloadFilteredDataBtn() {
       <v-dialog
         v-model="downloadDataOpened"
         :width="800"
-        :max-width="'90vw'"
+        :max-width="'fit-content'"
         :style="{ 'z-index': 1000 }"
         :transition="false"
       >
         <v-card>
-          <v-card-title class="text-h5">
-            {{ $t('download_data') }}
-          </v-card-title>
-          <v-card-text>
+          <v-card-actions>
+            <v-btn :text="$t('close')" :icon="mdiClose" @click="downloadDataClosed"> </v-btn>
+          </v-card-actions>
+          <v-card-text class="d-flex justify-center">
             <v-btn @click="downloadAllData"> {{ $t('download_all_data') }}</v-btn>
           </v-card-text>
-          <v-card-text>
+          <v-card-text class="d-flex justify-center">
             <v-btn @click="downloadFilteredDataBtn"> {{ $t('download_data_filtered') }}</v-btn>
           </v-card-text>
-          <v-card-actions>
-            <v-btn :text="$t('close')" @click="downloadDataClosed">
-              {{ $t('close') }}
-            </v-btn>
-          </v-card-actions>
         </v-card>
       </v-dialog>
     </v-main>
