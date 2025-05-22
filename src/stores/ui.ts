@@ -3,7 +3,7 @@ import { ref } from 'vue'
 
 export const useUiStore = defineStore('ui', () => {
   // State
-  const drawerRail = ref(false)
+  const drawerRail = ref(true)
 
   // Actions
   function toggleDrawerRail() {

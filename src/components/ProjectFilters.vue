@@ -136,7 +136,7 @@ const filtersActivated = computed<FilterActivated>(() => {
 const drawerStyle = computed(() => {
   return {
     width: mobile.value 
-      ? (!drawerRail.value ? '100vw' : '56px')
+      ? (!drawerRail.value ? '100vw' : '64px')
       : (!drawerRail.value ? 'max(450px,25vw)' : '64px'),
     height: `calc(100vh - ${defaultAppHeaderHeight})`,
     top: defaultAppHeaderHeight,
@@ -310,7 +310,7 @@ watch(
 }
 
 .v-navigation-drawer {
-  border-right: 1px solid rgb(var(--v-theme-primary)) !important;
+  border-right: 1px solid rgba(var(--v-border-color), var(--v-border-opacity)) !important;
 }
 
 .permanent-drawer {
