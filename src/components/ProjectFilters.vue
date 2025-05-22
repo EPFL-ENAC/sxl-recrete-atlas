@@ -177,7 +177,6 @@ watch(
                 class="filter-text"
                 v-bind="props"
                 :icon="mdiFilterRemoveOutline"
-                :title="$t('clear-filters')"
                 size="smaller"
                 @click="resetFilter"
               />
