@@ -19,6 +19,7 @@ import { RouterView } from 'vue-router'
 import { useCookies } from 'vue3-cookies'
 import { useProjectsStore } from '@/stores/projects'
 // import { useLocale } from 'vuetify'
+import { useDisplay } from 'vuetify'
 import epflLogoUrl from '/EPFL_Logo_184X53.svg'
 // import LocaleSelector from './components/LocaleSelector.vue'
 import { useUiStore } from '@/stores/ui'
@@ -78,6 +79,8 @@ function downloadFilteredDataBtn() {
   // const filtered = getCurrentFilteredData(); // however you store it
   downloadFilteredData(projects.value).catch(handleError)
 }
+const { mobile } = useDisplay()
+
 </script>
 
 <template>
@@ -87,7 +90,7 @@ function downloadFilteredDataBtn() {
         <div class="text-h5">{{ $t('app_title') }}</div>
         <div class="text-subtitle-2">{{ $t('app_subtitle') }}</div>
       </v-app-bar-title>
-      <div class="flex-shrink-1 flex-grow-1">
+      <div v-if="!mobile" class="flex-shrink-1 flex-grow-1" >
         <div class="text-h5">
           {{ $t('app_wip_title') }}<v-icon class="ml-5"> {{ mdiWrench }}</v-icon>
         </div>
