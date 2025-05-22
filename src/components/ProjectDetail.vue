@@ -18,17 +18,39 @@
     <v-card-item>
       <v-card-text>
         <v-row class="mb-4">
-          
           <v-col :cols="12">
             <v-carousel
               v-if="(props.project.images?.length ?? 0) > 0"
               v-model="carouselIndex"
               height="100%"
+              variant="plain"
               :show-arrows="true"
               :hide-delimiter-background="true"
               :hide-delimiters="true"
               :interval="3000"
             >
+              <template #prev>
+                <v-btn
+                  variant="plain"
+                  class="carousel-icon"
+                  :icon="mdiChevronLeft"
+                  @click.stop="
+                    carouselIndex =
+                      (carouselIndex - 1 + (props.project.images?.length ?? 0)) %
+                      (props.project.images?.length ?? 1)
+                  "
+                ></v-btn>
+              </template>
+              <template #next>
+                <v-btn
+                  variant="plain"
+                  class="carousel-icon"
+                  :icon="mdiChevronRight"
+                  @click.stop="
+                    carouselIndex = (carouselIndex + 1) % (props.project.images?.length ?? 1)
+                  "
+                ></v-btn>
+              </template>
               <v-carousel-item
                 v-for="(image, $key) in props.project.images"
                 :key="$key"
@@ -50,8 +72,11 @@
               class="image-title d-flex flex-spacebetween"
               style="gap: 1rem; align-items: center"
             >
-              <v-card-subtitle>
-                <span v-if="props.project?.images_credits?.length ?? 0 > 0">
+              <v-card-subtitle style="width: 100%" class="d-flex flex-column">
+                <span
+                  class="d-flex justify-end font-italic"
+                  v-if="props.project?.images_credits?.length ?? 0 > 0"
+                >
                   {{ t('credits') }}:
                   {{ props.project?.images_credits?.[carouselIndex] }}
                 </span>
@@ -94,7 +119,7 @@
               </span>
             </v-row>
           </v-col>
-        </v-row> 
+        </v-row>
         <v-row class="ga-3">
           <v-col
             v-if="
@@ -116,7 +141,8 @@
               <span v-else>{{ props.project.distance_km }}</span>
             </v-row>
             <v-row v-if="(props.project.donor_use?.length ?? 0) > 0">
-              <span class="key">{{ $t('donor_use') }}:</span> {{ props.project.donor_use?.join(', ') }}
+              <span class="key">{{ $t('donor_use') }}:</span>
+              {{ props.project.donor_use?.join(', ') }}
             </v-row>
             <v-row v-if="project_construction_year > 0">
               <span class="key">{{ t('construction_year') }}:</span>
@@ -225,7 +251,8 @@
               <h3 class="text-decoration-underline">{{ t('more_information') }}</h3>
             </v-row>
             <v-row>
-              <span class="key">{{ $t('reference') }}:</span> {{ props.project.reference?.join(', ') }}
+              <span class="key">{{ $t('reference') }}:</span>
+              {{ props.project.reference?.join(', ') }}
               <VDropdown :distance="6" popper-class="popper-class" :placement="'top-end'">
                 <!-- This will be the popover reference (for the events and position) -->
                 <button>
@@ -263,7 +290,13 @@
 </template>
 
 <script setup lang="ts">
-import { mdiClose, mdiInformationBoxOutline, mdiInformationSlabCircle } from '@mdi/js'
+import {
+  mdiClose,
+  mdiInformationBoxOutline,
+  mdiInformationSlabCircle,
+  mdiChevronLeft,
+  mdiChevronRight
+} from '@mdi/js'
 import { computed, defineModel, ref } from 'vue'
 import { defaultImage } from '@/utils/default'
 import type { Project, ProjectLang } from '@/types/Project'
