@@ -16,10 +16,9 @@ import data from '@/assets/data/data.json'
 const { t, locale } = useI18n({ useScope: 'global' })
 const { mobile } = useDisplay()
 
-
-const uiStore = useUiStore();
-const { drawerRail } = storeToRefs(uiStore);
-const { setDrawerRail } = uiStore;
+const uiStore = useUiStore()
+const { drawerRail } = storeToRefs(uiStore)
+const { setDrawerRail } = uiStore
 
 interface FilterSelectValues {
   key: SelectFilterKey
@@ -135,9 +134,13 @@ const filtersActivated = computed<FilterActivated>(() => {
 
 const drawerStyle = computed(() => {
   return {
-    width: mobile.value 
-      ? (!drawerRail.value ? '100vw' : '64px')
-      : (!drawerRail.value ? 'max(450px,25vw)' : '64px'),
+    width: mobile.value
+      ? !drawerRail.value
+        ? '100vw'
+        : '64px'
+      : !drawerRail.value
+        ? 'max(450px,25vw)'
+        : '64px',
     height: `calc(100vh - ${defaultAppHeaderHeight})`,
     top: defaultAppHeaderHeight,
     zIndex: mobile.value ? 1200 : 1000
@@ -169,8 +172,13 @@ watch(
       :class="{ 'hide-all-but-first': drawerRail, 'sticky-header': !drawerRail }"
     >
       <v-list-item class="sticky-header" :append-icon="mdiChevronLeft">
-        <v-list-item-title class="d-flex ga-2 align-center" :class="{ 'drawer-collapsed': drawerRail }">
-          <span class="filter-text " :class="mobile ? 'text-subtitle-1' : 'text-h6'">{{ $t('filters') }}</span>
+        <v-list-item-title
+          class="d-flex ga-2 align-center"
+          :class="{ 'drawer-collapsed': drawerRail }"
+        >
+          <span class="filter-text" :class="mobile ? 'text-subtitle-1' : 'text-h6'">{{
+            $t('filters')
+          }}</span>
           <v-tooltip :text="$t('clear-filters')" bottom>
             <template #activator="{ props }">
               <v-btn
@@ -184,20 +192,30 @@ watch(
           </v-tooltip>
         </v-list-item-title>
         <template v-if="drawerRail" #prepend>
-          <v-btn
-            :icon="mdiChevronRight"
-            variant="flat"
-            size="smaller"
-            @click.stop="setDrawerRail(false)"
-          />
+          <v-tooltip :text="$t('open-filters')" bottom>
+            <template #activator="{ props }">
+              <v-btn
+                :icon="mdiChevronRight"
+                v-bind="props"
+                variant="flat"
+                size="smaller"
+                @click.stop="setDrawerRail(false)"
+              />
+            </template>
+          </v-tooltip>
         </template>
         <template v-if="!drawerRail" #append>
-          <v-btn
-            :icon="mdiChevronLeft"
-            variant="flat"
-            size="smaller"
-            @click.stop="setDrawerRail(true)"
-          />
+          <v-tooltip :text="$t('close-filters')" bottom>
+            <template #activator="{ props }">
+              <v-btn
+                v-bind="props"
+                :icon="mdiChevronLeft"
+                variant="flat"
+                size="smaller"
+                @click.stop="setDrawerRail(true)"
+              />
+            </template>
+          </v-tooltip>
         </template>
       </v-list-item>
       <v-list-item>
@@ -288,15 +306,17 @@ watch(
 </template>
 
 <style scoped lang="scss">
-:root{
+:root {
   --v-layout-left: 25vw;
   --v-layout-top: 10vh;
 }
 .v-row.filters > .v-col {
-    padding: 4px;
+  padding: 4px;
 }
 .filter-text {
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
 }
 
 .drawer-collapsed .filter-text {
@@ -317,7 +337,7 @@ watch(
   :deep(.v-list-item) {
     padding: 0 !important;
   }
- 
+
   :deep(.v-navigation-drawer__content) {
     z-index: 1000;
     display: grid;
@@ -330,7 +350,6 @@ watch(
       }
     }
 
-    
     .v-list {
       overflow: auto;
       padding-top: 0 !important;
