@@ -18,41 +18,8 @@
     <v-card-item>
       <v-card-text>
         <v-row class="mb-4">
-          <v-col :cols="6">
-            <v-row>
-              <b class="key">{{ $t(`description_${locale as ProjectLang}`) }}: </b>
-              {{ props.project[`description_${locale as ProjectLang}`] }}
-            </v-row>
-
-            <v-row>
-              <h3 class="text-decoration-underline">{{ t('about_the_receiving_project') }}</h3>
-            </v-row>
-            <v-row>
-              <b class="key"
-                >{{ $t('receiver_country') }}
-                <span v-if="props.project.receiver_city">({{ $t('receiver_city') }})</span>
-                :
-              </b>
-              <span
-                >{{ $t('countryFn', [props.project.receiver_country]) }}
-                <span v-if="props.project.receiver_city">
-                  ({{ props.project.receiver_city }})
-                </span>
-              </span>
-            </v-row>
-            <v-row>
-              <b class="key">{{ $t('start_date_year') }}: </b>
-              <span
-                :class="{
-                  'font-italic': props.project.date_uncertainty,
-                  'text-grey': props.project.date_uncertainty
-                }"
-              >
-                {{ props.project.start_date_year }}
-              </span>
-            </v-row>
-          </v-col>
-          <v-col :cols="6">
+          
+          <v-col :cols="12">
             <v-carousel
               v-if="(props.project.images?.length ?? 0) > 0"
               v-model="carouselIndex"
@@ -93,6 +60,42 @@
           </v-col>
         </v-row>
         <v-row class="ga-3">
+          <v-col :cols="6">
+            <v-row>
+              <span class="key">{{ $t(`description_${locale as ProjectLang}`) }}: </span>
+              {{ props.project[`description_${locale as ProjectLang}`] }}
+            </v-row>
+
+            <v-row>
+              <h3 class="text-decoration-underline">{{ t('about_the_receiving_project') }}</h3>
+            </v-row>
+            <v-row>
+              <span class="key"
+                >{{ $t('receiver_country') }}
+                <span v-if="props.project.receiver_city">({{ $t('receiver_city') }})</span>
+                :
+              </span>
+              <span
+                >{{ $t('countryFn', [props.project.receiver_country]) }}
+                <span v-if="props.project.receiver_city">
+                  ({{ props.project.receiver_city }})
+                </span>
+              </span>
+            </v-row>
+            <v-row>
+              <span class="key">{{ $t('start_date_year') }}: </span>
+              <span
+                :class="{
+                  'font-italic': props.project.date_uncertainty,
+                  'text-grey': props.project.date_uncertainty
+                }"
+              >
+                {{ props.project.start_date_year }}
+              </span>
+            </v-row>
+          </v-col>
+        </v-row> 
+        <v-row class="ga-3">
           <v-col
             v-if="
               props.project.distance_km ||
@@ -105,7 +108,7 @@
               <h3 class="text-decoration-underline">{{ t('about_the_donor_site') }}</h3>
             </v-row>
             <v-row v-if="props.project.distance_km">
-              <b class="key">{{ $t('distance_km') }}:</b>
+              <span class="key">{{ $t('distance_km') }}:</span>
 
               <i v-if="props.project.distance_uncertainty">
                 {{ props.project.distance_km }}
@@ -113,10 +116,10 @@
               <span v-else>{{ props.project.distance_km }}</span>
             </v-row>
             <v-row v-if="(props.project.donor_use?.length ?? 0) > 0">
-              <b class="key">{{ $t('donor_use') }}:</b> {{ props.project.donor_use?.join(', ') }}
+              <span class="key">{{ $t('donor_use') }}:</span> {{ props.project.donor_use?.join(', ') }}
             </v-row>
             <v-row v-if="project_construction_year > 0">
-              <b class="key">{{ t('construction_year') }}:</b>
+              <span class="key">{{ t('construction_year') }}:</span>
               <i v-if="props.project.age_uncertainty || props.project.date_uncertainty">
                 {{ project_construction_year }}
               </i>
@@ -136,20 +139,20 @@
               <h3 class="text-decoration-underline">{{ t('about_the_reused_concrete') }}</h3>
             </v-row>
             <v-row v-if="props.project.quantity_reclaimed">
-              <b class="key">{{ $t('quantity_reclaimed') }}:</b>
+              <span class="key">{{ $t('quantity_reclaimed') }}:</span>
               {{ props.project.quantity_reclaimed }} ({{ props.project.quantity_reclaimed_unit }})
             </v-row>
 
             <v-row v-if="(props.project.donor_element_type?.length ?? 0) > 0">
-              <b class="key">{{ $t('donor_element_type') }}:</b>
+              <span class="key">{{ $t('donor_element_type') }}:</span>
               {{ props.project.donor_element_type?.join(', ') }}
             </v-row>
             <v-row v-if="(props.project.receiver_element_type?.length ?? 0) > 0">
-              <b class="key">{{ $t('receiver_element_type') }}:</b>
+              <span class="key">{{ $t('receiver_element_type') }}:</span>
               {{ props.project.receiver_element_type?.join(', ') }}
             </v-row>
             <v-row v-if="props.project.component_age">
-              <b class="key">{{ $t('component_age') }}:</b>
+              <span class="key">{{ $t('component_age') }}:</span>
               <i v-if="props.project.age_uncertainty">
                 {{ props.project.component_age }}
               </i>
@@ -158,7 +161,7 @@
 
             <v-row>
               <!-- TODO: CIP for instance: use equivalent Cast in Place text for i18n-->
-              <b class="key">{{ $t('main_concrete_type') }}:</b>
+              <span class="key">{{ $t('main_concrete_type') }}:</span>
               <ul class="comma-separated-list">
                 <li v-for="(concrete_type, $key) in props.project.main_concrete_type" :key="$key">
                   <span
@@ -184,7 +187,7 @@
               <h3 class="text-decoration-underline">{{ t('about_the_new_project') }}</h3>
             </v-row>
             <v-row v-if="props.project.impact_difference">
-              <b class="key">{{ $t('impact_design_alternative') }}:</b>
+              <span class="key">{{ $t('impact_design_alternative') }}:</span>
               {{ props.project.impact_difference }}
               <!-- {{ props.project.impact_unit }} -->
               {{ t('compared_to') }} {{ props.project.cost_design_alternative }}
@@ -197,7 +200,7 @@
             </v-row>
 
             <v-row v-if="props.project.cost_difference_max_percent">
-              <b class="key">{{ $t('cost_difference_max_percent') }}:</b>
+              <span class="key">{{ $t('cost_difference_max_percent') }}:</span>
               {{ props.project.cost_difference_max_percent }} % {{ t('compared_to') }}
               {{ props.project.cost_design_alternative }}
               <v-tooltip v-if="props.project.cost_source" text="Tooltip">
@@ -209,11 +212,11 @@
             </v-row>
 
             <v-row v-if="props.project?.other">
-              <b class="key">{{ $t('other') }}:</b> {{ props.project.other }}
+              <span class="key">{{ $t('other') }}:</span> {{ props.project.other }}
             </v-row>
 
             <v-row v-if="(props.project.actors?.length ?? 0) > 0">
-              <b class="key">{{ t('actors') }}:</b>
+              <span class="key">{{ t('actors') }}:</span>
               {{ props.project.actors?.join(',') ?? $t('unknown') }}
             </v-row>
           </v-col>
@@ -222,7 +225,7 @@
               <h3 class="text-decoration-underline">{{ t('more_information') }}</h3>
             </v-row>
             <v-row>
-              <b class="key">{{ $t('reference') }}:</b> {{ props.project.reference?.join(', ') }}
+              <span class="key">{{ $t('reference') }}:</span> {{ props.project.reference?.join(', ') }}
               <VDropdown :distance="6" popper-class="popper-class" :placement="'top-end'">
                 <!-- This will be the popover reference (for the events and position) -->
                 <button>
@@ -236,7 +239,7 @@
               </VDropdown>
             </v-row>
             <v-row v-if="(props.project.actors?.length ?? 0) > 0">
-              <b class="key">{{ t('case_study_actors') }}:</b>
+              <span class="key">{{ t('case_study_actors') }}:</span>
               {{ props.project.actors?.join(', ') ?? $t('unknown') }}
             </v-row>
           </v-col>
