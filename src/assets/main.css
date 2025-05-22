@@ -1,5 +1,6 @@
 html {
   overflow-y: auto;
+  /* font-family: 'Catamaran', sans-serif; */
 }
 /* stylelint-disable selector-class-pattern */
 .v-input__details, .v-input__details .v-messages {
@@ -9,12 +10,11 @@ html {
 .popper-class {
   width: 800px;
 
-  @media screen and (width <= 800px) {
+  @media screen and (max-width: 800px) {
     margin-left: 1rem;
     width: 95%;
   }
-
-  @media screen and (width <= 1350px) and (width >= 850px) {
+  @media screen and (max-width: 1350px) and (min-width: 850px) {
     width: 500px;
     
   }
