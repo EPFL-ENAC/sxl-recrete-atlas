@@ -6,6 +6,26 @@ html {
   min-height: 0 !important;
 }
 
+.popper-class {
+  width: 800px;
+
+  @media screen and (width <= 800px) {
+    margin-left: 1rem;
+    width: 95%;
+  }
+
+  @media screen and (width <= 1350px) and (width >= 850px) {
+    width: 500px;
+    
+  }
+
+  .v-popper__inner {
+    padding: 1.5rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+}
+
 .marked ul,
 .marked ol {
   margin-left: 20px;
