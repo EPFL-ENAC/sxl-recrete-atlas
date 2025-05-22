@@ -1,7 +1,7 @@
 import { createVuetify } from 'vuetify'
 import { aliases, mdi } from 'vuetify/iconsets/mdi-svg'
-import '@mdi/font/css/materialdesignicons.css' // Ensure you are using css-loader
-import colors from 'vuetify/lib/util/colors'
+import '@mdi/font/css/materialdesignicons.css'
+import colors from 'vuetify/util/colors' // Updated import path
 import 'vuetify/styles'
 import { useCookies } from 'vue3-cookies'
 

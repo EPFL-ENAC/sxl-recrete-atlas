@@ -17,6 +17,40 @@ Two external json files to load configuration in [`.env`](.env) :
 - **VITE_PARAMETERS_URL**: Webmap parameters following [this JSON Schema](schema/parameters.schema.json)
 - **VITE_STYLE_URL**: [MapLibre style](https://maplibre.org/maplibre-style-spec)
 
+
+## Project Dependencies Overview
+
+This project is built with [Vue.js](https://vuejs.org/) (v3) and utilizes [Vuetify](https://vuetifyjs.com/) as its primary UI component framework.
+
+*   **Core Vue Ecosystem:**
+    *   [Pinia](https://pinia.vuejs.org/): For reactive state management.
+    *   [Vue Router](https://router.vuejs.org/): For client-side navigation.
+    *   [Vue I18n](https://vue-i18n.intlify.dev/): For internationalization.
+    *   [@vueuse/core](https://vueuse.org/): A collection of essential Vue Composition API utilities.
+    *   [Floating Vue](https://floating-vue.starpad.dev/): For tooltips and popovers.
+*   **Mapping & Data Visualization:**
+    *   [MapLibre GL JS](https://maplibre.org/): For rendering interactive vector maps.
+*   **Data Handling & Utilities:**
+    *   [Axios](https://axios-http.com/): For making HTTP requests to fetch data.
+    *   [Marked](https://marked.js.org/): For parsing Markdown content, with [marked-emoji](https://github.com/UziTech/marked-emoji) for emoji support.
+    *   [DOMPurify](https://github.com/cure53/DOMPurify): For sanitizing HTML to prevent XSS attacks.
+    *   [JSZip](https://stuk.github.io/jszip/): For creating and managing .zip files, used for data bundling.
+    *   [csvtojson](https://github.com/Keyang/node-csvtojson): Used in the convert.js script to convert CSV data files into JSON format during the pre-build/pre-development steps.
+    *   [vue3-cookies](https://github.com/KanHarI/vue3-cookies): For managing browser cookies.
+*   **Development & Build Tooling:**
+    *   [Vite](https://vitejs.dev/): As the frontend build tool and development server.
+    *   [Vitest](https://vitest.dev/): For running unit tests.
+    *   [TypeScript](https://www.typescriptlang.org/): For adding static types to JavaScript.
+    *   [ESLint](https://eslint.org/): For code linting to maintain code quality.
+    *   [Prettier](https://prettier.io/): For code formatting.
+    *   [Stylelint](https://stylelint.io/): For linting CSS and SCSS styles.
+    *   ImageMagick: Utilized via the optimize-images.sh script to optimize images by resizing and converting them to WebP format.
+    *   [Rimraf](https://github.com/isaacs/rimraf): Used in the `clean-optimize-images` script for deleting files and folders.
+    *   [npm-run-all](https://github.com/mysticatea/npm-run-all): To run multiple npm scripts in parallel or sequentially (e.g., in the `build` script).
+    *   [Lefthook](https://github.com/evilmartians/lefthook): For managing Git hooks.
+    *   [Commitlint](https://commitlint.js.org/): For linting commit messages.
+
+
 ## Development Guidelines
 
 ### Conventional Commits
