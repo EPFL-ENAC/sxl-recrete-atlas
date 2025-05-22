@@ -47,8 +47,10 @@
             <v-carousel
               v-if="(props.project.images?.length ?? 0) > 0"
               v-model="carouselIndex"
-              height="90%"
-              :show-arrows="false"
+              height="100%"
+              :show-arrows="true"
+              :hide-delimiter-background="true"
+              :hide-delimiters="true"
               :interval="3000"
             >
               <v-carousel-item
@@ -56,8 +58,8 @@
                 :key="$key"
                 :src="image"
                 content-class="carousel-content"
-                cover
-                height="300px"
+                
+                height="512px"
               >
               </v-carousel-item>
             </v-carousel>
