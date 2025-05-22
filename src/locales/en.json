@@ -21,6 +21,8 @@
   "map": "Map",
   "search": "Search",
   "filters": "Filters",
+  "open-filters": "Open filters",
+  "close-filters": "Close filters",
   "home": "Home",
   "about": "About the Atlas",
   "contribute": "Contribute",

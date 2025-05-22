@@ -21,6 +21,8 @@
   "map": "Carte",
   "search": "Recherche",
   "filters": "Filtres",
+  "open-filters": "Ouvrir les filtres",
+  "close-filters": "Fermer les filtres",
   "home": "Home",
   "about": "À propos de l'Atlas",
   "contribute": "Contribuer",
