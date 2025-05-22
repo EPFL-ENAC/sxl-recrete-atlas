@@ -84,15 +84,15 @@
             </v-card-title>
           </v-col>
         </v-row>
-        <v-row class="ga-3">
+        <v-row class="ga-3 mb-4">
           <v-col :cols="6">
-            <v-row>
-              <span class="key">{{ $t(`description_${locale as ProjectLang}`) }}: </span>
+            <v-row class="mb-4">
+              <h3 class="text-font-bold">{{ $t(`description_${locale as ProjectLang}`) }}</h3>
               {{ props.project[`description_${locale as ProjectLang}`] }}
             </v-row>
 
             <v-row>
-              <h3 class="text-decoration-underline">{{ t('about_the_receiving_project') }}</h3>
+              <h3 class="text-font-bold">{{ t('about_the_receiving_project') }}</h3>
             </v-row>
             <v-row>
               <span class="key"
@@ -120,36 +120,43 @@
             </v-row>
           </v-col>
         </v-row>
-        <v-row class="ga-3">
+        <v-row class="">
           <v-col
             v-if="
               props.project.distance_km ||
               (props.project.donor_use?.length ?? 0) > 0 ||
               project_construction_year > 0
             "
+            :sm="12"
+            :md="6"
+            :lg="3"
             :cols="3"
           >
             <v-row>
-              <h3 class="text-decoration-underline">{{ t('about_the_donor_site') }}</h3>
-            </v-row>
-            <v-row v-if="props.project.distance_km">
-              <span class="key">{{ $t('distance_km') }}:</span>
+              <v-col>
+                <v-row>
+                  <h3 class="text-font-bold">{{ t('about_the_donor_site') }}</h3>
+                </v-row>
+                <v-row v-if="props.project.distance_km">
+                  <span class="key">{{ $t('distance_km') }}:</span>
 
-              <i v-if="props.project.distance_uncertainty">
-                {{ props.project.distance_km }}
-              </i>
-              <span v-else>{{ props.project.distance_km }}</span>
-            </v-row>
-            <v-row v-if="(props.project.donor_use?.length ?? 0) > 0">
-              <span class="key">{{ $t('donor_use') }}:</span>
-              {{ props.project.donor_use?.join(', ') }}
-            </v-row>
-            <v-row v-if="project_construction_year > 0">
-              <span class="key">{{ t('construction_year') }}:</span>
-              <i v-if="props.project.age_uncertainty || props.project.date_uncertainty">
-                {{ project_construction_year }}
-              </i>
-              <span v-else>{{ project_construction_year }}</span>
+                  <i v-if="props.project.distance_uncertainty">
+                    {{ props.project.distance_km }}
+                  </i>
+                  <span v-else>{{ props.project.distance_km }}</span>
+                </v-row>
+                <v-row v-if="(props.project.donor_use?.length ?? 0) > 0">
+                  <span class="key">{{ $t('donor_use') }}:</span>
+                  {{ props.project.donor_use?.join(', ') }}
+                </v-row>
+                <v-row v-if="project_construction_year > 0">
+                  <span class="key">{{ t('construction_year') }}:</span>
+                  <i v-if="props.project.age_uncertainty || props.project.date_uncertainty">
+                    {{ project_construction_year }}
+                  </i>
+                  <span v-else>{{ project_construction_year }}</span>
+                </v-row>
+              </v-col>
             </v-row>
           </v-col>
           <v-col
@@ -159,10 +166,13 @@
               (props.project.receiver_element_type?.length ?? 0) > 0 ||
               props.project.component_age
             "
+            :sm="12"
+            :md="6"
+            :lg="3"
             :cols="3"
           >
             <v-row>
-              <h3 class="text-decoration-underline">{{ t('about_the_reused_concrete') }}</h3>
+              <h3 class="text-font-bold">{{ t('about_the_reused_concrete') }}</h3>
             </v-row>
             <v-row v-if="props.project.quantity_reclaimed">
               <span class="key">{{ $t('quantity_reclaimed') }}:</span>
@@ -207,10 +217,13 @@
               props.project.cost_difference_max_percent ||
               props.project?.other
             "
+            :sm="12"
+            :md="12"
+            :lg="3"
             :cols="3"
           >
             <v-row>
-              <h3 class="text-decoration-underline">{{ t('about_the_new_project') }}</h3>
+              <h3 class="text-font-bold">{{ t('about_the_new_project') }}</h3>
             </v-row>
             <v-row v-if="props.project.impact_difference">
               <span class="key">{{ $t('impact_design_alternative') }}:</span>
@@ -246,9 +259,9 @@
               {{ props.project.actors?.join(',') ?? $t('unknown') }}
             </v-row>
           </v-col>
-          <v-col :cols="3">
+          <v-col :sm="12" :md="6" :lg="3" :cols="3">
             <v-row>
-              <h3 class="text-decoration-underline">{{ t('more_information') }}</h3>
+              <h3 class="text-font-bold">{{ t('more_information') }}</h3>
             </v-row>
             <v-row>
               <span class="key">{{ $t('reference') }}:</span>
