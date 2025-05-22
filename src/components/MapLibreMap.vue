@@ -397,11 +397,11 @@ function addProjects() {
                   return `<h3>${property.point_count_abbreviated} ${t(
                     'receiver_title',
                     property.point_count_abbreviated
-                  )}:</h3>
-                <!-- display PC and CIP counts -->
+                  )}</h3>
+                <!-- display PC and CIP counts 
                 <p>${t('PC')}: ${PC}</p>
                 <p>${t('CIP')}: ${CIP}</p>
-                <i class="text-sm">${t('click_to_zoom')}</i>`
+                <i class="text-sm">${t('click_to_zoom')}</i>-->`
                 } else {
                   // Handle non-clustered feature
                   const name = e.features?.[0].properties[`name_${locale.value as ProjectLang}`]
@@ -410,11 +410,11 @@ function addProjects() {
                     console.error('Name is undefined')
                     return ''
                   }
-                  return `<h3>${name}:</h3>
-                  <p>${t('main_concrete_type')}: ${JSON.parse(property?.main_concrete_type || [])
+                  return `<h3>${name}</h3>
+                  <!--<p>${t('main_concrete_type')}: ${JSON.parse(property?.main_concrete_type || [])
                     .map((type: string) => t(type))
                     .join(', ')}</p>
-                  <i class="text-sm">${t('click_to_detail')}</i>`
+                  <i class="text-sm">${t('click_to_detail')}</i>-->`
                 }
               })()
             )
