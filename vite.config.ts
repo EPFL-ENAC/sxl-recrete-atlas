@@ -10,7 +10,12 @@ export default defineConfig({
   optimizeDeps: {
     exclude: ['marked-emoji']
   },
-  plugins: [vue(), vuetify(),
+  plugins: [vue(), vuetify({
+    autoImport: true,
+    styles: {
+      configFile: 'src/assets/settings.scss'
+    }
+  }),
     VueI18nPlugin({
     /* options */
     // locale messages resource pre-compile option
