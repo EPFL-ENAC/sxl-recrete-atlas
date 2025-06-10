@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.8.0](https://github.com/EPFL-ENAC/sxl-recrete-atlas/compare/v1.7.0...v1.8.0) (2025-06-10)
+
+
+### Features
+
+* update issue templates for bug reports and performance issues ([b3f9422](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/b3f9422b4a722a702a39c21684acd25ea1837cf1))
+
 ## [1.7.0](https://github.com/EPFL-ENAC/sxl-recrete-atlas/compare/v1.6.0...v1.7.0) (2025-05-22)
 
 
