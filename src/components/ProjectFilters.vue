@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, watch } from 'vue'
+import { computed, watch, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useDisplay } from 'vuetify'
 import { useFiltersStore, stepsHash, valuesHash, newFilter } from '@/stores/filters'
@@ -156,6 +156,13 @@ watch(
     deep: true
   }
 )
+
+// Nouveau filtre pour le lieu de référence
+const referenceLocation = ref<string | null>(null)
+const referenceLocationOptions = [
+  { title: 'Lausanne', value: 'lausanne', coords: [46.5191, 6.6336] },
+  // Ajouter d'autres villes ici si besoin
+]
 </script>
 
 <template>
@@ -295,6 +302,30 @@ watch(
               size="x-small"
               @click="filters[filterBoolean] = undefined"
             ></v-btn>
+          </v-col>
+        </v-row>
+      </v-list-item>
+      <v-list-item>
+        <v-row>
+          <v-col cols="12">
+            <v-select
+              v-model="referenceLocation"
+              :items="referenceLocationOptions"
+              :label="$t('Lieu de référence')"
+              item-title="title"
+              item-value="value"
+              clearable
+              density="compact"
+            />
+          </v-col>
+          <v-col cols="12">
+            <v-text-field
+              v-model.number="filters.distance_km[1]"
+              :label="$t('Distance (km)')"
+              type="number"
+              min="0"
+              density="compact"
+            />
           </v-col>
         </v-row>
       </v-list-item>

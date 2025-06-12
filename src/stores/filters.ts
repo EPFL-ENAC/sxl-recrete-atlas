@@ -29,7 +29,8 @@ export function newFilter(): Filter {
     research_prototype: undefined,
     unbuilt_with_construction_permission: undefined,
     cost_difference_min_percent: undefined,
-    name: null
+    name: null,
+    reference_location: null // Ajout du champ lieu de référence
   }
 }
 
