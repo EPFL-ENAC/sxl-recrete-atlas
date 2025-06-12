@@ -29,7 +29,9 @@ export interface BooleanFilter {
 }
 export type BooleanFilterKey = keyof BooleanFilter
 
-export type Filter = SelectFilter & RangeFilter & BooleanFilter & TextFilter
+export interface Filter extends TextFilter, SelectFilter, RangeFilter, BooleanFilter {
+  reference_location?: string | null;
+}
 
 // todo should be extension of Project key somehow
 export type FilterKey = keyof Filter
