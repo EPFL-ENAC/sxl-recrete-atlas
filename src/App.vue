@@ -73,11 +73,11 @@ function handleError(error: unknown) {
 
 function downloadAllData() {
   // const filtered = getCurrentFilteredData(); // however you store it
-  downloadBundle(data as Project[]).catch(handleError)
+  downloadBundle(data as Project[], locale.value, false).catch(handleError) // false = all data
 }
 function downloadFilteredDataBtn() {
   // const filtered = getCurrentFilteredData(); // however you store it
-  downloadFilteredData(projects.value).catch(handleError)
+  downloadFilteredData(projects.value, locale.value).catch(handleError)
 }
 const { mobile } = useDisplay()
 
