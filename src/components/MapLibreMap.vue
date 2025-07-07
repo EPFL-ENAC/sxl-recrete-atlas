@@ -5,7 +5,6 @@ import 'maplibre-gl/dist/maplibre-gl.css'
 import { DivControl } from '@/utils/control'
 import {
   AttributionControl,
-  FullscreenControl,
   GeoJSONSource,
   Map,
   MapMouseEvent,
@@ -81,7 +80,6 @@ onMounted(() => {
     pixelRatio: window.devicePixelRatio || 1
   })
   map.addControl(new NavigationControl({}))
-  map.addControl(new FullscreenControl({}))
   map.addControl(
     new AttributionControl({
       compact: false,
