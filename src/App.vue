@@ -87,8 +87,15 @@ const { mobile } = useDisplay()
   <v-app>
     <v-app-bar flat :style="`height: ${defaultAppHeaderHeight}`" class="justify-center">
       <v-app-bar-title class="flex-1-1">
-        <div class="text-h5">{{ $t('app_title') }}</div>
-        <div class="text-subtitle-2">{{ $t('app_subtitle') }}</div>
+        <router-link 
+          to="/" 
+          class="home-link"
+          :aria-label="$t('go_to_home')"
+          @click="uiStore.resetMap()"
+        >
+          <div class="text-h5">{{ $t('app_title') }}</div>
+          <div class="text-subtitle-2">{{ $t('app_subtitle') }}</div>
+        </router-link>
       </v-app-bar-title>
       <div v-if="!mobile" class="flex-shrink-1 flex-grow-1" >
         <div class="text-h5">
@@ -271,15 +278,34 @@ const { mobile } = useDisplay()
   margin-right: 1rem;
   padding-right: 1rem;
 }
+
+.home-link {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  display: block;
+  
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+    transition: background-color 0.2s ease;
+  }
+  
+  &:focus {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+  }
+}
 </style>
 
 <i18n>
   {
     "en": {
       "choose-your-lang": "Choose your language",
+      "go_to_home": "Go to home page"
     },
     "fr": {
       "choose-your-lang": "Choisissez votre langue",
+      "go_to_home": "Aller à la page d'accueil"
     }
   }
 </i18n>
