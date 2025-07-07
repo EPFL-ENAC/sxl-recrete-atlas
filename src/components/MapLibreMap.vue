@@ -76,7 +76,7 @@ onMounted(() => {
     maxZoom: props.maxZoom,
     trackResize: true,
     attributionControl: false,
-    renderWorldCopies: false, // 👈 disables repeating the world
+    renderWorldCopies: true, // repeat the world amp could be weird for giant screen sizes
     pixelRatio: window.devicePixelRatio || 1
   })
   map.addControl(new NavigationControl({}))
