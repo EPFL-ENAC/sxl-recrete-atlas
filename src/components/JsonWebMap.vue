@@ -12,6 +12,8 @@ import type { StyleSpecification } from 'maplibre-gl'
 import { computed, defineModel, onMounted, ref, shallowRef, triggerRef, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import type { Project } from '@/types/Project'
+import { useUiStore } from '@/stores/ui'
+import { storeToRefs } from 'pinia'
 
 const props = defineProps<{
   styleUrl: string
@@ -19,6 +21,9 @@ const props = defineProps<{
 }>()
 
 const { t } = useI18n({ useScope: 'global' })
+
+const uiStore = useUiStore()
+const { resetMapTrigger } = storeToRefs(uiStore)
 
 const map = ref<InstanceType<typeof MapLibreMap>>()
 const selectedLayerIds = ref<string[]>([])
@@ -111,6 +116,16 @@ watch(
       if (scaleItems.value && scaleItems.value.length > 0) {
         scale.value = scaleItems.value?.[0].id
       }
+    }
+  }
+)
+
+// Watch for map reset trigger from UI store
+watch(
+  () => resetMapTrigger.value,
+  () => {
+    if (parameters.value?.center && parameters.value?.zoom !== undefined) {
+      map.value?.update(parameters.value.center, parameters.value.zoom)
     }
   }
 )
