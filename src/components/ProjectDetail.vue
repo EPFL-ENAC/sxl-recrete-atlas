@@ -22,7 +22,7 @@
             <v-carousel
               v-if="(props.project.images?.length ?? 0) > 0"
               v-model="carouselIndex"
-              height="100%"
+              height="512px"
               variant="plain"
               :show-arrows="true"
               :hide-delimiter-background="true"
@@ -33,6 +33,7 @@
                 <v-btn
                   variant="plain"
                   class="carousel-icon"
+                  aria-label="Previous image"
                   :icon="mdiChevronLeft"
                   @click.stop="
                     carouselIndex =
@@ -45,6 +46,7 @@
                 <v-btn
                   variant="plain"
                   class="carousel-icon"
+                  aria-label="Next image"
                   :icon="mdiChevronRight"
                   @click.stop="
                     carouselIndex = (carouselIndex + 1) % (props.project.images?.length ?? 1)
@@ -56,7 +58,6 @@
                 :key="$key"
                 :src="image"
                 content-class="carousel-content"
-                height="512px"
               >
               </v-carousel-item>
             </v-carousel>
