@@ -368,7 +368,6 @@ const project_construction_year = computed(() => {
 }
 
 .project-detail-card {
-  margin: auto;
   justify-content: space-between;
 }
 
