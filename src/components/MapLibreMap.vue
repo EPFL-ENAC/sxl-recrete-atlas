@@ -5,7 +5,6 @@ import 'maplibre-gl/dist/maplibre-gl.css'
 import { DivControl } from '@/utils/control'
 import {
   AttributionControl,
-  FullscreenControl,
   GeoJSONSource,
   Map,
   MapMouseEvent,
@@ -77,11 +76,10 @@ onMounted(() => {
     maxZoom: props.maxZoom,
     trackResize: true,
     attributionControl: false,
-    renderWorldCopies: false, // 👈 disables repeating the world
+    renderWorldCopies: true, // repeat the world amp could be weird for giant screen sizes
     pixelRatio: window.devicePixelRatio || 1
   })
   map.addControl(new NavigationControl({}))
-  map.addControl(new FullscreenControl({}))
   map.addControl(
     new AttributionControl({
       compact: false,
@@ -324,7 +322,7 @@ function addProjects() {
           const currentZoom = map!.getZoom()
           map!.easeTo({
             center: e.lngLat,
-            zoom: currentZoom + 2
+            zoom: currentZoom + 4
           })
           return
         }

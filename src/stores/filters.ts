@@ -34,18 +34,9 @@ export function newFilter(): Filter {
 }
 
 export const useFiltersStore = defineStore('filters', () => {
-  function valueToLocalStorage(value: Filter): void {
-    localStorage.setItem('pinia_filters', JSON.stringify(value))
-  }
-  function localStorageToValue(): Filter {
-    const pinia_filters = localStorage.getItem('pinia_filters')
-    return pinia_filters ? JSON.parse(pinia_filters) : newFilter()
-  }
-
-  const filters = ref<Filter>(localStorageToValue())
+  const filters = ref<Filter>(newFilter())
 
   const getFilters = computed(() => {
-    filters.value = localStorageToValue()
     return filters
   })
 
@@ -53,7 +44,6 @@ export const useFiltersStore = defineStore('filters', () => {
     ;(Object.keys(newFilters) as FilterKey[]).forEach((key: FilterKey) => {
       ;(filters.value as Filter)[key] = newFilters[key] as never
     })
-    valueToLocalStorage(filters.value)
   }
 
   function setRangeFilters(value: number[], key: RangeFilterKey) {
