@@ -1,5 +1,33 @@
 # Changelog
 
+## [1.8.0](https://github.com/EPFL-ENAC/sxl-recrete-atlas/compare/v1.7.0...v1.8.0) (2025-07-08)
+
+
+### Features
+
+* **ui:** set Title as button/href to go back to homepage with default extent Fixes [#88](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/88) ([a440585](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/a440585575dc69a5105c8522566828ea048581c8))
+* update issue templates for bug reports and performance issues ([b3f9422](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/b3f9422b4a722a702a39c21684acd25ea1837cf1))
+
+
+### Bug Fixes
+
+* **App, ProjectFilters:** prevent horizontal overflow by hiding overflow-x in styles Fixes [#99](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/99) ([e99c26e](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/e99c26e18d9f1b415364289f9ff01ae18056b4b6))
+* **App:** add main-content class for improved layout and scrolling behavior Fixes [#121](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/121) ([912353c](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/912353c29390ade4fab515049b7e9980c2e50031))
+* correct media query syntax for responsive design in main.css ([33e4f13](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/33e4f138a7aa936d031af5262865aa751709f9bd))
+* correct syntax for body font family in settings.scss ([2277d6c](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/2277d6c2836c135b2ecc95eb06e73264e051e0d3))
+* **download:** correct export columns and order without some columns  [#108](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/108) ([aea93c6](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/aea93c6ec96ec88d236e39c5e9d38a6f22f2cb4b))
+* **FiltersStore:** remove localStorage handling for filters and initialize with default Fixes [#115](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/115) ([e10fb75](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/e10fb751cabe07d6d076638e752e15170cf4db3c))
+* **MapLibreMap:** enable world copies rendering in map  Fixes [#100](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/100) ([aa88b42](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/aa88b42e6c55ea1ee5d7701b4d4fd511533ecd9b))
+* **MapLibreMap:** increase zoom level increment from 2 to 4 in addProjects function #Fixes [#85](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/85) ([fdb50b7](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/fdb50b79f1cf2758f3a2d095c5a5d066b077734c))
+* **MapLibreMap:** remove  FullscreenControl from map ([61e7e02](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/61e7e02abebccb01e2584158c42a0c72d2ef3481)), closes [#86](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/86)
+* **ProjectCard:** add line-clamp property for better text overflow handling ([0017e65](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/0017e65117cdf0d6011b0c3c9bf420fb545ad1df))
+* **ProjectDetail:** set carousel height to 512px and add aria labels for navigation buttons ([647b990](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/647b9908c1ccce27ec34484ad67b5aba62fb7da2)), closes [#95](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/95)
+* **ProjectDialog:** click outside close the popup always ([388aa4e](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/388aa4e8d040ea6cc3c5463858c48ef5c2fa99c2)), closes [#111](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/111)
+* **ProjectDialog:** enhance responsive styles for better dialog display Fixes [#104](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/104) ([b8bd6fc](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/b8bd6fc90a9f32d0af64ec2e437fa92450a56069))
+* **ProjectFilters:** adjust drawer width based on viewport size for better responsiveness Fixes [#119](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/119) ([015dc91](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/015dc918acb92c10e301decdb706e86ee6248589))
+* **ProjectFilters:** sort select values by title in a case-insensitive manner Fixes [#96](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/96) ([d3ac038](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/d3ac0387d556427c96481743ccc45a5192aed5a8))
+* update media query syntax for popper-class in main.css Mobile responsive [#76](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/76) ([a47d1ab](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/a47d1abc05d22c4360c8bad37c71bb641cf8736c))
+
 ## [1.7.0](https://github.com/EPFL-ENAC/sxl-recrete-atlas/compare/v1.6.0...v1.7.0) (2025-05-22)
 
 
