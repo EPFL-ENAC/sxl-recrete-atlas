@@ -50,7 +50,10 @@ function getSelectValues(key: ProjectKey): OptionValues[] {
   return uniqueValues.map((uniqueValue: string) => ({
     title: key.includes('country') ? t('countryFn', [uniqueValue]) : (t(uniqueValue) as string),
     value: uniqueValue as string
-  }))
+  })).sort((a, b) => {
+    // Sort by title, case-insensitive
+    return a.title.localeCompare(b.title, locale.value, { sensitivity: 'base' })
+  })
 }
 
 const filterSelectKeys: SelectFilterKey[] = keys
