@@ -322,7 +322,7 @@ function addProjects() {
           const currentZoom = map!.getZoom()
           map!.easeTo({
             center: e.lngLat,
-            zoom: currentZoom + 2
+            zoom: currentZoom + 4
           })
           return
         }
