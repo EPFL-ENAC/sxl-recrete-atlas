@@ -14,7 +14,7 @@ import keys from '@/assets/data/keys.json'
 import data from '@/assets/data/data.json'
 
 const { t, locale } = useI18n({ useScope: 'global' })
-const { mobile } = useDisplay()
+const { mobile, width } = useDisplay()
 
 const uiStore = useUiStore()
 const { drawerRail } = storeToRefs(uiStore)
@@ -133,10 +133,11 @@ const filtersActivated = computed<FilterActivated>(() => {
 })
 
 const drawerStyle = computed(() => {
+  // if < 400px mobile, use 100vw, otherwise use max(450px, 25vw)
   return {
     width: mobile.value
       ? !drawerRail.value
-        ? '100vw'
+        ? width.value < 450 ? '100vw' : '300px'
         : '64px'
       : !drawerRail.value
         ? 'max(450px,25vw)'
