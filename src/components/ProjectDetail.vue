@@ -359,6 +359,12 @@ const project_construction_year = computed(() => {
 <style scoped>
 .project-title-border {
   border-bottom: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
+  &:deep(.v-card-title) {
+    padding: 0.5rem 1rem;
+    font-size: 1.25rem;
+    font-weight: bold;
+    text-wrap-mode: wrap;
+  }
 }
 
 :deep(.carousel-content) {
