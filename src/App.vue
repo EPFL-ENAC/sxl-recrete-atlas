@@ -220,9 +220,9 @@ const { mobile } = useDisplay()
       </template>
     </v-app-bar>
     <v-main
+      class="main-content"
       :style="`--v-layout-left: ${!drawerRail ? 'max(450px, 25vw)' : '64px'};
       --v-layout-right: 0px;
-      --v-layout-top: ${defaultAppHeaderHeight};
       --v-layout-bottom: 0px;`"
     >
       <RouterView />
@@ -270,6 +270,16 @@ const { mobile } = useDisplay()
 .v-app-bar {
   border-bottom: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
 }
+
+.main-content {
+  margin-top: max(10vh, 64px);
+  padding-top: 0px !important;
+  height: calc(100vh - max(10vh, 64px));
+  overflow-y: auto;
+  display: flex;
+  flex-wrap: wrap;
+}
+
 .main-group-btn {
   justify-content: end;
   align-items: end;
