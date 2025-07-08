@@ -368,6 +368,7 @@ watch(
 .permanent-drawer.v-navigation-drawer--rail {
   :deep(.v-list) {
     padding: 1.25rem !important;
+    overflow-x: hidden;
   }
 }
 

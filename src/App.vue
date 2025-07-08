@@ -276,6 +276,7 @@ const { mobile } = useDisplay()
   padding-top: 0px !important;
   height: calc(100vh - max(10vh, 64px));
   overflow-y: auto;
+  overflow-x: hidden;
   display: flex;
   flex-wrap: wrap;
 }
