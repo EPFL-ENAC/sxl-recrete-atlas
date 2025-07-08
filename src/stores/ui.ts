@@ -4,6 +4,7 @@ import { ref } from 'vue'
 export const useUiStore = defineStore('ui', () => {
   // State
   const drawerRail = ref(true)
+  const resetMapTrigger = ref(0)
 
   // Actions
   function toggleDrawerRail() {
@@ -14,9 +15,15 @@ export const useUiStore = defineStore('ui', () => {
     drawerRail.value = value
   }
 
+  function resetMap() {
+    resetMapTrigger.value++
+  }
+
   return {
     drawerRail,
+    resetMapTrigger,
     toggleDrawerRail,
-    setDrawerRail
+    setDrawerRail,
+    resetMap
   }
 })

@@ -14,7 +14,7 @@ import keys from '@/assets/data/keys.json'
 import data from '@/assets/data/data.json'
 
 const { t, locale } = useI18n({ useScope: 'global' })
-const { mobile } = useDisplay()
+const { mobile, width } = useDisplay()
 
 const uiStore = useUiStore()
 const { drawerRail } = storeToRefs(uiStore)
@@ -50,7 +50,10 @@ function getSelectValues(key: ProjectKey): OptionValues[] {
   return uniqueValues.map((uniqueValue: string) => ({
     title: key.includes('country') ? t('countryFn', [uniqueValue]) : (t(uniqueValue) as string),
     value: uniqueValue as string
-  }))
+  })).sort((a, b) => {
+    // Sort by title, case-insensitive
+    return a.title.localeCompare(b.title, locale.value, { sensitivity: 'base' })
+  })
 }
 
 const filterSelectKeys: SelectFilterKey[] = keys
@@ -133,10 +136,11 @@ const filtersActivated = computed<FilterActivated>(() => {
 })
 
 const drawerStyle = computed(() => {
+  // if < 400px mobile, use 100vw, otherwise use max(450px, 25vw)
   return {
     width: mobile.value
       ? !drawerRail.value
-        ? '100vw'
+        ? width.value < 450 ? '100vw' : '300px'
         : '64px'
       : !drawerRail.value
         ? 'max(450px,25vw)'
@@ -364,6 +368,7 @@ watch(
 .permanent-drawer.v-navigation-drawer--rail {
   :deep(.v-list) {
     padding: 1.25rem !important;
+    overflow-x: hidden;
   }
 }
 
