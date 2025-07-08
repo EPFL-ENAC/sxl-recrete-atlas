@@ -49,6 +49,7 @@ const { locale } = useI18n({ useScope: 'global' })
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: var(--max-lines);
+  line-clamp: var(--max-lines);
   overflow: hidden;
   text-overflow: ellipsis;
 }

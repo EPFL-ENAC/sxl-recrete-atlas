@@ -73,11 +73,11 @@ function handleError(error: unknown) {
 
 function downloadAllData() {
   // const filtered = getCurrentFilteredData(); // however you store it
-  downloadBundle(data as Project[]).catch(handleError)
+  downloadBundle(data as Project[], locale.value, false).catch(handleError) // false = all data
 }
 function downloadFilteredDataBtn() {
   // const filtered = getCurrentFilteredData(); // however you store it
-  downloadFilteredData(projects.value).catch(handleError)
+  downloadFilteredData(projects.value, locale.value).catch(handleError)
 }
 const { mobile } = useDisplay()
 
@@ -87,8 +87,15 @@ const { mobile } = useDisplay()
   <v-app>
     <v-app-bar flat :style="`height: ${defaultAppHeaderHeight}`" class="justify-center">
       <v-app-bar-title class="flex-1-1">
-        <div class="text-h5">{{ $t('app_title') }}</div>
-        <div class="text-subtitle-2">{{ $t('app_subtitle') }}</div>
+        <router-link 
+          to="/" 
+          class="home-link"
+          :aria-label="$t('go_to_home')"
+          @click="uiStore.resetMap()"
+        >
+          <div class="text-h5">{{ $t('app_title') }}</div>
+          <div class="text-subtitle-2">{{ $t('app_subtitle') }}</div>
+        </router-link>
       </v-app-bar-title>
       <div v-if="!mobile" class="flex-shrink-1 flex-grow-1" >
         <div class="text-h5">
@@ -213,9 +220,9 @@ const { mobile } = useDisplay()
       </template>
     </v-app-bar>
     <v-main
+      class="main-content"
       :style="`--v-layout-left: ${!drawerRail ? 'max(450px, 25vw)' : '64px'};
       --v-layout-right: 0px;
-      --v-layout-top: ${defaultAppHeaderHeight};
       --v-layout-bottom: 0px;`"
     >
       <RouterView />
@@ -263,6 +270,17 @@ const { mobile } = useDisplay()
 .v-app-bar {
   border-bottom: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
 }
+
+.main-content {
+  margin-top: max(10vh, 64px);
+  padding-top: 0px !important;
+  height: calc(100vh - max(10vh, 64px));
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-wrap: wrap;
+}
+
 .main-group-btn {
   justify-content: end;
   align-items: end;
@@ -271,15 +289,34 @@ const { mobile } = useDisplay()
   margin-right: 1rem;
   padding-right: 1rem;
 }
+
+.home-link {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  display: block;
+  
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+    transition: background-color 0.2s ease;
+  }
+  
+  &:focus {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+  }
+}
 </style>
 
 <i18n>
   {
     "en": {
       "choose-your-lang": "Choose your language",
+      "go_to_home": "Go to home page"
     },
     "fr": {
       "choose-your-lang": "Choisissez votre langue",
+      "go_to_home": "Aller à la page d'accueil"
     }
   }
 </i18n>
