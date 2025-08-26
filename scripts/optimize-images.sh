@@ -8,7 +8,7 @@ set -e
 IMG_DIR="public/images"
 QUALITY=80
 
-find "$IMG_DIR" -type f \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' \) | while read -r img; do
+find "$IMG_DIR" -type f \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.JPG' \) | while read -r img; do
   base="${img%.*}"
   ext="${img##*.}"
   for size in 1920 512; do
