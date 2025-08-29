@@ -255,10 +255,6 @@
               <span class="key">{{ $t('other') }}:</span> {{ props.project.other }}
             </v-row>
 
-            <v-row v-if="(props.project.actors?.length ?? 0) > 0">
-              <span class="key">{{ t('actors') }}:</span>
-              {{ props.project.actors?.join(',') ?? $t('unknown') }}
-            </v-row>
           </v-col>
           <v-col :sm="12" :md="6" :lg="3" :cols="3">
             <v-row>
