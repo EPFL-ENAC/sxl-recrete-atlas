@@ -44,7 +44,7 @@ const props = withDefaults(
     zoom: 4,
     aspectRatio: undefined,
     minZoom: 2,
-    maxZoom: 10,
+    maxZoom: 8,
     popupLayerIds: () => [],
     areaLayerIds: () => [],
     scales: () => [],
@@ -224,7 +224,7 @@ function addProjects() {
     map.addSource('buildings', {
       type: 'geojson',
       cluster: true,
-      clusterMaxZoom: 9, // Max zoom to cluster points on
+      clusterMaxZoom: 4, // Max zoom to cluster points on
       clusterRadius: 20, // Radius of each cluster when clustering poi
       data: computedData.value
     })
