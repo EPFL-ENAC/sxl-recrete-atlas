@@ -273,7 +273,7 @@ const showRowTooltip = ref(true)
   --card-size: 350px;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(var(--card-size), 1fr));
-  grid-template-rows: repeat(auto-fill, minmax(var(--card-size), var(--card-size)));
+  grid-auto-rows: var(--card-size); /* or minmax(var(--card-size), auto) */
   gap: 2rem;
   margin-top: 2rem;
   margin-bottom: 2rem;
