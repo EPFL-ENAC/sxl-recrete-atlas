@@ -30,7 +30,7 @@ export interface Parameters {
    */
   zoom?: number
   /**
-   * Map default maxzoom level
+   * Map maximum zoom level (if not provided, will be calculated dynamically based on container size)
    */
   maxZoom?: number
   /**
