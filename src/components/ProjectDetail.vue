@@ -73,10 +73,10 @@
               class="image-title d-flex flex-spacebetween"
               style="gap: 1rem; align-items: center"
             >
-              <v-card-subtitle style="width: 100%" class="d-flex flex-column">
+              <v-card-subtitle style="width: 100%" class="d-flex justify-center flex-column">
                 <span
                   v-if="props.project?.images_credits?.length ?? 0 > 0"
-                  class="d-flex justify-end font-italic"
+                  class="d-flex justify-center font-italic"
                 >
                   {{ t('credits') }}:
                   {{ props.project?.images_credits?.[carouselIndex] }}
