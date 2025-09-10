@@ -16,6 +16,7 @@ import {
   type StyleSpecification
 } from 'maplibre-gl'
 import { onMounted, ref, watch, defineModel, computed } from 'vue'
+import { useDebounceFn } from '@vueuse/core'
 import { useI18n } from 'vue-i18n'
 import { storeToRefs } from 'pinia'
 import { useUiStore } from '@/stores/ui'
@@ -46,7 +47,7 @@ const props = withDefaults(
     zoom: 4,
     aspectRatio: undefined,
     minZoom: 2,
-    maxZoom: 8,
+    maxZoom: undefined, // Will be calculated dynamically
     popupLayerIds: () => [],
     areaLayerIds: () => [],
     scales: () => [],
@@ -56,8 +57,19 @@ const props = withDefaults(
 
 const { locale } = useI18n({ useScope: 'global' })
 
+// Function to calculate maxZoom based on window width (simplified approach)
+function getWindowBasedMaxZoom() {
+  const windowWidth = window.innerWidth
+  if (windowWidth < 1024) {
+    return 5.5
+  } else if (windowWidth <= 1440) {
+    return 6
+  } else {
+    return 7
+  }
+}
 
-const boundingBoxPadding = 50;
+const boundingBoxPadding = 50
 const loading = ref(true)
 let map: Map | undefined = undefined
 const isProjectDialogOpen = defineModel('isProjectDialogOpen', {
@@ -70,18 +82,39 @@ const project = defineModel('project', {
   default: undefined
 })
 
+// Create a debounced function to log zoom level
+const logZoomLevel = useDebounceFn(() => {
+  if (map) {
+    console.log('Current zoom level:', map.getZoom())
+  }
+}, 200)
+
 onMounted(() => {
+  console.log('Initializing map with maxZoom prop:', props.maxZoom)
+  // Calculate dynamic maxZoom only if not provided via props
+  const finalMaxZoom = props.maxZoom !== undefined ? props.maxZoom : getWindowBasedMaxZoom()
+  console.log('Final maxZoom used for map:', finalMaxZoom)
+
   map = new Map({
     container: 'maplibre-map',
     style: props.styleSpec || '',
     center: props.center,
     zoom: props.zoom,
     minZoom: window.innerWidth > 1900 ? 3 : props.minZoom,
-    maxZoom: props.maxZoom,
+    maxZoom: finalMaxZoom,
     trackResize: true,
     attributionControl: false,
     renderWorldCopies: true, // repeat the world amp could be weird for giant screen sizes
     pixelRatio: window.devicePixelRatio || 1
+  })
+
+  // Update maxZoom when window is resized
+  window.addEventListener('resize', () => {
+    if (map && props.maxZoom === undefined) {
+      console.log('Window resized, updating maxZoom')
+      const newMaxZoom = getWindowBasedMaxZoom()
+      map.setMaxZoom(newMaxZoom)
+    }
   })
   map.addControl(new NavigationControl({}))
   map.addControl(
@@ -103,6 +136,10 @@ onMounted(() => {
       positionControl.container.innerHTML = ''
     }
   })
+
+  // Add map event listeners for zoom logging
+  map.on('move', logZoomLevel)
+  map.on('zoom', logZoomLevel)
 
   map.once('load', () => {
     addProjects()
@@ -209,7 +246,7 @@ const computedBoundingBox = computed(() => {
   let minX = features[0].geometry.type === 'Point' ? features[0].geometry.coordinates[0] : Infinity
   let minY = features[0].geometry.type === 'Point' ? features[0].geometry.coordinates[1] : Infinity
   let maxX = features[0].geometry.type === 'Point' ? features[0].geometry.coordinates[0] : -Infinity
-  let maxY = features[0].geometry.type === 'Point' ? features[0].geometry.coordinates[1] : -Infinity 
+  let maxY = features[0].geometry.type === 'Point' ? features[0].geometry.coordinates[1] : -Infinity
   features.forEach((feature) => {
     if (feature.geometry.type === 'Point') {
       const [x, y] = feature.geometry.coordinates
@@ -219,18 +256,23 @@ const computedBoundingBox = computed(() => {
       if (y > maxY) maxY = y
     }
   })
-  return [[minX, minY], [maxX, maxY]] as [[number, number], [number, number]]
-});
+  return [
+    [minX, minY],
+    [maxX, maxY]
+  ] as [[number, number], [number, number]]
+})
 
 const { drawerRail } = storeToRefs(uiStore)
 
 watch(drawerRail, () => {
   // Update the bounding box padding based on drawerRail state
   if (map && computedBoundingBox.value) {
+    const fitBoundsMaxZoom = props.maxZoom !== undefined ? props.maxZoom : getWindowBasedMaxZoom()
+    console.log('fitBounds called with maxZoom:', fitBoundsMaxZoom)
     // const padding = drawerRail.value ? 300 : 50
     map.fitBounds(computedBoundingBox.value as [[number, number], [number, number]], {
       padding: boundingBoxPadding,
-      maxZoom: props.maxZoom
+      maxZoom: fitBoundsMaxZoom
     })
   }
 })
@@ -263,15 +305,24 @@ function updateLayerData(newData: GeoJSON.GeoJSON | string): void {
   if (map !== undefined && newData !== undefined) {
     const source: GeoJSONSource = map.getSource('buildings') as GeoJSONSource
     source?.setData(newData)
+    const fitBoundsMaxZoom = props.maxZoom !== undefined ? props.maxZoom : getWindowBasedMaxZoom()
+    console.log('updateLayerData fitBounds called with maxZoom:', fitBoundsMaxZoom)
     map.fitBounds(computedBoundingBox.value as [[number, number], [number, number]], {
       padding: boundingBoxPadding,
-      maxZoom: props.maxZoom
+      maxZoom: fitBoundsMaxZoom
     })
   }
 }
 
 function addProjects() {
   if (map !== undefined) {
+    // Calculate and set the dynamic maxZoom when the map is loaded
+    if (props.maxZoom === undefined) {
+      const dynamicMaxZoom = getWindowBasedMaxZoom()
+      console.log('Setting dynamic maxZoom in addProjects:', dynamicMaxZoom)
+      map.setMaxZoom(dynamicMaxZoom)
+    }
+
     map.addSource('buildings', {
       type: 'geojson',
       cluster: true,
@@ -279,9 +330,11 @@ function addProjects() {
       clusterRadius: 20, // Radius of each cluster when clustering poi
       data: computedData.value
     })
+    const fitBoundsMaxZoom = props.maxZoom !== undefined ? props.maxZoom : getWindowBasedMaxZoom()
+    console.log('addProjects fitBounds called with maxZoom:', fitBoundsMaxZoom)
     map.fitBounds(computedBoundingBox.value as [[number, number], [number, number]], {
       padding: boundingBoxPadding,
-      maxZoom: props.maxZoom
+      maxZoom: fitBoundsMaxZoom
     })
 
     // Base layer for single-project markers (existing)
