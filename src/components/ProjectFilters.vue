@@ -47,13 +47,15 @@ function getSelectValues(key: ProjectKey): OptionValues[] {
   if (uniqueValuesString.length > 0) {
     uniqueValues = uniqueValuesString
   }
-  return uniqueValues.map((uniqueValue: string) => ({
-    title: key.includes('country') ? t('countryFn', [uniqueValue]) : (t(uniqueValue) as string),
-    value: uniqueValue as string
-  })).sort((a, b) => {
-    // Sort by title, case-insensitive
-    return a.title.localeCompare(b.title, locale.value, { sensitivity: 'base' })
-  })
+  return uniqueValues
+    .map((uniqueValue: string) => ({
+      title: key.includes('country') ? t('countryFn', [uniqueValue]) : (t(uniqueValue) as string),
+      value: uniqueValue as string
+    }))
+    .sort((a, b) => {
+      // Sort by title, case-insensitive
+      return a.title.localeCompare(b.title, locale.value, { sensitivity: 'base' })
+    })
 }
 
 const filterSelectKeys: SelectFilterKey[] = keys
@@ -140,7 +142,9 @@ const drawerStyle = computed(() => {
   return {
     width: mobile.value
       ? !drawerRail.value
-        ? width.value < 450 ? '100vw' : '300px'
+        ? width.value < 450
+          ? '100vw'
+          : '300px'
         : '64px'
       : !drawerRail.value
         ? 'max(450px,25vw)'
