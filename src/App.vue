@@ -38,7 +38,7 @@ const showWelcome = ref<boolean>(openWelcome.value)
 const welcomeOpened = computed<boolean>(() => openWelcome.value || showWelcome.value)
 
 function welcomeClosed() {
-  cookies.set('welcome', '1', '365d')
+  cookies.set('welcome', '1', '12h')
   showWelcome.value = false
 }
 
