@@ -18,12 +18,14 @@ import {
 import { onMounted, ref, watch, defineModel, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { storeToRefs } from 'pinia'
+import { useUiStore } from '@/stores/ui'
 
 import { useProjectsStore } from '@/stores/projects'
 import type { Project, ProjectLang } from '@/types/Project'
 
 const projects = storeToRefs(useProjectsStore()).projects
 const { t } = useI18n({ useScope: 'global' })
+const uiStore = useUiStore()
 
 defineExpose({
   update
@@ -219,6 +221,19 @@ const computedBoundingBox = computed(() => {
   })
   return [[minX, minY], [maxX, maxY]] as [[number, number], [number, number]]
 });
+
+const { drawerRail } = storeToRefs(uiStore)
+
+watch(drawerRail, () => {
+  // Update the bounding box padding based on drawerRail state
+  if (map && computedBoundingBox.value) {
+    // const padding = drawerRail.value ? 300 : 50
+    map.fitBounds(computedBoundingBox.value as [[number, number], [number, number]], {
+      padding: boundingBoxPadding,
+      maxZoom: props.maxZoom
+    })
+  }
+})
 
 watch(
   () => computedBoundingBox.value,
