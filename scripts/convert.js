@@ -10,9 +10,6 @@ const sanitizeValue = (value) => {
   // Handle null or undefined values
   if (value === null || value === undefined) return ''
 
-  // Log the original value for debugging
-  console.log(`Original value: ${value}`)
-
   // Deep sanitize to handle various edge cases
   let sanitized = value
 
@@ -30,9 +27,6 @@ const sanitizeValue = (value) => {
   if (sanitized === '' && value.length > 0) {
     sanitized = ''
   }
-
-  // Log the sanitized value
-  console.log(`Sanitized value: ${sanitized}`)
 
   return sanitized
 }
