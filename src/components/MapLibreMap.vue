@@ -54,6 +54,8 @@ const props = withDefaults(
 
 const { locale } = useI18n({ useScope: 'global' })
 
+
+const boundingBoxPadding = 50;
 const loading = ref(true)
 let map: Map | undefined = undefined
 const isProjectDialogOpen = defineModel('isProjectDialogOpen', {
@@ -196,6 +198,36 @@ const computedData = computed<GeoJSON.GeoJSON | string>(() => {
   } as GeoJSON.GeoJSON
 })
 
+const computedBoundingBox = computed(() => {
+  // Compute bounding box from all computedData features
+  const features = (computedData.value as GeoJSON.FeatureCollection).features
+  if (features.length === 0) {
+    return null
+  }
+  let minX = features[0].geometry.type === 'Point' ? features[0].geometry.coordinates[0] : Infinity
+  let minY = features[0].geometry.type === 'Point' ? features[0].geometry.coordinates[1] : Infinity
+  let maxX = features[0].geometry.type === 'Point' ? features[0].geometry.coordinates[0] : -Infinity
+  let maxY = features[0].geometry.type === 'Point' ? features[0].geometry.coordinates[1] : -Infinity 
+  features.forEach((feature) => {
+    if (feature.geometry.type === 'Point') {
+      const [x, y] = feature.geometry.coordinates
+      if (x < minX) minX = x
+      if (y < minY) minY = y
+      if (x > maxX) maxX = x
+      if (y > maxY) maxY = y
+    }
+  })
+  return [[minX, minY], [maxX, maxY]] as [[number, number], [number, number]]
+});
+
+watch(
+  () => computedBoundingBox.value,
+  () => {
+    updateLayerData(computedData.value)
+  },
+  { immediate: true }
+)
+
 watch(
   () => projects,
   () => {
@@ -216,6 +248,10 @@ function updateLayerData(newData: GeoJSON.GeoJSON | string): void {
   if (map !== undefined && newData !== undefined) {
     const source: GeoJSONSource = map.getSource('buildings') as GeoJSONSource
     source?.setData(newData)
+    map.fitBounds(computedBoundingBox.value as [[number, number], [number, number]], {
+      padding: boundingBoxPadding,
+      maxZoom: props.maxZoom
+    })
   }
 }
 
@@ -227,6 +263,10 @@ function addProjects() {
       clusterMaxZoom: 4, // Max zoom to cluster points on
       clusterRadius: 20, // Radius of each cluster when clustering poi
       data: computedData.value
+    })
+    map.fitBounds(computedBoundingBox.value as [[number, number], [number, number]], {
+      padding: boundingBoxPadding,
+      maxZoom: props.maxZoom
     })
 
     // Base layer for single-project markers (existing)
