@@ -10,7 +10,6 @@ export function toWebp512(imagePath) {
   return imagePath.replace(/\.(jpg|jpeg|png|webp)$/i, '-512.webp')
 }
 
-
 export function toWebp1920(imagePath) {
   if (!imagePath) return ''
   imagePath = imagePath.trim()
