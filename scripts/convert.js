@@ -3,12 +3,56 @@ import { writeFileSync } from 'fs'
 import { toWebp1920 } from '../src/utils/image.js'
 
 // Helper function to sanitize the value.
-const sanitizeValue = (value) => value.replace(/^"+|"+$/g, '')
-// Update the arraySplitter to sanitize the value before splitting.
-const arraySplitter = (item) =>
-  sanitizeValue(item)
+const sanitizeValue = (value) => {
+  // Return non-string values as-is
+  if (typeof value !== 'string') return value
+
+  // Handle null or undefined values
+  if (value === null || value === undefined) return ''
+
+  // Log the original value for debugging
+  console.log(`Original value: ${value}`)
+
+  // Deep sanitize to handle various edge cases
+  let sanitized = value
+
+  // Remove surrounding quotes (both single and double)
+  sanitized = sanitized.replace(/^(["'])+|(["'])+$/g, '')
+
+  // Unescape escaped quotes
+  sanitized = sanitized.replace(/\\"/g, '"')
+  sanitized = sanitized.replace(/\\'/g, "'")
+
+  // Trim whitespace
+  sanitized = sanitized.trim()
+
+  // Handle special case of empty quoted strings
+  if (sanitized === '' && value.length > 0) {
+    sanitized = ''
+  }
+
+  // Log the sanitized value
+  console.log(`Sanitized value: ${sanitized}`)
+
+  return sanitized
+}
+
+// Improved arraySplitter function to handle edge cases
+const arraySplitter = (item) => {
+  // Handle null, undefined or empty values
+  if (!item || item === '') return []
+
+  const sanitized = sanitizeValue(item)
+
+  // Handle empty sanitized values
+  if (sanitized === '') return []
+
+  // Split by comma and process each item
+  return sanitized
     .split(',')
     .map((type) => type.trim())
+    .filter((type) => type.length > 0) // Remove empty items
+}
 
 csv({ checkType: true })
   .fromFile('./src/assets/data/keys.csv')
@@ -24,9 +68,20 @@ csv({
   trim: true,
   colParser: {
     receiver_coordinates: function (item) {
-      return sanitizeValue(item)
+      const sanitized = sanitizeValue(item)
+      if (!sanitized || sanitized === '') return []
+
+      return sanitized
         .split(',')
-        .map((coordinate) => parseFloat(coordinate.trim()))
+        .map((coordinate) => {
+          const trimmed = coordinate.trim()
+          // Handle empty coordinates
+          if (trimmed === '') return null
+          // Parse float or return 0 if invalid
+          const parsed = parseFloat(trimmed)
+          return isNaN(parsed) ? 0 : parsed
+        })
+        .filter((coord) => coord !== null)
         .reverse()
     },
     main_concrete_type: arraySplitter,
@@ -47,6 +102,12 @@ csv({
       return sanitizeValue(item)
         .split(',')
         .map((credit) => credit.trim())
+    },
+    description_en: function (item) {
+      return sanitizeValue(item)
+    },
+    description_fr: function (item) {
+      return sanitizeValue(item)
     }
   }
 })

@@ -5,5 +5,5 @@
  * @example toWebp512('image.png') => 'image-512.webp'
  * @example toWebp512(null) => ''
  */
-export declare function toWebp512(imagePath: string | null | undefined): string;
-export declare function toWebp1920(imagePath: string | null | undefined): string;
+export declare function toWebp512(imagePath: string | null | undefined): string
+export declare function toWebp1920(imagePath: string | null | undefined): string

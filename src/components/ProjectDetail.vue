@@ -88,8 +88,10 @@
         <v-row class="ga-3 mb-4">
           <v-col :cols="6">
             <v-row class="mb-4">
-              <h3 class="text-font-bold">{{ $t(`description_${locale as ProjectLang}`) }}</h3>
-              {{ props.project[`description_${locale as ProjectLang}`] }}
+              <section>
+                <h3 class="text-font-bold">{{ $t(`description_${locale as ProjectLang}`) }}</h3>
+                <p>{{ props.project[`description_${locale as ProjectLang}`] }}</p>
+              </section>
             </v-row>
 
             <v-row>
@@ -254,7 +256,6 @@
             <v-row v-if="props.project?.other">
               <span class="key">{{ $t('other') }}:</span> {{ props.project.other }}
             </v-row>
-
           </v-col>
           <v-col :sm="12" :md="6" :lg="3" :cols="3">
             <v-row>
@@ -407,7 +408,7 @@ const project_construction_year = computed(() => {
 
 <!-- construction_year, status, actors should be moved to keys.csv -->
 <i18n lang="json">
-  {
+{
   "en": {
     "about_the_receiving_project": "About the receiving project",
     "about_the_donor_site": "About the donor building",

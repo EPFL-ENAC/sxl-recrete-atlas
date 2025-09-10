@@ -80,15 +80,14 @@ function downloadFilteredDataBtn() {
   downloadFilteredData(projects.value, locale.value).catch(handleError)
 }
 const { mobile } = useDisplay()
-
 </script>
 
 <template>
   <v-app>
     <v-app-bar flat :style="`height: ${defaultAppHeaderHeight}`" class="justify-center">
       <v-app-bar-title class="flex-1-1">
-        <router-link 
-          to="/" 
+        <router-link
+          to="/"
           class="home-link"
           :aria-label="$t('go_to_home')"
           @click="uiStore.resetMap()"
@@ -97,7 +96,7 @@ const { mobile } = useDisplay()
           <div class="text-subtitle-2">{{ $t('app_subtitle') }}</div>
         </router-link>
       </v-app-bar-title>
-      <div v-if="!mobile" class="flex-shrink-1 flex-grow-1" >
+      <div v-if="!mobile" class="flex-shrink-1 flex-grow-1">
         <div class="text-h5">
           {{ $t('app_wip_title') }}<v-icon class="ml-5"> {{ mdiWrench }}</v-icon>
         </div>
@@ -295,12 +294,12 @@ const { mobile } = useDisplay()
   color: inherit;
   cursor: pointer;
   display: block;
-  
+
   &:hover {
     background-color: rgba(0, 0, 0, 0.04);
     transition: background-color 0.2s ease;
   }
-  
+
   &:focus {
     outline: 2px solid currentColor;
     outline-offset: 2px;

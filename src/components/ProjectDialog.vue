@@ -41,7 +41,6 @@ const projectId = computed({
 })
 
 const maxWidth = computed(() => {
-
   const width = window.innerWidth
   return width < 600 ? '100vw' : '80%'
 })
@@ -52,11 +51,10 @@ const closeDialog = () => {
 </script>
 
 <style scoped>
-
 :deep(.v-overlay__content) {
   max-height: 80vh;
   overflow-y: auto;
- @media screen and (max-width: 600px) {
+  @media screen and (max-width: 600px) {
     max-height: 100vh;
     width: 100vw;
     overflow-y: auto;
@@ -67,6 +65,4 @@ const closeDialog = () => {
     overflow-y: auto;
   }
 }
-
-
 </style>
