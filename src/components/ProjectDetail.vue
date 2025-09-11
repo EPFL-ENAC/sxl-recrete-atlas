@@ -73,10 +73,10 @@
               class="image-title d-flex flex-spacebetween"
               style="gap: 1rem; align-items: center"
             >
-              <v-card-subtitle style="width: 100%" class="d-flex flex-column">
+              <v-card-subtitle style="width: 100%" class="d-flex justify-center flex-column">
                 <span
                   v-if="props.project?.images_credits?.length ?? 0 > 0"
-                  class="d-flex justify-end font-italic"
+                  class="d-flex justify-center font-italic"
                 >
                   {{ t('credits') }}:
                   {{ props.project?.images_credits?.[carouselIndex] }}
@@ -88,8 +88,10 @@
         <v-row class="ga-3 mb-4">
           <v-col :cols="6">
             <v-row class="mb-4">
-              <h3 class="text-font-bold">{{ $t(`description_${locale as ProjectLang}`) }}</h3>
-              {{ props.project[`description_${locale as ProjectLang}`] }}
+              <section>
+                <h3 class="text-font-bold">{{ $t(`description_${locale as ProjectLang}`) }}</h3>
+                <p>{{ props.project[`description_${locale as ProjectLang}`] }}</p>
+              </section>
             </v-row>
 
             <v-row>
@@ -97,8 +99,8 @@
             </v-row>
             <v-row>
               <span class="key"
-                >{{ $t('receiver_country') }}
-                <span v-if="props.project.receiver_city">({{ $t('receiver_city') }})</span>
+                >{{ t('about_receiving_country') }}
+                <span v-if="props.project.receiver_city">({{ t('about_receiving_city') }})</span>
                 :
               </span>
               <span
@@ -109,7 +111,7 @@
               </span>
             </v-row>
             <v-row>
-              <span class="key">{{ $t('start_date_year') }}: </span>
+              <span class="key">{{ t('about_receiving_date') }}: </span>
               <span
                 :class="{
                   'font-italic': props.project.date_uncertainty,
@@ -224,7 +226,7 @@
             :cols="3"
           >
             <v-row>
-              <h3 class="text-font-bold">{{ t('about_the_new_project') }}</h3>
+              <h3 class="text-font-bold">{{ t('about_the_new_case_study') }}</h3>
             </v-row>
             <v-row v-if="props.project.impact_difference">
               <span class="key">{{ $t('impact_design_alternative') }}:</span>
@@ -254,7 +256,6 @@
             <v-row v-if="props.project?.other">
               <span class="key">{{ $t('other') }}:</span> {{ props.project.other }}
             </v-row>
-
           </v-col>
           <v-col :sm="12" :md="6" :lg="3" :cols="3">
             <v-row>
@@ -278,6 +279,10 @@
             <v-row v-if="(props.project.actors?.length ?? 0) > 0">
               <span class="key">{{ t('case_study_actors') }}:</span>
               {{ props.project.actors?.join(', ') ?? $t('unknown') }}
+            </v-row>
+            <v-row v-if="(props.project.fact_sheet_contributors?.length ?? 0) > 0">
+              <span class="key">{{ t('fact_sheet_contributors') }}:</span>
+              {{ props.project.fact_sheet_contributors?.join(', ') ?? $t('unknown') }}
             </v-row>
           </v-col>
         </v-row>
@@ -408,7 +413,7 @@ const project_construction_year = computed(() => {
     "about_the_receiving_project": "About the receiving project",
     "about_the_donor_site": "About the donor building",
     "about_the_reused_concrete": "About the reused concrete",
-    "about_the_new_project": "About the new case-study",
+    "about_the_new_case_study": "About the new case-study",
     "more_information": "More information",
     "construction_year": "Construction year",
     "status": "Project status",
@@ -418,13 +423,17 @@ const project_construction_year = computed(() => {
     "impact_source_tooltip": "Source",
     "cost_source_tooltip": "Source",
     "compared_to": "compared to",
-    "credits": "credits"
+    "credits": "credits",
+    "about_receiving_country": "Country",
+    "about_receiving_city": "City",
+    "about_receiving_date": "Date of Construction start",
+    "fact_sheet_contributors": "Fact sheet contributors"
   },
   "fr": {
     "about_the_receiving_project": "À propos du projet receveur",
     "about_the_donor_site": "À propos du site du donneur",
     "about_the_reused_concrete": "À propos du réemploi du béton",
-    "about_the_new_project": "À propos du nouveau cas d'étude",
+    "about_the_new_case_study": "À propos du nouveau cas d'étude",
     "more_information": "Plus d'information",
     "construction_year": "Année de construction",
     "status": "État du projet",
@@ -434,7 +443,11 @@ const project_construction_year = computed(() => {
     "impact_source_tooltip": "Source",
     "cost_source_tooltip": "Source",
     "compared_to": "comparé à",
-    "credits": "crédits"
+    "credits": "crédits",
+    "about_receiving_country": "Pays",
+    "about_receiving_city": "Ville",
+    "about_receiving_date": "Date de début de construction",
+    "fact_sheet_contributors": "Contributeurs de la fiche projet"
   }
 }
 </i18n>

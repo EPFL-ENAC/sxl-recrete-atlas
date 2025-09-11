@@ -41,3 +41,4 @@ cost_difference_max_percent,,,Maximal cost difference [%],Différence de coût m
 cost_source,,,Reference for cost calculations,Référence pour le calcul des coûts
 images,,,Images,Images
 images_credits,,,Images credits,Crédits des images
+clear-filters,,,Clear all filters,Effacer tous les filtres
