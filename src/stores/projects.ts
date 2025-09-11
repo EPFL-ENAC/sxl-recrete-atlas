@@ -13,7 +13,7 @@ export type FilterValue = string | null | undefined | boolean
 export type Filters = Record<ProjectKey, FilterValue>
 
 function randomOffset(): [number, number] {
-  const radius = 4 // 1 km
+  const radius = 0.5 // 1 km
   const distance = Math.random() * radius
   const angle = Math.random() * 2 * Math.PI
   const offsetX = distance * Math.cos(angle)
