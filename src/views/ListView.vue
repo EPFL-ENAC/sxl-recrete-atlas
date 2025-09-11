@@ -16,6 +16,7 @@ import { useRoute } from 'vue-router'
 import { defaultAppHeaderHeight } from '@/utils/default'
 import type { VDataTable } from 'vuetify/components/VDataTable'
 import { Dropdown as VDropdown } from 'floating-vue'
+import { useDisplay } from 'vuetify'
 
 const route = useRoute()
 const { t, locale } = useI18n({ useScope: 'global' })
@@ -103,10 +104,11 @@ const mouseLeaveRow = () => {
 }
 
 const showRowTooltip = ref(true)
+const { smAndUp } = useDisplay()
 </script>
 
 <template>
-  <project-filters />
+  <project-filters v-if="smAndUp" />
   <v-container v-if="listMode === 'list'" class="fill-height pa-0 align-baseline" fluid>
     <v-alert v-if="data.length === 0" type="info" variant="tonal" class="mt-4">
       {{ $t('No elements selected') }}
@@ -275,8 +277,15 @@ const showRowTooltip = ref(true)
   grid-template-columns: repeat(auto-fill, minmax(var(--card-size), 1fr));
   grid-auto-rows: var(--card-size); /* or minmax(var(--card-size), auto) */
   gap: 2rem;
-  margin-top: 2rem;
-  margin-bottom: 2rem;
+  margin: 2rem;
+}
+
+@media (max-width: 600px) {
+  .grid-list {
+    --card-size: 350px;
+    margin: 0.5rem;
+    gap: 0.5rem;
+  }
 }
 
 .comma-separated-list {

@@ -82,18 +82,9 @@ const project = defineModel('project', {
   default: undefined
 })
 
-// Create a debounced function to log zoom level
-const logZoomLevel = useDebounceFn(() => {
-  if (map) {
-    console.log('Current zoom level:', map.getZoom())
-  }
-}, 200)
-
 onMounted(() => {
-  console.log('Initializing map with maxZoom prop:', props.maxZoom)
   // Calculate dynamic maxZoom only if not provided via props
   const finalMaxZoom = props.maxZoom !== undefined ? props.maxZoom : getWindowBasedMaxZoom()
-  console.log('Final maxZoom used for map:', finalMaxZoom)
 
   map = new Map({
     container: 'maplibre-map',
@@ -111,7 +102,6 @@ onMounted(() => {
   // Update maxZoom when window is resized
   window.addEventListener('resize', () => {
     if (map && props.maxZoom === undefined) {
-      console.log('Window resized, updating maxZoom')
       const newMaxZoom = getWindowBasedMaxZoom()
       map.setMaxZoom(newMaxZoom)
     }
@@ -136,10 +126,6 @@ onMounted(() => {
       positionControl.container.innerHTML = ''
     }
   })
-
-  // Add map event listeners for zoom logging
-  map.on('move', logZoomLevel)
-  map.on('zoom', logZoomLevel)
 
   map.once('load', () => {
     addProjects()
@@ -264,18 +250,19 @@ const computedBoundingBox = computed(() => {
 
 const { drawerRail } = storeToRefs(uiStore)
 
-watch(drawerRail, () => {
+const debouncedDrawerRailHandler = useDebounceFn(() => {
   // Update the bounding box padding based on drawerRail state
   if (map && computedBoundingBox.value) {
     const fitBoundsMaxZoom = props.maxZoom !== undefined ? props.maxZoom : getWindowBasedMaxZoom()
-    console.log('fitBounds called with maxZoom:', fitBoundsMaxZoom)
     // const padding = drawerRail.value ? 300 : 50
     map.fitBounds(computedBoundingBox.value as [[number, number], [number, number]], {
       padding: boundingBoxPadding,
       maxZoom: fitBoundsMaxZoom
     })
   }
-})
+}, 150)
+
+watch(drawerRail, debouncedDrawerRailHandler)
 
 watch(
   () => computedBoundingBox.value,

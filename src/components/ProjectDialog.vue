@@ -1,8 +1,6 @@
 <template>
   <v-dialog
     v-model="isDialogActive"
-    height="80%"
-    :max-width="maxWidth"
     scrollable
     @after-leave="closeDialog"
   >
@@ -40,11 +38,6 @@ const projectId = computed({
   }
 })
 
-const maxWidth = computed(() => {
-  const width = window.innerWidth
-  return width < 600 ? '100vw' : '80%'
-})
-
 const closeDialog = () => {
   projectId.value = ''
 }
@@ -52,17 +45,16 @@ const closeDialog = () => {
 
 <style scoped>
 :deep(.v-overlay__content) {
-  max-height: 80vh;
+  max-height: calc(100vh - 4rem);
+  width: calc(100vw - 4rem);
   overflow-y: auto;
+  
   @media screen and (max-width: 600px) {
     max-height: 100vh;
-    width: 100vw;
+    width: 100%;
+    margin: 0;
     overflow-y: auto;
-  }
-  @media screen and (min-width: 600px) {
-    max-height: 80vh;
-    width: 80vw;
-    overflow-y: auto;
+    min-width: 100%;
   }
 }
 </style>
