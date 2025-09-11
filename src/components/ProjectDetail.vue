@@ -1,6 +1,6 @@
 <template>
   <v-card v-if="props.project" class="project-detail-card">
-    <v-card-item class="project-title-border">
+    <v-card-item class="project-detail__title project-title-border">
       <v-card-title class="d-flex justify-center align-center">
         <p class="d-flex justify-center" style="width: 100%">
           <span class="font-weight-bold">{{ props.project[`name_${locale as ProjectLang}`] }}</span>
@@ -15,7 +15,7 @@
         ></v-btn>
       </v-card-title>
     </v-card-item>
-    <v-card-item>
+    <v-card-item class="project-detail__card">
       <v-card-text>
         <v-row class="mb-4">
           <v-col :cols="12">
@@ -377,7 +377,24 @@ const project_construction_year = computed(() => {
 .project-detail-card {
   justify-content: space-between;
 }
+.project-detail__title {
+  background-color: oklch(0.95 0.1 270 / 1);
+      position: sticky;
+    top: 0;
+    z-index: 1;
+    flex-shrink: 0;
+    background-color: white;
+}
 
+.project-detail__card {
+  padding: 1rem 2rem 2rem 2rem;
+}
+
+@media screen and (max-width: 600px) {
+  :deep(.v-card-item.project-detail__card) {
+    padding: 0rem !important;
+  }
+}
 .image-title {
   /* text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white; */
   font-family: sans;
@@ -427,7 +444,7 @@ const project_construction_year = computed(() => {
     "about_receiving_country": "Country",
     "about_receiving_city": "city",
     "about_receiving_date": "Date of Construction start",
-    "fact_sheet_contributors": "Fact sheet contributors"
+    "fact_sheet_contributors": "Factsheet contributors"
   },
   "fr": {
     "about_the_receiving_project": "À propos du projet receveur",

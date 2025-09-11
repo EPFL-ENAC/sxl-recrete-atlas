@@ -11,6 +11,7 @@ import { useI18n } from 'vue-i18n'
 import type { Project } from '@/types/Project'
 import { useUiStore } from '@/stores/ui'
 import { storeToRefs } from 'pinia'
+import { useDisplay } from 'vuetify'
 
 const props = defineProps<{
   styleUrl: string
@@ -125,10 +126,12 @@ watch(
     }
   }
 )
+
+const { smAndUp } = useDisplay()
 </script>
 
 <template>
-  <project-filters />
+  <project-filters v-if="smAndUp" />
   <v-container class="fill-height pa-0" fluid>
     <v-row class="fill-height">
       <v-col cols="12" class="py-0">
