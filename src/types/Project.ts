@@ -34,7 +34,7 @@ export interface Project {
   reference?: string[]
   impact_design_alternative?: string
   impact_difference?: string
-  research_prototype?: string,
+  research_prototype?: string
   unbuilt_with_construction_permission?: string
   impact_unit?: string
   impact_source?: string

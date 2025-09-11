@@ -9,7 +9,7 @@ import type { Key } from '@/types/Filter'
 
 // const { cookies } = useCookies()
 // const locale = cookies.get('locale')
-const locale = 'en'; // cf issue #60
+const locale = 'en' // cf issue #60
 
 type LangKeys = Record<string, string>
 const enKeys = (keys as Key[]).reduce((acc: LangKeys, filter: Key) => {

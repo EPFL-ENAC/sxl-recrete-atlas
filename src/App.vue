@@ -38,7 +38,7 @@ const showWelcome = ref<boolean>(openWelcome.value)
 const welcomeOpened = computed<boolean>(() => openWelcome.value || showWelcome.value)
 
 function welcomeClosed() {
-  cookies.set('welcome', '1', '365d')
+  cookies.set('welcome', '1', '12h')
   showWelcome.value = false
 }
 
@@ -80,15 +80,14 @@ function downloadFilteredDataBtn() {
   downloadFilteredData(projects.value, locale.value).catch(handleError)
 }
 const { mobile } = useDisplay()
-
 </script>
 
 <template>
   <v-app>
     <v-app-bar flat :style="`height: ${defaultAppHeaderHeight}`" class="justify-center">
       <v-app-bar-title class="flex-1-1">
-        <router-link 
-          to="/" 
+        <router-link
+          to="/"
           class="home-link"
           :aria-label="$t('go_to_home')"
           @click="uiStore.resetMap()"
@@ -97,7 +96,7 @@ const { mobile } = useDisplay()
           <div class="text-subtitle-2">{{ $t('app_subtitle') }}</div>
         </router-link>
       </v-app-bar-title>
-      <div v-if="!mobile" class="flex-shrink-1 flex-grow-1" >
+      <div v-if="!mobile" class="flex-shrink-1 flex-grow-1">
         <div class="text-h5">
           {{ $t('app_wip_title') }}<v-icon class="ml-5"> {{ mdiWrench }}</v-icon>
         </div>
@@ -121,16 +120,13 @@ const { mobile } = useDisplay()
           <template #activator="{ props: activatorProps }">
             <v-btn
               v-bind="activatorProps"
-              :to="{ name: `list`, query: { view: 'list' } }"
-              :active="$route.query.view === 'list'"
-              :icon="mdiListBox"
+              :to="{ name: `home` }"
+              :icon="mdiMapOutline"
               class="mr-3"
-              :title="$t('list')"
+              :title="$t('map')"
             ></v-btn>
           </template>
-          <template #default>
-            {{ $t('list') }}
-          </template>
+          <span>{{ $t('map') }} </span>
         </v-tooltip>
         <v-tooltip location="bottom">
           <template #activator="{ props: activatorProps }">
@@ -145,18 +141,20 @@ const { mobile } = useDisplay()
           </template>
           <span>{{ $t('grid') }} </span>
         </v-tooltip>
-
         <v-tooltip location="bottom">
           <template #activator="{ props: activatorProps }">
             <v-btn
               v-bind="activatorProps"
-              :to="{ name: `home` }"
-              :icon="mdiMapOutline"
+              :to="{ name: `list`, query: { view: 'list' } }"
+              :active="$route.query.view === 'list'"
+              :icon="mdiListBox"
               class="mr-3"
-              :title="$t('map')"
+              :title="$t('list')"
             ></v-btn>
           </template>
-          <span>{{ $t('map') }} </span>
+          <template #default>
+            {{ $t('list') }}
+          </template>
         </v-tooltip>
       </div>
       <v-tooltip location="bottom">
@@ -295,12 +293,12 @@ const { mobile } = useDisplay()
   color: inherit;
   cursor: pointer;
   display: block;
-  
+
   &:hover {
     background-color: rgba(0, 0, 0, 0.04);
     transition: background-color 0.2s ease;
   }
-  
+
   &:focus {
     outline: 2px solid currentColor;
     outline-offset: 2px;
