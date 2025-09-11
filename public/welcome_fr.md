@@ -1,10 +1,16 @@
-### Bienvenue dans l'Atlas du réemploi de béton 
+## Bienvenue sur ARC - l'Atlas du Béton Réutilisé
+ 
+ARC est une base de données interactive et un site web sur la réutilisation structurelle du béton. Il présente et recueille des données provenant de plus de 50 projets construits avec du béton réutilisé structurellement.
+ 
+Entrez sur le site et explorez les projets en utilisant la vue carte :mdi-map-outline:, la vue grille :mdi-grid:, ou la vue liste :mdi-list-box:.
+<picture>
+  <source media="(max-width: 512px)" srcset="/images/About_Welcome_image_block_1-512.webp" type="image/webp">
+  <source media="(max-width: 512px)" srcset="/images/About_Welcome_image_block_1.jpg">
+  <source media="(max-width: 1920px)" srcset="/images/About_Welcome_image_block_1-1920.webp" type="image/webp">
+  <source media="(max-width: 1920px)" srcset="/images/About_Welcome_image_block_1.jpg">
+  <img src="/images/About_Welcome_image_block_1.jpg" alt="Bienvenue sur l'Atlas" loading="lazy" style="width: 100%; height: auto;">
+</picture>
 
-Ce site web est une base de données interactive de projets de réemploi de béton pour les structures dans le secteur de la construction, développée à l'EPFL.
-
-* Pour explorer la base de données des projets, naviguez en utilisant la vue carte :mdi-map-outline:, la vue en mosaïque :mdi-grid: ou la vue en liste :mdi-list-box:.
-* Pour contribuer, cliquez sur le bouton/icône :mdi-plus-box: pour partager un nouveau projet ou de nouvelles données.
-* Pour en savoir plus sur l'atlas, cliquez sur le bouton :mdi-information:.
-* 	Une FAQ sur le réemploi du béton est accessible sous le bouton :mdi-crane:.
-
-Pour toute question, contactez-nous par :mdi-email: à concrete-reuse@epfl.ch
+ARC accueille et reconnaît les contributions externes ! Cliquez sur le bouton « :mdi-plus-box: » pour partager un nouveau projet ou de nouvelles données. Pour toute question, contactez-nous à **[concrete-reuse@epfl.ch](mailto:concrete-reuse@epfl.ch)**
+ 
+Pour en savoir plus sur l'atlas, cliquez sur le bouton « :mdi-information: ». Une FAQ sur la réutilisation du béton est accessible sous le bouton « :mdi-crane: ».

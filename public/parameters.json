@@ -2,7 +2,6 @@
   "$schema": "https://raw.githubusercontent.com/EPFL-ENAC/alice-perl-eerl-urbtrees/main/schema/parameters.schema.json",
   "center": { "lat": 48.3246, "lng": 10 },
   "zoom": 4,
-  "maxZoom": 8,
   "popupLayerIds": [],
   "selectableItems": [
     {

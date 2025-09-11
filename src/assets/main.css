@@ -2,7 +2,8 @@ html {
   overflow-y: auto;
 }
 /* stylelint-disable selector-class-pattern */
-.v-input__details, .v-input__details .v-messages {
+.v-input__details,
+.v-input__details .v-messages {
   min-height: 0 !important;
 }
 
@@ -16,7 +17,6 @@ html {
 
   @media screen and (width <= 1350px) and (width >= 850px) {
     width: 500px;
-    
   }
 
   .v-popper__inner {
@@ -56,7 +56,6 @@ html {
   padding: 6px 13px;
   border-bottom: 1px solid #ccc;
 }
-
 
 .marked tr:nth-child(even) {
   background-color: #f6f8fa;

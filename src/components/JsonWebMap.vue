@@ -2,10 +2,7 @@
 import MapLibreMap from '@/components/MapLibreMap.vue'
 import ProjectFilters from '@/components/ProjectFilters.vue'
 import type { Parameters } from '@/utils/jsonWebMap'
-import type {
-  SelectableItem,
-  SelectableSingleItem
-} from '@/utils/layerSelector'
+import type { SelectableItem, SelectableSingleItem } from '@/utils/layerSelector'
 import { mdiClose } from '@mdi/js'
 import axios from 'axios'
 import type { StyleSpecification } from 'maplibre-gl'
@@ -76,7 +73,6 @@ const singleItems = computed<SelectableSingleItem[]>(() =>
     .flatMap((item: SelectableItem) => ('children' in item ? item.children : [item]))
 )
 
-
 const selectedItemWithLegend = computed(() =>
   singleItems.value
     .filter((item: SelectableSingleItem) =>
@@ -129,7 +125,6 @@ watch(
     }
   }
 )
-
 </script>
 
 <template>

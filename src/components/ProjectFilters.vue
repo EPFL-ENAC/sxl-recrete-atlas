@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, watch } from 'vue'
+import { computed, watch, ref, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useDisplay } from 'vuetify'
 import { useFiltersStore, stepsHash, valuesHash, newFilter } from '@/stores/filters'
@@ -19,6 +19,20 @@ const { mobile, width } = useDisplay()
 const uiStore = useUiStore()
 const { drawerRail } = storeToRefs(uiStore)
 const { setDrawerRail } = uiStore
+
+// Bounce animation for drawer button on app load
+const bounceButton = ref(false)
+
+onMounted(() => {
+  // Trigger the bounce animation after a short delay to ensure app is loaded
+  setTimeout(() => {
+    bounceButton.value = true
+    // Remove the animation class after it completes (1 second)
+    setTimeout(() => {
+      bounceButton.value = false
+    }, 1000)
+  }, 500)
+})
 
 interface FilterSelectValues {
   key: SelectFilterKey
@@ -47,13 +61,15 @@ function getSelectValues(key: ProjectKey): OptionValues[] {
   if (uniqueValuesString.length > 0) {
     uniqueValues = uniqueValuesString
   }
-  return uniqueValues.map((uniqueValue: string) => ({
-    title: key.includes('country') ? t('countryFn', [uniqueValue]) : (t(uniqueValue) as string),
-    value: uniqueValue as string
-  })).sort((a, b) => {
-    // Sort by title, case-insensitive
-    return a.title.localeCompare(b.title, locale.value, { sensitivity: 'base' })
-  })
+  return uniqueValues
+    .map((uniqueValue: string) => ({
+      title: key.includes('country') ? t('countryFn', [uniqueValue]) : (t(uniqueValue) as string),
+      value: uniqueValue as string
+    }))
+    .sort((a, b) => {
+      // Sort by title, case-insensitive
+      return a.title.localeCompare(b.title, locale.value, { sensitivity: 'base' })
+    })
 }
 
 const filterSelectKeys: SelectFilterKey[] = keys
@@ -140,7 +156,9 @@ const drawerStyle = computed(() => {
   return {
     width: mobile.value
       ? !drawerRail.value
-        ? width.value < 450 ? '100vw' : '300px'
+        ? width.value < 450
+          ? '100vw'
+          : '300px'
         : '64px'
       : !drawerRail.value
         ? 'max(450px,25vw)'
@@ -203,6 +221,7 @@ watch(
                 v-bind="props"
                 variant="flat"
                 size="smaller"
+                :class="{ bounce: bounceButton }"
                 @click.stop="setDrawerRail(false)"
               />
             </template>
@@ -378,5 +397,34 @@ watch(
   z-index: 1100;
   background: inherit; // or a defined background color if needed
   background-color: #fff;
+}
+
+/* Bounce animation for drawer button */
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-8px);
+  }
+  50% {
+    transform: translateX(0);
+  }
+  75% {
+    transform: translateX(-4px);
+  }
+}
+
+.bounce {
+  animation: bounce 1s ease;
+  /* Add a bit of visual enhancement */
+  box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.1);
+}
+
+.bounce:hover {
+  /* Slight enhancement on hover */
+  transform: scale(1.05);
+  transition: transform 0.2s ease;
 }
 </style>
