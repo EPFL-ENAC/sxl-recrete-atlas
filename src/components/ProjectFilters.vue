@@ -152,16 +152,16 @@ const filtersActivated = computed<FilterActivated>(() => {
 })
 
 const drawerStyle = computed(() => {
-  // if < 400px mobile, use 100vw, otherwise use max(450px, 25vw)
+  // if < 400px mobile, use 100vw, otherwise use 400px
   return {
     width: mobile.value
       ? !drawerRail.value
-        ? width.value < 450
+        ? width.value < 400
           ? '100vw'
-          : '300px'
+          : '400px'
         : '64px'
       : !drawerRail.value
-        ? 'max(450px,25vw)'
+        ? '400px'
         : '64px',
     height: `calc(100vh - ${defaultAppHeaderHeight})`,
     top: defaultAppHeaderHeight,
@@ -322,15 +322,11 @@ watch(
         </v-row>
       </v-list-item>
     </v-list>
-    <!-- <v-sheet v-if="!drawerRail" class="pa-0">
-      <BarProjectEchart :projects="data" />
-    </v-sheet> -->
   </v-navigation-drawer>
 </template>
 
 <style scoped lang="scss">
 :root {
-  --v-layout-left: 25vw;
   --v-layout-top: 10vh;
 }
 .v-row.filters > .v-col {
