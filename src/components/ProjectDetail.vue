@@ -425,7 +425,7 @@ const project_construction_year = computed(() => {
     "compared_to": "compared to",
     "credits": "credits",
     "about_receiving_country": "Country",
-    "about_receiving_city": "City",
+    "about_receiving_city": "city",
     "about_receiving_date": "Date of Construction start",
     "fact_sheet_contributors": "Fact sheet contributors"
   },
@@ -445,7 +445,7 @@ const project_construction_year = computed(() => {
     "compared_to": "comparé à",
     "credits": "crédits",
     "about_receiving_country": "Pays",
-    "about_receiving_city": "Ville",
+    "about_receiving_city": "ville",
     "about_receiving_date": "Date de début de construction",
     "fact_sheet_contributors": "Contributeurs de la fiche projet"
   }
