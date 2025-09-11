@@ -120,16 +120,13 @@ const { mobile } = useDisplay()
           <template #activator="{ props: activatorProps }">
             <v-btn
               v-bind="activatorProps"
-              :to="{ name: `list`, query: { view: 'list' } }"
-              :active="$route.query.view === 'list'"
-              :icon="mdiListBox"
+              :to="{ name: `home` }"
+              :icon="mdiMapOutline"
               class="mr-3"
-              :title="$t('list')"
+              :title="$t('map')"
             ></v-btn>
           </template>
-          <template #default>
-            {{ $t('list') }}
-          </template>
+          <span>{{ $t('map') }} </span>
         </v-tooltip>
         <v-tooltip location="bottom">
           <template #activator="{ props: activatorProps }">
@@ -144,18 +141,20 @@ const { mobile } = useDisplay()
           </template>
           <span>{{ $t('grid') }} </span>
         </v-tooltip>
-
         <v-tooltip location="bottom">
           <template #activator="{ props: activatorProps }">
             <v-btn
               v-bind="activatorProps"
-              :to="{ name: `home` }"
-              :icon="mdiMapOutline"
+              :to="{ name: `list`, query: { view: 'list' } }"
+              :active="$route.query.view === 'list'"
+              :icon="mdiListBox"
               class="mr-3"
-              :title="$t('map')"
+              :title="$t('list')"
             ></v-btn>
           </template>
-          <span>{{ $t('map') }} </span>
+          <template #default>
+            {{ $t('list') }}
+          </template>
         </v-tooltip>
       </div>
       <v-tooltip location="bottom">
