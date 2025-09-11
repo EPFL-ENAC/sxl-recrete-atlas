@@ -1,5 +1,5 @@
 # Atlas of reused concrete projects
-An interactive database on concrete structural reuse in construction
+An interactive database on the structural reuse of concrete in construction
 
 ## Data source
 
