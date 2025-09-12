@@ -1,6 +1,7 @@
 import type { MapGeoJSONFeature, Map, GeoJSONSource, MapMouseEvent } from 'maplibre-gl'
 import type { ProjectLang } from '@/types/Project'
 import { from1920to512 } from './image'
+import { useUiStore } from '@/stores/ui'
 
 /**
  * Generates HTML content for map popups based on features
@@ -9,6 +10,7 @@ import { from1920to512 } from './image'
  * @param t - Translation function
  * @returns HTML string for the popup content
  */
+const uiStore = useUiStore()
 export function generatePopupHTML(
   features: MapGeoJSONFeature[],
   locale: ProjectLang,
@@ -18,10 +20,17 @@ export function generatePopupHTML(
   const isCluster = features.length > 1
   if (isCluster) {
     // Handle cluster features
-    return `<h3>${features.length} ${t('receiver_title', features.length)}</h3>`
-    // const pointCount = features[0]?.properties?.point_count
-
-    // return `<h3>${features[0]?.properties?.point_count_abbreviated} ${t('receiver_title', pointCount)}</h3>`
+    let result = `<h3>${features.length} ${t('receiver_title', features.length)}</h3>`
+    // is maxZoom ?
+    const map = uiStore.getMap()
+    if (map && map.getZoom() < (map.getMaxZoom() || 22)) {
+      result += `<p>${t('zoom_in_for_details')}</p>`
+      return result
+    } else {
+      result += `<p>${t('click_for_details')}</p>`
+    }
+    result += '<ul style="padding-left:1em; max-height:200px; overflow-y:auto;">'
+    return result
   } else {
     // Handle individual project feature
 
@@ -43,6 +52,13 @@ export function generatePopupHTML(
     if (prop.image !== '') {
       result += `<img src="${from1920to512(prop.image)}" alt="${prop.image_credit}" style="width:100%;height:auto;"/>`
     }
+    if (prop[`description_${locale}`]) {
+      result += `<p>${prop[`description_${locale}`]}</p>`
+    }
+    if (prop.image_credit) {
+      result += `<p style="font-size:0.8em;color:#666;">${t('image_credit')}: ${prop.image_credit}</p>`
+    }
+    result += `<span style="color:#777; cursor:pointer; display:flex; justify-content:center;">Click for more info</span>`
     return result
   }
 }
@@ -135,17 +151,23 @@ export function generateClusterExplodedLayer(
 /**
  * Closes an exploded cluster visualization
  * @param map - The Map instance
+ * @returns boolean indicating whether a cluster was actually closed
  */
-export function closeClusterExplosion(map: Map): void {
+export function closeClusterExplosion(map: Map): boolean {
+  let clusterWasClosed = false
+
   // Remove existing exploded layers if they exist
   if (map.getLayer('exploded-cluster-lines')) {
     map.removeLayer('exploded-cluster-lines')
+    clusterWasClosed = true
   }
   if (map.getLayer('exploded-cluster-layer')) {
     map.removeLayer('exploded-cluster-layer')
+    clusterWasClosed = true
   }
   if (map.getSource('exploded-cluster-source')) {
     map.removeSource('exploded-cluster-source')
+    clusterWasClosed = true
   }
 
   // Restore the original cluster styling
@@ -154,6 +176,8 @@ export function closeClusterExplosion(map: Map): void {
   } catch (e) {
     console.warn('Could not restore cluster opacity:', e)
   }
+
+  return clusterWasClosed
 }
 
 /**
@@ -161,12 +185,13 @@ export function closeClusterExplosion(map: Map): void {
  * @param map - The Map instance
  * @param feature - The clicked cluster feature
  * @param event - The MapMouseEvent
+ * @returns The clusterId that was exploded
  */
 export function handleClusterExplosion(
   map: Map,
   feature: MapGeoJSONFeature,
   event: MapMouseEvent
-): void {
+): number {
   // Remove existing exploded layer if it exists
   closeClusterExplosion(map)
 
@@ -234,4 +259,6 @@ export function handleClusterExplosion(
       }
     })
   })
+
+  return clusterId
 }

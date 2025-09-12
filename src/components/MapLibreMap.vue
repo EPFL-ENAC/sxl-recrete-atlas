@@ -77,6 +77,7 @@ function getWindowBasedMaxZoom() {
 const boundingBoxPadding = 50
 const loading = ref(true)
 let map: Map | undefined = undefined
+let currentlyExplodedClusterId: number | null = null
 const isProjectDialogOpen = defineModel('isProjectDialogOpen', {
   type: Boolean,
   default: false
@@ -95,18 +96,42 @@ function onFeatureClick(e: MapMouseEvent & { features?: MapGeoJSONFeature[] }) {
     return
   }
   if (feature.properties?.cluster) {
+    const clusterId = feature.properties.cluster_id
+
     // Check if we're clicking on an already exploded cluster
-    // by checking if the exploded layers exist
     if (map!.getLayer('exploded-cluster-layer') && map!.getLayer('exploded-cluster-lines')) {
-      // Close the exploded cluster
-      closeClusterExplosion(map!)
-      return
+      // If we're clicking on the same cluster that's currently exploded, close it
+      if (currentlyExplodedClusterId === clusterId) {
+        // Close the exploded cluster
+        closeClusterExplosion(map!)
+        currentlyExplodedClusterId = null
+        return
+      } else {
+        // If we're clicking on a different cluster, close the current one and explode the new one
+        closeClusterExplosion(map!)
+        currentlyExplodedClusterId = null
+
+        // Proceed to explode the new cluster
+        const currentZoom = map!.getZoom()
+        if (currentZoom >= (props.maxZoom || getWindowBasedMaxZoom())) {
+          const newClusterId = handleClusterExplosion(map!, feature, e)
+          currentlyExplodedClusterId = newClusterId
+          return
+        }
+        console.log('Cluster clicked, zooming in')
+        map!.easeTo({
+          center: e.lngLat,
+          zoom: currentZoom + 4
+        })
+        return
+      }
     }
 
-    // Increase the zoom level by 2 when a cluster is clicked.
+    // If no cluster is currently exploded, explode the clicked cluster
     const currentZoom = map!.getZoom()
     if (currentZoom >= (props.maxZoom || getWindowBasedMaxZoom())) {
-      handleClusterExplosion(map!, feature, e)
+      const newClusterId = handleClusterExplosion(map!, feature, e)
+      currentlyExplodedClusterId = newClusterId
       return
     }
     console.log('Cluster clicked, zooming in')
@@ -143,6 +168,9 @@ onMounted(() => {
     renderWorldCopies: true, // repeat the world amp could be weird for giant screen sizes
     pixelRatio: window.devicePixelRatio || 1
   })
+
+  uiStore.setMap(map)
+  console.log('Map initialized with maxZoom:', finalMaxZoom)
 
   // Update maxZoom when window is resized
   window.addEventListener('resize', () => {
@@ -260,6 +288,9 @@ const computedData = computed<GeoJSON.GeoJSON | string>(() => {
         properties: {
           image: project.images?.[0] || '',
           image_credit: project.images_credits?.[0] || '',
+          [`description_${locale.value as ProjectLang}`]:
+            project[`description_${locale.value as ProjectLang}`],
+          id: project._id,
           main_concrete_type: project.main_concrete_type,
           [`name_${locale.value as ProjectLang}`]: project[`name_${locale.value as ProjectLang}`]
         }
