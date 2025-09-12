@@ -83,6 +83,36 @@ const project = defineModel('project', {
   default: undefined
 })
 
+// Existing event bindings remain unchanged.
+function onFeatureClick(e: MapMouseEvent & { features?: MapGeoJSONFeature[] }) {
+  const feature = e.features?.[0]
+  if (!feature) {
+    console.error('Feature is undefined')
+    return
+  }
+  if (feature.properties?.cluster) {
+    // Increase the zoom level by 2 when a cluster is clicked.
+    const currentZoom = map!.getZoom()
+    if (currentZoom >= (props.maxZoom || getWindowBasedMaxZoom())) {
+      handleClusterExplosion(map!, feature, e)
+      return
+    }
+    console.log('Cluster clicked, zooming in')
+    map!.easeTo({
+      center: e.lngLat,
+      zoom: currentZoom + 4
+    })
+    return
+  }
+  // Handle non-clustered feature click.
+  isProjectDialogOpen.value = true
+  project.value = projects.value.find(
+    (x: Project) =>
+      x[`name_${locale.value as ProjectLang}`] ===
+      feature.properties[`name_${locale.value as ProjectLang}`]
+  )
+}
+
 const lastCsvDate = import.meta.env.VITE_LAST_CSV_DATE || 'unknown'
 
 onMounted(() => {
@@ -307,30 +337,27 @@ function updateLayerData(newData: GeoJSON.GeoJSON | string): void {
   }
 }
 
-    const popups: Popup[] = []
+const popups: Popup[] = []
 
- function callbackOnLeaves(
-        error: Error | null | undefined,
-        features: MapGeoJSONFeature[]
-      ): void {
-        if (error) {
-          console.error('Error getting cluster leaves:', error)
-          return
-        }
-        if (map !== undefined) {
-          const a = new Popup({
-            closeButton: false,
-            closeOnClick: false,
-            anchor: 'bottom'
-          })
-            .setLngLat((features?.[0].geometry as GeoJSON.Point)?.coordinates as LngLatLike)
-            .setHTML(generatePopupHTML(features, locale.value as ProjectLang, t))
-            .addTo(map)
-          popups.push(a)
-          map.getCanvas().style.cursor = 'pointer'
-        }
-      }
-    function addProjects() {
+function callbackOnLeaves(error: Error | null | undefined, features: MapGeoJSONFeature[]): void {
+  if (error) {
+    console.error('Error getting cluster leaves:', error)
+    return
+  }
+  if (map !== undefined) {
+    const a = new Popup({
+      closeButton: false,
+      closeOnClick: false,
+      anchor: 'bottom'
+    })
+      .setLngLat((features?.[0].geometry as GeoJSON.Point)?.coordinates as LngLatLike)
+      .setHTML(generatePopupHTML(features, locale.value as ProjectLang, t))
+      .addTo(map)
+    popups.push(a)
+    map.getCanvas().style.cursor = 'pointer'
+  }
+}
+function addProjects() {
   if (map !== undefined) {
     // Calculate and set the dynamic maxZoom when the map is loaded
     if (props.maxZoom === undefined) {
@@ -434,41 +461,10 @@ function updateLayerData(newData: GeoJSON.GeoJSON | string): void {
     }
     animateClusters()
 
-    // Existing event bindings remain unchanged.
-    map.on(
-      'click',
-      'buildings-layer',
-      function (e: MapMouseEvent & { features?: MapGeoJSONFeature[] }) {
-        const feature = e.features?.[0]
-        if (!feature) {
-          console.error('Feature is undefined')
-          return
-        }
-        if (feature.properties?.cluster) {
-          // Increase the zoom level by 2 when a cluster is clicked.
-          const currentZoom = map!.getZoom()
-          if (currentZoom >= (props.maxZoom || getWindowBasedMaxZoom())) {
-            handleClusterExplosion(map!, feature, e);
-            return;
-          }
-          console.log('Cluster clicked, zooming in')
-          map!.easeTo({
-            center: e.lngLat,
-            zoom: currentZoom + 4
-          })
-          return
-        }
-        // Handle non-clustered feature click.
-        isProjectDialogOpen.value = true
-        project.value = projects.value.find(
-          (x: Project) =>
-            x[`name_${locale.value as ProjectLang}`] ===
-            feature.properties[`name_${locale.value as ProjectLang}`]
-        )
-      }
-    )
+    map.on('click', 'buildings-layer', onFeatureClick)
 
-   
+    map.on('click', 'exploded-cluster-layer', onFeatureClick)
+
     map.on('mouseenter', 'buildings-layer', async function (e) {
       const property = e.features?.[0].properties
       if (property?.cluster && map) {
@@ -486,7 +482,7 @@ function updateLayerData(newData: GeoJSON.GeoJSON | string): void {
         callbackOnLeaves(null, e.features as MapGeoJSONFeature[])
       }
     })
- map.on('mouseleave', 'buildings-layer', function () {
+    map.on('mouseleave', 'buildings-layer', function () {
       if (map !== undefined) {
         popups.forEach((p) => p.remove())
         map.getCanvas().style.cursor = ''
@@ -495,13 +491,12 @@ function updateLayerData(newData: GeoJSON.GeoJSON | string): void {
     map.on('mouseenter', 'exploded-cluster-layer', async function (e) {
       callbackOnLeaves(null, e.features as MapGeoJSONFeature[])
     })
- map.on('mouseleave', 'exploded-cluster-layer', function () {
+    map.on('mouseleave', 'exploded-cluster-layer', function () {
       if (map !== undefined) {
         popups.forEach((p) => p.remove())
         map.getCanvas().style.cursor = ''
       }
     })
-   
   }
 }
 </script>
