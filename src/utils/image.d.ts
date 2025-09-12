@@ -7,3 +7,4 @@
  */
 export declare function toWebp512(imagePath: string | null | undefined): string
 export declare function toWebp1920(imagePath: string | null | undefined): string
+export declare function from1920to512(imagePath: string | null | undefined): string
