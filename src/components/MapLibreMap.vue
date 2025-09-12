@@ -166,9 +166,9 @@ const effectiveCircleRadius = [
   2,
   9,
   4,
-  15,
-  10,
-  30
+  8,
+  9,
+  12
 ]
 const buildingPaint: any = {
   'circle-radius': effectiveCircleRadius,
@@ -313,11 +313,12 @@ function addProjects() {
       map.setMaxZoom(dynamicMaxZoom)
     }
 
+    // cluster max-zoom is 7, so we can see clusters up to zoom level 7
     map.addSource('buildings', {
       type: 'geojson',
       cluster: true,
-      clusterMaxZoom: 4, // Max zoom to cluster points on
-      clusterRadius: 20, // Radius of each cluster when clustering poi
+      clusterMaxZoom: getWindowBasedMaxZoom(), // Max zoom to cluster points on
+      clusterRadius: 13, // Radius of each cluster when clustering poi
       data: computedData.value
     })
     const fitBoundsMaxZoom = props.maxZoom !== undefined ? props.maxZoom : getWindowBasedMaxZoom()
@@ -339,14 +340,14 @@ function addProjects() {
     // The inner circle represents pre‑cast and the outer ring (stroke) represents cast‑in‑place.
     // Change to doughnut style only if cluster count >= 2.
     // (You could further use feature properties if available to compute proportions.)
-    const innerRatio = 0.7 // Inner circle is 60% of the total outer radius.
-    const scaleFactor = 1.3 // Ripple scale factor.
-    const period = 5000 // 4 seconds period.
+    const innerRatio = 0.9 // Inner circle is 60% of the total outer radius.
+    const scaleFactor = 1 // Ripple scale factor.
+    const period = 2000 // 2 seconds period.
 
     const innerRatio5 = 5 * innerRatio
-    const innerRatio9 = 9 * innerRatio
-    const innerRatio15 = 15 * innerRatio
-    const innerRatio30 = 30 * innerRatio
+    const innerRatio9 = 8 * innerRatio
+    const innerRatio15 = 9 * innerRatio
+    const innerRatio30 = 10 * innerRatio
 
     // Inner circle layer (pre‑cast, lighter red).
     map.addLayer({
@@ -397,6 +398,8 @@ function addProjects() {
         4,
         innerRatio15 * (1 + (scaleFactor - 1) * rippleFactor),
         10,
+        innerRatio30 * (1 + (scaleFactor - 1) * rippleFactor),
+        50,
         innerRatio30 * (1 + (scaleFactor - 1) * rippleFactor)
       ]
 
