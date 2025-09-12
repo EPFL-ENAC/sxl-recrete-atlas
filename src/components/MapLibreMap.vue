@@ -83,6 +83,19 @@ const isProjectDialogOpen = defineModel('isProjectDialogOpen', {
   default: false
 })
 
+// Watch for dialog state changes to enable/disable map scroll zoom
+watch(isProjectDialogOpen, (newVal) => {
+  if (map) {
+    if (newVal) {
+      // Dialog opened - disable map scroll zoom
+      map.scrollZoom.disable()
+    } else {
+      // Dialog closed - enable map scroll zoom
+      map.scrollZoom.enable()
+    }
+  }
+})
+
 const project = defineModel('project', {
   type: Object,
   default: undefined
