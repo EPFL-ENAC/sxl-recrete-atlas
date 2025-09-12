@@ -47,14 +47,13 @@ export default createI18n({
       ...en,
       ...enKeys,
       countryFn: (ctx: MessageContext) => {
-        if (ctx.list === undefined || ctx.list.length === 0 ||
-          typeof ctx.list?.(0) !== 'string'
-        ) return ''
+        if (ctx.list === undefined || ctx.list.length === 0 || typeof ctx.list?.(0) !== 'string')
+          return ''
         try {
-          const region = ctx.list?.(0)  as string
+          const region = ctx.list?.(0) as string
           return regionOfEn.of(region)
         } catch (error) {
-          return ctx.list?.(0) as string; // Fallback to the original region code if an error occurs
+          return ctx.list?.(0) as string // Fallback to the original region code if an error occurs
         }
       }
     },
@@ -63,9 +62,8 @@ export default createI18n({
       ...fr,
       ...frKeys,
       countryFn: (ctx: MessageContext) => {
-        if (ctx.list === undefined || ctx.list.length === 0 ||
-          typeof ctx.list?.(0) !== 'string'
-        ) return ''
+        if (ctx.list === undefined || ctx.list.length === 0 || typeof ctx.list?.(0) !== 'string')
+          return ''
         const region = ctx.list?.(0) as string
         return regionOfFr.of(region)
       }

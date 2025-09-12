@@ -21,8 +21,21 @@
         {{ item[`description_${locale as ProjectLang}`] }}
       </span>
     </v-card-text>
-    <v-card-text v-else class="d-flex justify-center align-center text-align-center"
-      style="transform: translateY(-6px) translateX(67px) rotate(-25deg); opacity: 0.1; font-size: 1.8rem; height: 130px; width: 200px; border: 2px dashed; border-radius: 12px; text-transform: uppercase; font-weight: bold;">
+    <v-card-text
+      v-else
+      class="d-flex justify-center align-center text-align-center"
+      style="
+        transform: translateY(-6px) translateX(67px) rotate(-25deg);
+        opacity: 0.1;
+        font-size: 1.8rem;
+        height: 130px;
+        width: 200px;
+        border: 2px dashed;
+        border-radius: 12px;
+        text-transform: uppercase;
+        font-weight: bold;
+      "
+    >
       <span>
         {{ $t('No description available') }}
       </span>
