@@ -22,7 +22,11 @@ import { storeToRefs } from 'pinia'
 import { useUiStore } from '@/stores/ui'
 
 import { useProjectsStore } from '@/stores/projects'
-import { generatePopupHTML, handleClusterExplosion } from '@/utils/popupUtils'
+import {
+  generatePopupHTML,
+  handleClusterExplosion,
+  closeClusterExplosion
+} from '@/utils/popupUtils'
 import type { Project, ProjectLang } from '@/types/Project'
 
 const projects = storeToRefs(useProjectsStore()).projects
@@ -91,6 +95,14 @@ function onFeatureClick(e: MapMouseEvent & { features?: MapGeoJSONFeature[] }) {
     return
   }
   if (feature.properties?.cluster) {
+    // Check if we're clicking on an already exploded cluster
+    // by checking if the exploded layers exist
+    if (map!.getLayer('exploded-cluster-layer') && map!.getLayer('exploded-cluster-lines')) {
+      // Close the exploded cluster
+      closeClusterExplosion(map!)
+      return
+    }
+
     // Increase the zoom level by 2 when a cluster is clicked.
     const currentZoom = map!.getZoom()
     if (currentZoom >= (props.maxZoom || getWindowBasedMaxZoom())) {
