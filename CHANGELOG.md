@@ -1,5 +1,47 @@
 # Changelog
 
+## [1.9.0](https://github.com/EPFL-ENAC/sxl-recrete-atlas/compare/v1.8.0...v1.9.0) (2025-09-12)
+
+
+### Features
+
+* **about:** add en about page only with images [#138](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/138) ([26c98ac](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/26c98acc087be4bba8b2301a4f6dafb9a10e3ec9))
+* add bounce to button drawer closes [#90](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/90) ([46a279d](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/46a279d707ecf5cf5df8e90e136f612789eb6c50))
+* **cluster:** refactor popup and add image for project ([9618125](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/96181259b1c25d8024afd70e87d74751fc3db7b1))
+* **clusters:** add click handle on cluster exploded leaf ([5cb23e9](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/5cb23e99155f9c4c6622b198ee0ea0a03b78ff6c))
+* **clusters:** add detail for cluster node [#123](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/123) ([a61cab4](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/a61cab44b2e54c5c4d661f811adec1458d1872ae))
+* **clusters:** add popup cluster exploded ([f8b0b47](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/f8b0b47a01c00a1940393c40cb937b2b30053cf8))
+* **clusters:** exploding cluster wip ([fd79254](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/fd79254ab5af76625f3c652ea4180ac4cba04901))
+* **clusters:** play with radius and scale factor to avoid too big clusters ([d8544c0](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/d8544c080d38732807e7bd5935bf5ad9e4eadcde))
+* **clusters:** unclick deselect already existing ([062c26d](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/062c26d572af8534b0cdb385074e51eb416e0de7))
+* **map:** change max zoom ([a9f1b60](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/a9f1b60bb558f4cfa3289bdcc47baf96f819d048))
+* **mobile:** full rewrite of project detail wip ([9e2f7f4](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/9e2f7f45b78e06800d45a3e149e69bb200bcf820))
+* update .env with last modified date of data.csv and improve project components [#103](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/103) [#118](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/118) ([499b6ba](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/499b6ba7874fcf1c2bd62e4b97360ec21435e0b1))
+* **welcome:** update welcome box [#136](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/136) ([7a60496](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/7a604964bf37ae5e6691891898c436a6cad5e3f2))
+
+
+### Bug Fixes
+
+* **add-project:** add text for add project [#84](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/84) [#131](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/131) ([4458eed](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/4458eed2ca0d027e474fb595ccdb5046fa85eac6))
+* **detail:** center credits oon the line Closes [#135](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/135) ([b11e2f8](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/b11e2f82110eabefecc599f8fa9031ce6462253b))
+* **drawer:** not working drawer ([6ba607a](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/6ba607a8255ad1c0dede21c923ef2fe93e54dbf9))
+* ensure all cards maintain consistent height in grid layout [#140](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/140) ([0279205](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/027920542bb8f0a6fe0920430ee86d3f5b5c5765))
+* **layout:** reorder navbar icons [#130](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/130) ([52f8b41](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/52f8b4137852a5d121e64ee2b7b8c7b90b8ada6d))
+* **localization:** correct capitalization for receiving city label [#142](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/142) ([6b9ab3a](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/6b9ab3a561a850702a70ee48da4d74163ec50dff))
+* **localization:** correct capitalization in app title ([debda9c](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/debda9c5e560a0c88e76d8a80b7218fdd5c0622e))
+* **map:** add fitBounds and boudingBox dynamic compute [#117](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/117) ([180eb3d](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/180eb3d8df687d4cbad47e74471e52cb080f7839))
+* **map:** trigger fitBounds on drawer change  [#117](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/117) ([d156de3](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/d156de3f56472c4985e056556b61abbeb4d4933f))
+* **mobile:** better column for mobile ([ce18181](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/ce18181b3736426cf1c598a890d2a7f860f19538))
+* **mobile:** better drawer and responsive project detail [#76](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/76) ([c41021f](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/c41021ffd2778bec00cc40d843215bafed552c05))
+* **project-details:** correct text i18n closes [#142](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/142) ([78f3fac](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/78f3fac3a37c9dd87c4bc06987390bc5210f3bb1))
+* **projects:** reduce random offset radius for project positioning ([debda9c](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/debda9c5e560a0c88e76d8a80b7218fdd5c0622e))
+* **responsive:** correct a lot of responsiveness issues ([f407d75](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/f407d7541ec4e7ad35f84dae0b6c467d635198b2))
+* simplify maxzoom calculation based on window width closes [#117](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/117) ([09e5ab7](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/09e5ab79e018a9d4d63069fa25a3dae474a2e640))
+* **text:** correct app subtitle text closes [#122](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/122) ([fe8248e](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/fe8248e3418559b37334083c1c7869e013b069cb))
+* **typo:** add i18n for clear-filters key ([57d4910](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/57d4910eb3816422510afced58ceb893da403e44))
+* **uster-school:** correct json parse bug and double quotes Closes [#143](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/143) ([db6ac5b](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/db6ac5b111789357cc695ca7e7e3156c32be4b83))
+* **welcome:** set cookie to 12h instead of 365d Closes [#139](https://github.com/EPFL-ENAC/sxl-recrete-atlas/issues/139) ([88e0680](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/88e0680e60a28707a7bea39c7e24a4d01cbacb00))
+
 ## [1.8.0](https://github.com/EPFL-ENAC/sxl-recrete-atlas/compare/v1.7.0...v1.8.0) (2025-07-08)
 
 
