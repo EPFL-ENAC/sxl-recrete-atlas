@@ -34,7 +34,7 @@ const props = defineProps({
     required: true
   }
 })
-// todo: use https://docs.sheetjs.com/docs/demos/local/clipboard/
+// use instead https://docs.sheetjs.com/docs/demos/local/clipboard/
 const source = ref(
   props.item?.reference
     .map((refe: string) => {

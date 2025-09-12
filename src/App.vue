@@ -10,7 +10,7 @@ import {
   mdiMapOutline,
   mdiCommentQuestionOutline,
   mdiClose,
-  mdiFilterRemoveOutline
+  mdiFilterOutline
 } from '@mdi/js'
 import data from '@/assets/data/data.json'
 import type { Project } from '@/types/Project'
@@ -80,7 +80,7 @@ function downloadFilteredDataBtn() {
   // const filtered = getCurrentFilteredData(); // however you store it
   downloadFilteredData(projects.value, locale.value).catch(handleError)
 }
-const { smAndDown, mdAndDown, smAndUp, mdAndUp, lgAndUp, xlAndUp } = useDisplay()
+const { smAndDown, smAndUp, mdAndUp, lgAndUp, xlAndUp } = useDisplay()
 
 const computedMainStyle = computed(() => {
   if (smAndUp.value) {
@@ -192,12 +192,12 @@ function closeDrawer() {
         <span>{{ $t('add_project') }} </span>
       </v-tooltip>
 
-      <v-tooltip v-if="smAndDown" :text="$t('clear-filters')" bottom>
+      <v-tooltip v-if="!smAndUp" :text="$t('filters')" bottom>
         <template #activator="{ props }">
           <v-btn
             class="filter-text"
             v-bind="props"
-            :icon="mdiFilterRemoveOutline"
+            :icon="mdiFilterOutline"
             size="smaller"
             @click="uiStore.toggleDrawerRail"
           />

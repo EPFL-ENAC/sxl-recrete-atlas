@@ -64,14 +64,15 @@ const { locale } = useI18n({ useScope: 'global' })
 
 // Function to calculate maxZoom based on window width (simplified approach)
 function getWindowBasedMaxZoom() {
-  const windowWidth = window.innerWidth
-  if (windowWidth < 1024) {
-    return 5.5
-  } else if (windowWidth <= 1440) {
-    return 6
-  } else {
-    return 7
-  }
+  return 7
+  // const windowWidth = window.innerWidth
+  // if (windowWidth < 1024) {
+  //   return 7
+  // } else if (windowWidth <= 1440) {
+  //   return 7
+  // } else {
+  //   return 7
+  // }
 }
 
 const boundingBoxPadding = 50
@@ -316,28 +317,38 @@ const computedData = computed<GeoJSON.GeoJSON | string>(() => {
 })
 
 const computedBoundingBox = computed(() => {
-  // Compute bounding box from all computedData features
-  const features = (computedData.value as GeoJSON.FeatureCollection).features
-  if (features.length === 0) {
+  try {
+    // Compute bounding box from all computedData features
+    const features = (computedData.value as GeoJSON.FeatureCollection).features
+    if (features.length === 0) {
+      return null
+    }
+    let minX =
+      features[0].geometry.type === 'Point' ? features[0].geometry.coordinates[0] : Infinity
+    let minY =
+      features[0].geometry.type === 'Point' ? features[0].geometry.coordinates[1] : Infinity
+    let maxX =
+      features[0].geometry.type === 'Point' ? features[0].geometry.coordinates[0] : -Infinity
+    let maxY =
+      features[0].geometry.type === 'Point' ? features[0].geometry.coordinates[1] : -Infinity
+    features.forEach((feature) => {
+      if (feature.geometry.type === 'Point') {
+        const [x, y] = feature.geometry.coordinates
+        if (x < minX) minX = x
+        if (y < minY) minY = y
+        if (x > maxX) maxX = x
+        if (y > maxY) maxY = y
+      }
+    })
+    return [
+      [minX, minY],
+      [maxX, maxY]
+    ] as [[number, number], [number, number]]
+  } catch (error) {
+    console.error('Error computing bounding box:', error)
     return null
   }
-  let minX = features[0].geometry.type === 'Point' ? features[0].geometry.coordinates[0] : Infinity
-  let minY = features[0].geometry.type === 'Point' ? features[0].geometry.coordinates[1] : Infinity
-  let maxX = features[0].geometry.type === 'Point' ? features[0].geometry.coordinates[0] : -Infinity
-  let maxY = features[0].geometry.type === 'Point' ? features[0].geometry.coordinates[1] : -Infinity
-  features.forEach((feature) => {
-    if (feature.geometry.type === 'Point') {
-      const [x, y] = feature.geometry.coordinates
-      if (x < minX) minX = x
-      if (y < minY) minY = y
-      if (x > maxX) maxX = x
-      if (y > maxY) maxY = y
-    }
-  })
-  return [
-    [minX, minY],
-    [maxX, maxY]
-  ] as [[number, number], [number, number]]
+  // Compute bounding box from all computedData features
 })
 
 const { drawerRail } = storeToRefs(uiStore)
@@ -359,6 +370,11 @@ watch(drawerRail, debouncedDrawerRailHandler)
 watch(
   () => computedBoundingBox.value,
   () => {
+    if (computedData.value === undefined) {
+      console.error('computedData is undefined in projects watcher')
+
+      return
+    }
     updateLayerData(computedData.value)
   },
   { immediate: true }
@@ -367,6 +383,10 @@ watch(
 watch(
   () => projects,
   () => {
+    if (computedData.value === undefined) {
+      console.error('computedData is undefined in projects watcher')
+      return
+    }
     // all selected by default
     updateLayerData(computedData.value)
   },
@@ -426,7 +446,8 @@ function addProjects() {
     map.addSource('buildings', {
       type: 'geojson',
       cluster: true,
-      clusterMaxZoom: getWindowBasedMaxZoom(), // Max zoom to cluster points on
+      // small screens should have lower max zoom! and it fails
+      clusterMaxZoom: 7, // Max zoom to cluster points on
       clusterRadius: 13, // Radius of each cluster when clustering poi
       data: computedData.value
     })
