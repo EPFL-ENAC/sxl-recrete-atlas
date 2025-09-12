@@ -44,5 +44,7 @@
   "legend": "Legend",
   "unknown": "Unknown",
   "receiver_title": "project | projects",
-  "choose-your-lang": "Choose your language"
+  "choose-your-lang": "Choose your language",
+  "zoom_in_for_details": "Zoom in for details",
+  "click_for_details": "Click on marker for details"
 }
