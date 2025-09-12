@@ -49,27 +49,81 @@ export function generatePopupHTML(
 
 
 export function generateClusterExplodedLayer(features: MapGeoJSONFeature[], lngLat: maplibregl.LngLat) {
-  // Create a new GeoJSON feature collection for all features in the cluster
+  // Create arrays for point features and line features
+  const pointFeatures = [];
+  const lineFeatures = [];
+  
+  // Cluster center coordinates
+  const centerCoords = [lngLat.lng, lngLat.lat];
+  
+  // Process each feature
+  for (let index = 0; index < features.length; index++) {
+    const feat = features[index];
+    
+    // Clone the feature
+    const clonedFeature = JSON.parse(JSON.stringify(feat));
+    
+    // Calculate circular distribution
+    const count = features.length;
+    const angle = (2 * Math.PI * index) / count; // Evenly space points around circle
+    
+    // Base radius in pixels, scaled by number of points
+    // Using a logarithmic scale to prevent excessive spreading for large clusters
+    const baseRadius = 30;
+    const radius = baseRadius * Math.log(count + 1);
+    
+    // Simplified conversion from pixels to degrees
+    // At zoom level 7, roughly 1 degree = 10000 pixels (this is an approximation)
+    // We'll use a more conservative value to ensure visible separation
+    const degreesPerPixel = 0.003;
+    
+    // Calculate coordinate offsets
+    const deltaLng = radius * degreesPerPixel * Math.cos(angle);
+    const deltaLat = radius * degreesPerPixel * Math.sin(angle);
+    
+    // Calculate new coordinates
+    const newLng = lngLat.lng + deltaLng;
+    const newLat = lngLat.lat + deltaLat;
+    
+    // Handle coordinate wrapping for world copies
+    let finalLng = newLng;
+    while (Math.abs(lngLat.lng - finalLng) > 180) {
+      finalLng += lngLat.lng > finalLng ? 360 : -360;
+    }
+    
+    // Create point feature with new coordinates
+    const pointFeature = {
+      ...clonedFeature,
+      geometry: {
+        ...clonedFeature.geometry,
+        coordinates: [finalLng, newLat]
+      }
+    };
+    
+    // Create line feature connecting point to cluster center
+    const lineFeature = {
+      type: 'Feature',
+      properties: {
+        ...clonedFeature.properties,
+        isConnectionLine: true
+      },
+      geometry: {
+        type: 'LineString',
+        coordinates: [
+          [finalLng, newLat],  // Point position
+          centerCoords         // Cluster center
+        ]
+      }
+    };
+    
+    pointFeatures.push(pointFeature);
+    lineFeatures.push(lineFeature);
+  }
+  
+  // Combine all features into a single collection
   const clusterFeatureCollection: GeoJSON.FeatureCollection = {
     type: 'FeatureCollection',
-    features: features.map((feat) => {
-      // Clone the feature
-      const clonedFeature = JSON.parse(JSON.stringify(feat));
-      
-      // Handle coordinate wrapping for world copies
-      const coordinates = (clonedFeature.geometry as GeoJSON.Point).coordinates.slice();
-      while (Math.abs(lngLat.lng - coordinates[0]) > 180) {
-        coordinates[0] += lngLat.lng > coordinates[0] ? 360 : -360;
-      }
-      
-      return {
-        ...clonedFeature,
-        geometry: {
-          ...clonedFeature.geometry,
-          coordinates
-        }
-      };
-    })
+    features: [...pointFeatures, ...lineFeatures]
   };
 
   // Return the GeoJSON data
@@ -88,11 +142,22 @@ export function handleClusterExplosion(
   event: MapMouseEvent
 ): void {
   // Remove existing exploded layer if it exists
+  if (map.getLayer('exploded-cluster-lines')) {
+    map.removeLayer('exploded-cluster-lines');
+  }
   if (map.getLayer('exploded-cluster-layer')) {
     map.removeLayer('exploded-cluster-layer');
   }
   if (map.getSource('exploded-cluster-source')) {
     map.removeSource('exploded-cluster-source');
+  }
+
+  // Dim the selected cluster by reducing its opacity
+  // We'll store the original opacity to restore it later if needed
+  try {
+    map.setPaintProperty('clusters-inner', 'circle-opacity', 0.3);
+  } catch (e) {
+    console.warn('Could not adjust cluster opacity:', e);
   }
 
   // Get features in the cluster
@@ -121,15 +186,31 @@ export function handleClusterExplosion(
       // Generate and add the exploded layer
       const explodedGeoJson = generateClusterExplodedLayer(features, event.lngLat);
 
-      // Add source and layer to map
+      // Add source and layers to map
       map.addSource('exploded-cluster-source', {
         type: 'geojson',
         data: explodedGeoJson
       });
+      
+      // Add line layer for connections (rendered first so points appear on top)
+      map.addLayer({
+        id: 'exploded-cluster-lines',
+        type: 'line',
+        source: 'exploded-cluster-source',
+        filter: ['==', 'isConnectionLine', true],
+        paint: {
+          'line-color': '#333',
+          'line-width': 1,
+          'line-dasharray': [2, 2]
+        }
+      });
+      
+      // Add circle layer for exploded points
       map.addLayer({
         id: 'exploded-cluster-layer',
         type: 'circle',
         source: 'exploded-cluster-source',
+        filter: ['!=', 'isConnectionLine', true],
         paint: {
           'circle-radius': 8,
           'circle-color': '#ff3333',
