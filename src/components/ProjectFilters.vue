@@ -14,7 +14,7 @@ import keys from '@/assets/data/keys.json'
 import data from '@/assets/data/data.json'
 
 const { t, locale } = useI18n({ useScope: 'global' })
-const { mobile, width } = useDisplay()
+const { mobile } = useDisplay()
 
 const uiStore = useUiStore()
 const { drawerRail } = storeToRefs(uiStore)
@@ -178,18 +178,27 @@ watch(
   }
 )
 
-const drawer = ref(false)
+const drawer = ref(true)
 
-
-const { smAndUp, mdAndUp, smAndDown, mdAndDown } = useDisplay()
+const { smAndUp } = useDisplay()
 </script>
 
 <template>
+  <!-- !smAndUp -->
   <v-navigation-drawer
     v-model="drawer"
-    :rail="drawerRail"
-    :width="drawerRail ? 64 : 400"
+    :permanent="smAndUp"
+    :temporary="!smAndUp"
+    :style="{
+      width: !smAndUp ? (!drawerRail ? '100%' : '1px') : !drawerRail ? '400px' : '64px',
+      height: `calc(100vh - ${defaultAppHeaderHeight})`,
+      top: defaultAppHeaderHeight,
+      transform: !smAndUp ? 'none' : 'translateX(0)',
+      zIndex: !smAndUp ? 1200 : 1000
+    }"
     class="permanent-drawer"
+    app
+    :rail="drawerRail"
     @click="setDrawerRail(false)"
   >
     <v-list
