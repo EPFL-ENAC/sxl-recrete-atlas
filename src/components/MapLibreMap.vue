@@ -22,7 +22,7 @@ import { storeToRefs } from 'pinia'
 import { useUiStore } from '@/stores/ui'
 
 import { useProjectsStore } from '@/stores/projects'
-import { generatePopupHTML } from '@/utils/popupUtils'
+import { generatePopupHTML, handleClusterExplosion } from '@/utils/popupUtils'
 import type { Project, ProjectLang } from '@/types/Project'
 
 const projects = storeToRefs(useProjectsStore()).projects
@@ -424,6 +424,11 @@ function addProjects() {
         if (feature.properties?.cluster) {
           // Increase the zoom level by 2 when a cluster is clicked.
           const currentZoom = map!.getZoom()
+          if (currentZoom >= (props.maxZoom || getWindowBasedMaxZoom())) {
+            handleClusterExplosion(map!, feature, e);
+            return;
+          }
+          console.log('Cluster clicked, zooming in')
           map!.easeTo({
             center: e.lngLat,
             zoom: currentZoom + 4
