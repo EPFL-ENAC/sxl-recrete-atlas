@@ -14,7 +14,7 @@ import keys from '@/assets/data/keys.json'
 import data from '@/assets/data/data.json'
 
 const { t, locale } = useI18n({ useScope: 'global' })
-const { mobile, width } = useDisplay()
+const { mobile } = useDisplay()
 
 const uiStore = useUiStore()
 const { drawerRail } = storeToRefs(uiStore)
@@ -151,23 +151,22 @@ const filtersActivated = computed<FilterActivated>(() => {
   )
 })
 
-const drawerStyle = computed(() => {
-  // if < 400px mobile, use 100vw, otherwise use 400px
-  return {
-    width: mobile.value
-      ? !drawerRail.value
-        ? width.value < 400
-          ? '100vw'
-          : '400px'
-        : '64px'
-      : !drawerRail.value
-        ? '400px'
-        : '64px',
-    height: `calc(100vh - ${defaultAppHeaderHeight})`,
-    top: defaultAppHeaderHeight,
-    zIndex: mobile.value ? 1200 : 1000
-  }
-})
+// const drawerStyle = computed(() => {
+//   // if < 400px mobile, use 100vw, otherwise use 400px
+//   return {
+//     width: mdAndDown.value
+//       ? !drawerRail.value
+//         ? '100%'
+//         : '1px'
+//       : !drawerRail.value
+//         ? '400px'
+//         : '64px',
+//     height: `calc(100vh - ${defaultAppHeaderHeight})`,
+//     top: defaultAppHeaderHeight,
+//     transform: mdAndDown.value ? 'none' : 'translateX(0)',
+//     zIndex: mdAndDown.value ? 1200 : 1000
+//   }
+// })
 
 watch(
   filters,
@@ -178,14 +177,28 @@ watch(
     deep: true
   }
 )
+
+const drawer = ref(true)
+
+const { smAndUp } = useDisplay()
 </script>
 
 <template>
+  <!-- !smAndUp -->
   <v-navigation-drawer
-    :rail="drawerRail"
-    permanent
-    :style="drawerStyle"
+    v-model="drawer"
+    :permanent="smAndUp"
+    :temporary="!smAndUp"
+    :style="{
+      width: !smAndUp ? (!drawerRail ? '100%' : '1px') : !drawerRail ? '400px' : '64px',
+      height: `calc(100vh - ${defaultAppHeaderHeight})`,
+      top: defaultAppHeaderHeight,
+      transform: !smAndUp ? 'none' : 'translateX(0)',
+      zIndex: !smAndUp ? 1200 : 1000
+    }"
     class="permanent-drawer"
+    app
+    :rail="drawerRail"
     @click="setDrawerRail(false)"
   >
     <v-list

@@ -9,7 +9,8 @@ import {
   mdiGrid,
   mdiMapOutline,
   mdiCommentQuestionOutline,
-  mdiClose
+  mdiClose,
+  mdiFilterOutline
 } from '@mdi/js'
 import data from '@/assets/data/data.json'
 import type { Project } from '@/types/Project'
@@ -88,7 +89,7 @@ const computedMainStyle = computed(() => {
       --v-layout-bottom: 0px;`
   }
   // no drawer on mobile
-  return `--v-layout-left: 0px;
+  return `--v-layout-left: ${!drawerRail.value ? '100%' : '0px'};
       --v-layout-right: 0px;
       --v-layout-bottom: 0px;`
 })
@@ -189,6 +190,18 @@ function closeDrawer() {
           ></v-btn>
         </template>
         <span>{{ $t('add_project') }} </span>
+      </v-tooltip>
+
+      <v-tooltip v-if="!smAndUp" :text="$t('filters')" bottom>
+        <template #activator="{ props }">
+          <v-btn
+            class="filter-text"
+            v-bind="props"
+            :icon="mdiFilterOutline"
+            size="smaller"
+            @click="uiStore.toggleDrawerRail"
+          />
+        </template>
       </v-tooltip>
       <v-tooltip v-if="smAndUp" location="bottom">
         <template #activator="{ props: activatorProps }">
