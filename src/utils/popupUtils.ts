@@ -1,4 +1,4 @@
-import type { MapGeoJSONFeature } from 'maplibre-gl'
+import type { MapGeoJSONFeature, Map, GeoJSONSource, MapMouseEvent } from 'maplibre-gl'
 import type { ProjectLang } from '@/types/Project'
 import { from1920to512 } from './image';
 
@@ -45,4 +45,99 @@ export function generatePopupHTML(
     }
     return result;
   }
+}
+
+
+export function generateClusterExplodedLayer(features: MapGeoJSONFeature[], lngLat: maplibregl.LngLat) {
+  // Create a new GeoJSON feature collection for all features in the cluster
+  const clusterFeatureCollection: GeoJSON.FeatureCollection = {
+    type: 'FeatureCollection',
+    features: features.map((feat) => {
+      // Clone the feature
+      const clonedFeature = JSON.parse(JSON.stringify(feat));
+      
+      // Handle coordinate wrapping for world copies
+      const coordinates = (clonedFeature.geometry as GeoJSON.Point).coordinates.slice();
+      while (Math.abs(lngLat.lng - coordinates[0]) > 180) {
+        coordinates[0] += lngLat.lng > coordinates[0] ? 360 : -360;
+      }
+      
+      return {
+        ...clonedFeature,
+        geometry: {
+          ...clonedFeature.geometry,
+          coordinates
+        }
+      };
+    })
+  };
+
+  // Return the GeoJSON data
+  return clusterFeatureCollection;
+}
+
+/**
+ * Handles the explosion of a cluster when clicked at max zoom level
+ * @param map - The Map instance
+ * @param feature - The clicked cluster feature
+ * @param event - The MapMouseEvent
+ */
+export function handleClusterExplosion(
+  map: Map,
+  feature: MapGeoJSONFeature,
+  event: MapMouseEvent
+): void {
+  // Remove existing exploded layer if it exists
+  if (map.getLayer('exploded-cluster-layer')) {
+    map.removeLayer('exploded-cluster-layer');
+  }
+  if (map.getSource('exploded-cluster-source')) {
+    map.removeSource('exploded-cluster-source');
+  }
+
+  // Get features in the cluster
+  const source = map.getSource('buildings') as GeoJSONSource;
+  const clusterId = feature.properties.cluster_id;
+
+  source.getClusterLeaves(
+    clusterId,
+    Infinity,
+    0,
+    (error, result) => {
+      if (error) {
+        console.error('Error getting cluster leaves:', error);
+        return;
+      }
+
+      // Check if result is valid
+      if (!result) {
+        console.error('No features returned from cluster');
+        return;
+      }
+
+      // Convert result to MapGeoJSONFeature[] for our function
+      const features = result as unknown as MapGeoJSONFeature[];
+
+      // Generate and add the exploded layer
+      const explodedGeoJson = generateClusterExplodedLayer(features, event.lngLat);
+
+      // Add source and layer to map
+      map.addSource('exploded-cluster-source', {
+        type: 'geojson',
+        data: explodedGeoJson
+      });
+      map.addLayer({
+        id: 'exploded-cluster-layer',
+        type: 'circle',
+        source: 'exploded-cluster-source',
+        paint: {
+          'circle-radius': 8,
+          'circle-color': '#ff3333',
+          'circle-opacity': 0.7,
+          'circle-stroke-color': '#fff',
+          'circle-stroke-width': 2
+        }
+      });
+    }
+  );
 }
