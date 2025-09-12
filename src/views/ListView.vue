@@ -108,7 +108,7 @@ const { smAndUp } = useDisplay()
 </script>
 
 <template>
-  <project-filters v-if="smAndUp" />
+  <project-filters />
   <v-container v-if="listMode === 'list'" class="fill-height pa-0 align-baseline" fluid>
     <v-alert v-if="data.length === 0" type="info" variant="tonal" class="mt-4">
       {{ $t('No elements selected') }}
