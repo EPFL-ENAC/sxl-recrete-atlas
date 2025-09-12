@@ -1,10 +1,10 @@
 <template>
   <v-card
     class="mx-auto"
-    min-width="80%"
-    max-width="80%"
-    max-height="80%"
-    min-height="80%"
+    min-width="100%"
+    max-width="100%"
+    max-height="100%"
+    min-height="100%"
     outlined
     tile
   >
@@ -16,9 +16,28 @@
     >
       <v-card-title>{{ item[`name_${locale as ProjectLang}`] }}</v-card-title>
     </v-img>
-    <v-card-text class="text-overflow">
+    <v-card-text v-if="item[`description_${locale as ProjectLang}`]" class="text-overflow">
       <span>
         {{ item[`description_${locale as ProjectLang}`] }}
+      </span>
+    </v-card-text>
+    <v-card-text
+      v-else
+      class="d-flex justify-center align-center text-align-center"
+      style="
+        transform: translateY(-6px) translateX(67px) rotate(-25deg);
+        opacity: 0.1;
+        font-size: 1.8rem;
+        height: 130px;
+        width: 200px;
+        border: 2px dashed;
+        border-radius: 12px;
+        text-transform: uppercase;
+        font-weight: bold;
+      "
+    >
+      <span>
+        {{ $t('No description available') }}
       </span>
     </v-card-text>
   </v-card>

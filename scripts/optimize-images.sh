@@ -6,9 +6,9 @@
 set -e
 
 IMG_DIR="public/images"
-QUALITY=80
+QUALITY=85
 
-find "$IMG_DIR" -type f \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' \) | while read -r img; do
+find "$IMG_DIR" -type f \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.JPG' \) | while read -r img; do
   base="${img%.*}"
   ext="${img##*.}"
   for size in 1920 512; do
@@ -16,7 +16,7 @@ find "$IMG_DIR" -type f \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' \
     # Only process if source is newer than output or output doesn't exist
     if [[ ! -f "$out_file" || "$img" -nt "$out_file" ]]; then
       echo "Converting $img to $out_file (max-width: ${size}px, quality: $QUALITY)"
-      magick "$img" -resize "${size}x" -quality $QUALITY "$out_file"
+      magick "$img" -auto-orient -resize "${size}x" -quality $QUALITY "$out_file"
     fi
   done
 done

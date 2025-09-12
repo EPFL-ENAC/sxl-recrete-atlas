@@ -9,7 +9,8 @@ import {
   mdiGrid,
   mdiMapOutline,
   mdiCommentQuestionOutline,
-  mdiClose
+  mdiClose,
+  mdiFilterOutline
 } from '@mdi/js'
 import data from '@/assets/data/data.json'
 import type { Project } from '@/types/Project'
@@ -38,7 +39,7 @@ const showWelcome = ref<boolean>(openWelcome.value)
 const welcomeOpened = computed<boolean>(() => openWelcome.value || showWelcome.value)
 
 function welcomeClosed() {
-  cookies.set('welcome', '1', '365d')
+  cookies.set('welcome', '1', '12h')
   showWelcome.value = false
 }
 
@@ -79,30 +80,49 @@ function downloadFilteredDataBtn() {
   // const filtered = getCurrentFilteredData(); // however you store it
   downloadFilteredData(projects.value, locale.value).catch(handleError)
 }
-const { mobile } = useDisplay()
+const { smAndDown, smAndUp, mdAndUp, lgAndUp, xlAndUp } = useDisplay()
 
+const computedMainStyle = computed(() => {
+  if (smAndUp.value) {
+    return `--v-layout-left: ${!drawerRail.value ? '400px' : '64px'};
+      --v-layout-right: 0px;
+      --v-layout-bottom: 0px;`
+  }
+  // no drawer on mobile
+  return `--v-layout-left: ${!drawerRail.value ? '100%' : '0px'};
+      --v-layout-right: 0px;
+      --v-layout-bottom: 0px;`
+})
+
+function closeDrawer() {
+  if (smAndUp.value && !drawerRail.value) {
+    uiStore.toggleDrawerRail()
+  }
+}
 </script>
 
 <template>
   <v-app>
     <v-app-bar flat :style="`height: ${defaultAppHeaderHeight}`" class="justify-center">
       <v-app-bar-title class="flex-1-1">
-        <router-link 
-          to="/" 
+        <router-link
+          to="/"
           class="home-link"
           :aria-label="$t('go_to_home')"
           @click="uiStore.resetMap()"
         >
-          <div class="text-h5">{{ $t('app_title') }}</div>
-          <div class="text-subtitle-2">{{ $t('app_subtitle') }}</div>
+          <div v-if="smAndDown" class="text-h5">{{ $t('app_short_title') }}</div>
+          <div v-if="mdAndUp" class="text-h5">{{ $t('app_title') }}</div>
+          <div v-if="lgAndUp" class="text-subtitle-2">{{ $t('app_subtitle') }}</div>
         </router-link>
       </v-app-bar-title>
-      <div v-if="!mobile" class="flex-shrink-1 flex-grow-1" >
+      <div v-if="mdAndUp" class="flex-shrink-1 flex-grow-1">
         <div class="text-h5">
-          {{ $t('app_wip_title') }}<v-icon class="ml-5"> {{ mdiWrench }}</v-icon>
+          <span v-if="lgAndUp">{{ $t('app_wip_title') }}</span>
+          <v-icon class="ml-5"> {{ mdiWrench }}</v-icon>
         </div>
-        <div class="text-subtitle-2">
-          {{ $t('app_wip_subtitle') }}
+        <div v-if="xlAndUp" class="text-subtitle-2">
+          <span>{{ $t('app_wip_subtitle') }}</span>
         </div>
       </div>
       <!--
@@ -121,16 +141,13 @@ const { mobile } = useDisplay()
           <template #activator="{ props: activatorProps }">
             <v-btn
               v-bind="activatorProps"
-              :to="{ name: `list`, query: { view: 'list' } }"
-              :active="$route.query.view === 'list'"
-              :icon="mdiListBox"
-              class="mr-3"
-              :title="$t('list')"
+              :to="{ name: `home` }"
+              :icon="mdiMapOutline"
+              :class="{ 'mr-3': smAndUp }"
+              :title="$t('map')"
             ></v-btn>
           </template>
-          <template #default>
-            {{ $t('list') }}
-          </template>
+          <span>{{ $t('map') }} </span>
         </v-tooltip>
         <v-tooltip location="bottom">
           <template #activator="{ props: activatorProps }">
@@ -139,24 +156,26 @@ const { mobile } = useDisplay()
               :to="{ name: `list`, query: { view: 'grid' } }"
               :active="$route.query.view === 'grid'"
               :icon="mdiGrid"
-              class="mr-3"
+              :class="{ 'mr-3': smAndUp }"
               :title="$t('grid')"
             ></v-btn>
           </template>
           <span>{{ $t('grid') }} </span>
         </v-tooltip>
-
-        <v-tooltip location="bottom">
+        <v-tooltip v-if="smAndUp" location="bottom">
           <template #activator="{ props: activatorProps }">
             <v-btn
               v-bind="activatorProps"
-              :to="{ name: `home` }"
-              :icon="mdiMapOutline"
-              class="mr-3"
-              :title="$t('map')"
+              :to="{ name: `list`, query: { view: 'list' } }"
+              :active="$route.query.view === 'list'"
+              :icon="mdiListBox"
+              :class="{ 'mr-3': smAndUp }"
+              :title="$t('list')"
             ></v-btn>
           </template>
-          <span>{{ $t('map') }} </span>
+          <template #default>
+            {{ $t('list') }}
+          </template>
         </v-tooltip>
       </div>
       <v-tooltip location="bottom">
@@ -165,20 +184,32 @@ const { mobile } = useDisplay()
             size="default"
             v-bind="activatorProps"
             :icon="mdiPlusBox"
-            class="mr-3"
+            :class="{ 'mr-3': smAndUp }"
             :title="$t('add_project')"
             @click="addProjectOpen()"
           ></v-btn>
         </template>
         <span>{{ $t('add_project') }} </span>
       </v-tooltip>
-      <v-tooltip location="bottom">
+
+      <v-tooltip v-if="!smAndUp" :text="$t('filters')" bottom>
+        <template #activator="{ props }">
+          <v-btn
+            class="filter-text"
+            v-bind="props"
+            :icon="mdiFilterOutline"
+            size="smaller"
+            @click="uiStore.toggleDrawerRail"
+          />
+        </template>
+      </v-tooltip>
+      <v-tooltip v-if="smAndUp" location="bottom">
         <template #activator="{ props: activatorProps }">
           <v-btn
             size="default"
             v-bind="activatorProps"
             :icon="mdiDownload"
-            class="mr-3"
+            :class="{ 'mr-3': smAndUp }"
             :title="$t('download_data_filtered')"
             @click="downloadDataOpen()"
           ></v-btn>
@@ -192,8 +223,9 @@ const { mobile } = useDisplay()
             v-bind="activatorProps"
             to="/about"
             :icon="mdiInformation"
-            class="mr-3"
+            :class="{ 'mr-3': smAndUp }"
             :title="$t('about')"
+            @click="closeDrawer()"
           ></v-btn>
         </template>
         <span>{{ $t('about') }} </span>
@@ -205,26 +237,22 @@ const { mobile } = useDisplay()
             v-bind="activatorProps"
             to="/faq"
             :icon="mdiCommentQuestionOutline"
-            class="mr-3"
+            :class="{ 'mr-3': smAndUp }"
             :title="$t('faq')"
+            @click="closeDrawer()"
           ></v-btn>
         </template>
         <span>{{ $t('faq') }} </span>
       </v-tooltip>
       <!-- <LocaleSelector class="mr-5" /> -->
 
-      <template #append>
+      <template v-if="smAndUp" #append>
         <a href="https://www.epfl.ch/labs/sxl/" target="_blank" class="pl-10 pr-5">
           <v-img :src="epflLogoUrl" width="100px" />
         </a>
       </template>
     </v-app-bar>
-    <v-main
-      class="main-content"
-      :style="`--v-layout-left: ${!drawerRail ? 'max(450px, 25vw)' : '64px'};
-      --v-layout-right: 0px;
-      --v-layout-bottom: 0px;`"
-    >
+    <v-main class="main-content" :style="computedMainStyle">
       <RouterView />
       <markdown-dialog
         :button-text="$t('close')"
@@ -290,17 +318,27 @@ const { mobile } = useDisplay()
   padding-right: 1rem;
 }
 
+@media screen and (max-width: 600px) {
+  // smAndUp is false
+  // hide the text in the buttons
+  .main-group-btn {
+    border-right: none;
+    margin-right: 0rem;
+    padding-right: 0rem;
+  }
+}
+
 .home-link {
   text-decoration: none;
   color: inherit;
   cursor: pointer;
   display: block;
-  
+
   &:hover {
     background-color: rgba(0, 0, 0, 0.04);
     transition: background-color 0.2s ease;
   }
-  
+
   &:focus {
     outline: 2px solid currentColor;
     outline-offset: 2px;

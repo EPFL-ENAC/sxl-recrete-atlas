@@ -16,14 +16,22 @@ import {
   type StyleSpecification
 } from 'maplibre-gl'
 import { onMounted, ref, watch, defineModel, computed } from 'vue'
+import { useDebounceFn } from '@vueuse/core'
 import { useI18n } from 'vue-i18n'
 import { storeToRefs } from 'pinia'
+import { useUiStore } from '@/stores/ui'
 
 import { useProjectsStore } from '@/stores/projects'
+import {
+  generatePopupHTML,
+  handleClusterExplosion,
+  closeClusterExplosion
+} from '@/utils/popupUtils'
 import type { Project, ProjectLang } from '@/types/Project'
 
 const projects = storeToRefs(useProjectsStore()).projects
 const { t } = useI18n({ useScope: 'global' })
+const uiStore = useUiStore()
 
 defineExpose({
   update
@@ -44,7 +52,7 @@ const props = withDefaults(
     zoom: 4,
     aspectRatio: undefined,
     minZoom: 2,
-    maxZoom: 10,
+    maxZoom: undefined, // Will be calculated dynamically
     popupLayerIds: () => [],
     areaLayerIds: () => [],
     scales: () => [],
@@ -54,11 +62,39 @@ const props = withDefaults(
 
 const { locale } = useI18n({ useScope: 'global' })
 
+// Function to calculate maxZoom based on window width (simplified approach)
+function getWindowBasedMaxZoom() {
+  return 7
+  // const windowWidth = window.innerWidth
+  // if (windowWidth < 1024) {
+  //   return 7
+  // } else if (windowWidth <= 1440) {
+  //   return 7
+  // } else {
+  //   return 7
+  // }
+}
+
+const boundingBoxPadding = 50
 const loading = ref(true)
 let map: Map | undefined = undefined
+let currentlyExplodedClusterId: number | null = null
 const isProjectDialogOpen = defineModel('isProjectDialogOpen', {
   type: Boolean,
   default: false
+})
+
+// Watch for dialog state changes to enable/disable map scroll zoom
+watch(isProjectDialogOpen, (newVal) => {
+  if (map) {
+    if (newVal) {
+      // Dialog opened - disable map scroll zoom
+      map.scrollZoom.disable()
+    } else {
+      // Dialog closed - enable map scroll zoom
+      map.scrollZoom.enable()
+    }
+  }
 })
 
 const project = defineModel('project', {
@@ -66,24 +102,103 @@ const project = defineModel('project', {
   default: undefined
 })
 
+// Existing event bindings remain unchanged.
+function onFeatureClick(e: MapMouseEvent & { features?: MapGeoJSONFeature[] }) {
+  const feature = e.features?.[0]
+  if (!feature) {
+    console.error('Feature is undefined')
+    return
+  }
+  if (feature.properties?.cluster) {
+    const clusterId = feature.properties.cluster_id
+
+    // Check if we're clicking on an already exploded cluster
+    if (map!.getLayer('exploded-cluster-layer') && map!.getLayer('exploded-cluster-lines')) {
+      // If we're clicking on the same cluster that's currently exploded, close it
+      if (currentlyExplodedClusterId === clusterId) {
+        // Close the exploded cluster
+        closeClusterExplosion(map!)
+        currentlyExplodedClusterId = null
+        return
+      } else {
+        // If we're clicking on a different cluster, close the current one and explode the new one
+        closeClusterExplosion(map!)
+        currentlyExplodedClusterId = null
+
+        // Proceed to explode the new cluster
+        const currentZoom = map!.getZoom()
+        if (currentZoom >= (props.maxZoom || getWindowBasedMaxZoom())) {
+          const newClusterId = handleClusterExplosion(map!, feature, e)
+          currentlyExplodedClusterId = newClusterId
+          return
+        }
+        console.log('Cluster clicked, zooming in')
+        map!.easeTo({
+          center: e.lngLat,
+          zoom: currentZoom + 4
+        })
+        return
+      }
+    }
+
+    // If no cluster is currently exploded, explode the clicked cluster
+    const currentZoom = map!.getZoom()
+    if (currentZoom >= (props.maxZoom || getWindowBasedMaxZoom())) {
+      const newClusterId = handleClusterExplosion(map!, feature, e)
+      currentlyExplodedClusterId = newClusterId
+      return
+    }
+    console.log('Cluster clicked, zooming in')
+    map!.easeTo({
+      center: e.lngLat,
+      zoom: currentZoom + 4
+    })
+    return
+  }
+  // Handle non-clustered feature click.
+  isProjectDialogOpen.value = true
+  project.value = projects.value.find(
+    (x: Project) =>
+      x[`name_${locale.value as ProjectLang}`] ===
+      feature.properties[`name_${locale.value as ProjectLang}`]
+  )
+}
+
+const lastCsvDate = import.meta.env.VITE_LAST_CSV_DATE || 'unknown'
+
 onMounted(() => {
+  // Calculate dynamic maxZoom only if not provided via props
+  const finalMaxZoom = props.maxZoom !== undefined ? props.maxZoom : getWindowBasedMaxZoom()
+
   map = new Map({
     container: 'maplibre-map',
     style: props.styleSpec || '',
     center: props.center,
     zoom: props.zoom,
     minZoom: window.innerWidth > 1900 ? 3 : props.minZoom,
-    maxZoom: props.maxZoom,
+    maxZoom: finalMaxZoom,
     trackResize: true,
     attributionControl: false,
     renderWorldCopies: true, // repeat the world amp could be weird for giant screen sizes
     pixelRatio: window.devicePixelRatio || 1
   })
+
+  uiStore.setMap(map)
+  console.log('Map initialized with maxZoom:', finalMaxZoom)
+
+  // Update maxZoom when window is resized
+  window.addEventListener('resize', () => {
+    if (map && props.maxZoom === undefined) {
+      const newMaxZoom = getWindowBasedMaxZoom()
+      map.setMaxZoom(newMaxZoom)
+    }
+  })
   map.addControl(new NavigationControl({}))
+
   map.addControl(
     new AttributionControl({
       compact: false,
-      customAttribution: '© <a href="https://www.epfl.ch/labs/sxl/" target="_blank">SXL</a>'
+      customAttribution: `🔴 receiving project – Website Last updated : ${lastCsvDate} – © <a href="https://www.epfl.ch/labs/sxl/" target="_blank">SXL</a>`
     })
   )
   const positionControl = new DivControl({ id: 'map-position' })
@@ -136,9 +251,9 @@ const effectiveCircleRadius = [
   2,
   9,
   4,
-  15,
-  10,
-  30
+  8,
+  9,
+  12
 ]
 const buildingPaint: any = {
   'circle-radius': effectiveCircleRadius,
@@ -185,6 +300,11 @@ const computedData = computed<GeoJSON.GeoJSON | string>(() => {
           coordinates: newCoordinates
         },
         properties: {
+          image: project.images?.[0] || '',
+          image_credit: project.images_credits?.[0] || '',
+          [`description_${locale.value as ProjectLang}`]:
+            project[`description_${locale.value as ProjectLang}`],
+          id: project._id,
           main_concrete_type: project.main_concrete_type,
           [`name_${locale.value as ProjectLang}`]: project[`name_${locale.value as ProjectLang}`]
         }
@@ -196,9 +316,77 @@ const computedData = computed<GeoJSON.GeoJSON | string>(() => {
   } as GeoJSON.GeoJSON
 })
 
+const computedBoundingBox = computed(() => {
+  try {
+    // Compute bounding box from all computedData features
+    const features = (computedData.value as GeoJSON.FeatureCollection).features
+    if (features.length === 0) {
+      return null
+    }
+    let minX =
+      features[0].geometry.type === 'Point' ? features[0].geometry.coordinates[0] : Infinity
+    let minY =
+      features[0].geometry.type === 'Point' ? features[0].geometry.coordinates[1] : Infinity
+    let maxX =
+      features[0].geometry.type === 'Point' ? features[0].geometry.coordinates[0] : -Infinity
+    let maxY =
+      features[0].geometry.type === 'Point' ? features[0].geometry.coordinates[1] : -Infinity
+    features.forEach((feature) => {
+      if (feature.geometry.type === 'Point') {
+        const [x, y] = feature.geometry.coordinates
+        if (x < minX) minX = x
+        if (y < minY) minY = y
+        if (x > maxX) maxX = x
+        if (y > maxY) maxY = y
+      }
+    })
+    return [
+      [minX, minY],
+      [maxX, maxY]
+    ] as [[number, number], [number, number]]
+  } catch (error) {
+    console.error('Error computing bounding box:', error)
+    return null
+  }
+  // Compute bounding box from all computedData features
+})
+
+const { drawerRail } = storeToRefs(uiStore)
+
+const debouncedDrawerRailHandler = useDebounceFn(() => {
+  // Update the bounding box padding based on drawerRail state
+  if (map && computedBoundingBox.value) {
+    const fitBoundsMaxZoom = props.maxZoom !== undefined ? props.maxZoom : getWindowBasedMaxZoom()
+    // const padding = drawerRail.value ? 300 : 50
+    map.fitBounds(computedBoundingBox.value as [[number, number], [number, number]], {
+      padding: boundingBoxPadding,
+      maxZoom: fitBoundsMaxZoom
+    })
+  }
+}, 150)
+
+watch(drawerRail, debouncedDrawerRailHandler)
+
+watch(
+  () => computedBoundingBox.value,
+  () => {
+    if (computedData.value === undefined) {
+      console.error('computedData is undefined in projects watcher')
+
+      return
+    }
+    updateLayerData(computedData.value)
+  },
+  { immediate: true }
+)
+
 watch(
   () => projects,
   () => {
+    if (computedData.value === undefined) {
+      console.error('computedData is undefined in projects watcher')
+      return
+    }
     // all selected by default
     updateLayerData(computedData.value)
   },
@@ -216,17 +404,58 @@ function updateLayerData(newData: GeoJSON.GeoJSON | string): void {
   if (map !== undefined && newData !== undefined) {
     const source: GeoJSONSource = map.getSource('buildings') as GeoJSONSource
     source?.setData(newData)
+    const fitBoundsMaxZoom = props.maxZoom !== undefined ? props.maxZoom : getWindowBasedMaxZoom()
+    console.log('updateLayerData fitBounds called with maxZoom:', fitBoundsMaxZoom)
+    map.fitBounds(computedBoundingBox.value as [[number, number], [number, number]], {
+      padding: boundingBoxPadding,
+      maxZoom: fitBoundsMaxZoom
+    })
   }
 }
 
+const popups: Popup[] = []
+
+function callbackOnLeaves(error: Error | null | undefined, features: MapGeoJSONFeature[]): void {
+  if (error) {
+    console.error('Error getting cluster leaves:', error)
+    return
+  }
+  if (map !== undefined) {
+    const a = new Popup({
+      closeButton: false,
+      closeOnClick: false,
+      anchor: 'bottom'
+    })
+      .setLngLat((features?.[0].geometry as GeoJSON.Point)?.coordinates as LngLatLike)
+      .setHTML(generatePopupHTML(features, locale.value as ProjectLang, t))
+      .addTo(map)
+    popups.push(a)
+    map.getCanvas().style.cursor = 'pointer'
+  }
+}
 function addProjects() {
   if (map !== undefined) {
+    // Calculate and set the dynamic maxZoom when the map is loaded
+    if (props.maxZoom === undefined) {
+      const dynamicMaxZoom = getWindowBasedMaxZoom()
+      console.log('Setting dynamic maxZoom in addProjects:', dynamicMaxZoom)
+      map.setMaxZoom(dynamicMaxZoom)
+    }
+
+    // cluster max-zoom is 7, so we can see clusters up to zoom level 7
     map.addSource('buildings', {
       type: 'geojson',
       cluster: true,
-      clusterMaxZoom: 9, // Max zoom to cluster points on
-      clusterRadius: 20, // Radius of each cluster when clustering poi
+      // small screens should have lower max zoom! and it fails
+      clusterMaxZoom: 7, // Max zoom to cluster points on
+      clusterRadius: 13, // Radius of each cluster when clustering poi
       data: computedData.value
+    })
+    const fitBoundsMaxZoom = props.maxZoom !== undefined ? props.maxZoom : getWindowBasedMaxZoom()
+    console.log('addProjects fitBounds called with maxZoom:', fitBoundsMaxZoom)
+    map.fitBounds(computedBoundingBox.value as [[number, number], [number, number]], {
+      padding: boundingBoxPadding,
+      maxZoom: fitBoundsMaxZoom
     })
 
     // Base layer for single-project markers (existing)
@@ -241,14 +470,14 @@ function addProjects() {
     // The inner circle represents pre‑cast and the outer ring (stroke) represents cast‑in‑place.
     // Change to doughnut style only if cluster count >= 2.
     // (You could further use feature properties if available to compute proportions.)
-    const innerRatio = 0.7 // Inner circle is 60% of the total outer radius.
-    const scaleFactor = 1.3 // Ripple scale factor.
-    const period = 5000 // 4 seconds period.
+    const innerRatio = 0.9 // Inner circle is 60% of the total outer radius.
+    const scaleFactor = 1 // Ripple scale factor.
+    const period = 2000 // 2 seconds period.
 
     const innerRatio5 = 5 * innerRatio
-    const innerRatio9 = 9 * innerRatio
-    const innerRatio15 = 15 * innerRatio
-    const innerRatio30 = 30 * innerRatio
+    const innerRatio9 = 8 * innerRatio
+    const innerRatio15 = 9 * innerRatio
+    const innerRatio30 = 10 * innerRatio
 
     // Inner circle layer (pre‑cast, lighter red).
     map.addLayer({
@@ -299,6 +528,8 @@ function addProjects() {
         4,
         innerRatio15 * (1 + (scaleFactor - 1) * rippleFactor),
         10,
+        innerRatio30 * (1 + (scaleFactor - 1) * rippleFactor),
+        50,
         innerRatio30 * (1 + (scaleFactor - 1) * rippleFactor)
       ]
 
@@ -307,35 +538,10 @@ function addProjects() {
     }
     animateClusters()
 
-    // Existing event bindings remain unchanged.
-    map.on(
-      'click',
-      'buildings-layer',
-      function (e: MapMouseEvent & { features?: MapGeoJSONFeature[] }) {
-        const feature = e.features?.[0]
-        if (!feature) {
-          console.error('Feature is undefined')
-          return
-        }
-        if (feature.properties?.cluster) {
-          // Increase the zoom level by 2 when a cluster is clicked.
-          const currentZoom = map!.getZoom()
-          map!.easeTo({
-            center: e.lngLat,
-            zoom: currentZoom + 4
-          })
-          return
-        }
-        // Handle non-clustered feature click.
-        isProjectDialogOpen.value = true
-        project.value = projects.value.find(
-          (x: Project) =>
-            x[`name_${locale.value as ProjectLang}`] ===
-            feature.properties[`name_${locale.value as ProjectLang}`]
-        )
-      }
-    )
-    const popups: Popup[] = []
+    map.on('click', 'buildings-layer', onFeatureClick)
+
+    map.on('click', 'exploded-cluster-layer', onFeatureClick)
+
     map.on('mouseenter', 'buildings-layer', async function (e) {
       const property = e.features?.[0].properties
       if (property?.cluster && map) {
@@ -352,78 +558,17 @@ function addProjects() {
         // Handle non-clustered feature
         callbackOnLeaves(null, e.features as MapGeoJSONFeature[])
       }
-
-      function countConcreteTypes(
-        features: Array<{ properties: { main_concrete_type?: string[] } }>
-      ) {
-        let pc = 0
-        let cip = 0
-        for (const feature of features) {
-          const types = feature.properties.main_concrete_type
-          if (Array.isArray(types)) {
-            pc += types.filter((t) => t === 'PC').length
-            cip += types.filter((t) => t === 'CIP').length
-          }
-        }
-        return { PC: pc, CIP: cip }
-      }
-      function callbackOnLeaves(
-        error: Error | null | undefined,
-        features: MapGeoJSONFeature[]
-      ): void {
-        if (error) {
-          console.error('Error getting cluster leaves:', error)
-          return
-        }
-        console.log('Cluster leaves:', features)
-        if (map !== undefined) {
-          const a = new Popup({
-            closeButton: false,
-            closeOnClick: false,
-            anchor: 'bottom'
-          })
-            .setLngLat((e.features?.[0].geometry as GeoJSON.Point)?.coordinates as LngLatLike)
-            .setHTML(
-              (() => {
-                const property = e.features?.[0].properties
-                // Retrieve all leaves of cluster if it's a cluster
-                // const clusterId = property?.cluster_id
-                // const source = map.getSource('buildings') as GeoJSONSource
-                if (property?.cluster && map) {
-                  console.log('Cluster leaves:', features)
-                  const { PC, CIP } = countConcreteTypes(features)
-                  return `<h3>${property.point_count_abbreviated} ${t(
-                    'receiver_title',
-                    property.point_count_abbreviated
-                  )}</h3>
-                <!-- display PC and CIP counts 
-                <p>${t('PC')}: ${PC}</p>
-                <p>${t('CIP')}: ${CIP}</p>
-                <i class="text-sm">${t('click_to_zoom')}</i>-->`
-                } else {
-                  // Handle non-clustered feature
-                  const name = e.features?.[0].properties[`name_${locale.value as ProjectLang}`]
-                  const property = e.features?.[0].properties
-                  if (!name) {
-                    console.error('Name is undefined')
-                    return ''
-                  }
-                  return `<h3>${name}</h3>
-                  <!--<p>${t('main_concrete_type')}: ${JSON.parse(property?.main_concrete_type || [])
-                    .map((type: string) => t(type))
-                    .join(', ')}</p>
-                  <i class="text-sm">${t('click_to_detail')}</i>-->`
-                }
-              })()
-            )
-            .addTo(map)
-          popups.push(a)
-          map.getCanvas().style.cursor = 'pointer'
-        }
+    })
+    map.on('mouseleave', 'buildings-layer', function () {
+      if (map !== undefined) {
+        popups.forEach((p) => p.remove())
+        map.getCanvas().style.cursor = ''
       }
     })
-
-    map.on('mouseleave', 'buildings-layer', function () {
+    map.on('mouseenter', 'exploded-cluster-layer', async function (e) {
+      callbackOnLeaves(null, e.features as MapGeoJSONFeature[])
+    })
+    map.on('mouseleave', 'exploded-cluster-layer', function () {
       if (map !== undefined) {
         popups.forEach((p) => p.remove())
         map.getCanvas().style.cursor = ''
