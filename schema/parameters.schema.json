@@ -218,6 +218,10 @@
             "description": "Map default zoom level",
             "type": "number"
         },
+        "maxZoom": {
+            "description": "Map maximum zoom level (if not provided, will be calculated dynamically based on container size)",
+            "type": "number"
+        },
         "legendScales": {
             "items": {
                 "$ref": "#/definitions/LegendScale"
@@ -227,4 +231,3 @@
     },
     "type": "object"
 }
-

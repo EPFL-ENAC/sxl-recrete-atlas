@@ -7,13 +7,19 @@ export function toWebp512(imagePath) {
   if (!imagePath) return ''
   imagePath = imagePath.trim()
   if (imagePath.endsWith('-512.webp')) return imagePath
-  return imagePath.replace(/\.(jpg|jpeg|png|webp)$/i, '-512.webp')
+  return imagePath.replace(/\.(jpg|jpeg|png|webp|JPG|PNG)$/i, '-512.webp')
 }
 
+export function from1920to512(imagePath) {
+  if (!imagePath) return ''
+  imagePath = imagePath.trim()
+  if (imagePath.endsWith('-512.webp')) return imagePath
+  return imagePath.replace(/-1920\.(jpg|jpeg|png|webp|JPG|PNG)$/i, '-512.webp')
+}
 
 export function toWebp1920(imagePath) {
   if (!imagePath) return ''
   imagePath = imagePath.trim()
   if (imagePath.endsWith('-1920.webp')) return imagePath
-  return imagePath.replace(/\.(jpg|jpeg|png|webp)$/i, '-1920.webp')
+  return imagePath.replace(/\.(jpg|jpeg|png|webp|JPG|PNG)$/i, '-1920.webp')
 }

@@ -1,9 +1,9 @@
 <template>
-  <v-card v-if="props.project" class="project-detail-card">
-    <v-card-item class="project-title-border">
+  <v-card v-if="project" class="project-detail-card">
+    <v-card-item class="project-detail__title project-title-border">
       <v-card-title class="d-flex justify-center align-center">
         <p class="d-flex justify-center" style="width: 100%">
-          <span class="font-weight-bold">{{ props.project[`name_${locale as ProjectLang}`] }}</span>
+          <span class="font-weight-bold">{{ project[`name_${locale as ProjectLang}`] }}</span>
         </p>
         <v-btn
           variant="plain"
@@ -15,12 +15,12 @@
         ></v-btn>
       </v-card-title>
     </v-card-item>
-    <v-card-item>
+    <v-card-item class="project-detail__card">
       <v-card-text>
-        <v-row class="mb-4">
-          <v-col :cols="12">
+        <div class="project-detail-grid grid-container">
+          <div class="grid-full-width grid-image">
             <v-carousel
-              v-if="(props.project.images?.length ?? 0) > 0"
+              v-if="(project.images?.length ?? 0) > 0"
               v-model="carouselIndex"
               height="512px"
               variant="plain"
@@ -37,8 +37,8 @@
                   :icon="mdiChevronLeft"
                   @click.stop="
                     carouselIndex =
-                      (carouselIndex - 1 + (props.project.images?.length ?? 0)) %
-                      (props.project.images?.length ?? 1)
+                      (carouselIndex - 1 + (project.images?.length ?? 0)) %
+                      (project.images?.length ?? 1)
                   "
                 ></v-btn>
               </template>
@@ -48,13 +48,11 @@
                   class="carousel-icon"
                   aria-label="Next image"
                   :icon="mdiChevronRight"
-                  @click.stop="
-                    carouselIndex = (carouselIndex + 1) % (props.project.images?.length ?? 1)
-                  "
+                  @click.stop="carouselIndex = (carouselIndex + 1) % (project.images?.length ?? 1)"
                 ></v-btn>
               </template>
               <v-carousel-item
-                v-for="(image, $key) in props.project.images"
+                v-for="(image, $key) in project.images"
                 :key="$key"
                 :src="image"
                 content-class="carousel-content"
@@ -73,200 +71,146 @@
               class="image-title d-flex flex-spacebetween"
               style="gap: 1rem; align-items: center"
             >
-              <v-card-subtitle style="width: 100%" class="d-flex flex-column">
+              <v-card-subtitle style="width: 100%" class="d-flex justify-center flex-column">
                 <span
-                  v-if="props.project?.images_credits?.length ?? 0 > 0"
-                  class="d-flex justify-end font-italic"
+                  v-if="project?.images_credits?.length ?? 0 > 0"
+                  class="d-flex justify-center font-italic"
                 >
                   {{ t('credits') }}:
-                  {{ props.project?.images_credits?.[carouselIndex] }}
+                  {{ project?.images_credits?.[carouselIndex] }}
                 </span>
               </v-card-subtitle>
             </v-card-title>
-          </v-col>
-        </v-row>
-        <v-row class="ga-3 mb-4">
-          <v-col :cols="6">
-            <v-row class="mb-4">
-              <h3 class="text-font-bold">{{ $t(`description_${locale as ProjectLang}`) }}</h3>
-              {{ props.project[`description_${locale as ProjectLang}`] }}
-            </v-row>
+          </div>
 
-            <v-row>
-              <h3 class="text-font-bold">{{ t('about_the_receiving_project') }}</h3>
-            </v-row>
-            <v-row>
-              <span class="key"
-                >{{ $t('receiver_country') }}
-                <span v-if="props.project.receiver_city">({{ $t('receiver_city') }})</span>
-                :
-              </span>
-              <span
-                >{{ $t('countryFn', [props.project.receiver_country]) }}
-                <span v-if="props.project.receiver_city">
-                  ({{ props.project.receiver_city }})
-                </span>
-              </span>
-            </v-row>
-            <v-row>
-              <span class="key">{{ $t('start_date_year') }}: </span>
-              <span
-                :class="{
-                  'font-italic': props.project.date_uncertainty,
-                  'text-grey': props.project.date_uncertainty
-                }"
-              >
-                {{ props.project.start_date_year }}
-              </span>
-            </v-row>
-          </v-col>
-        </v-row>
-        <v-row class="">
-          <v-col
+          <div class="grid-full-width grid-description">
+            <section>
+              <h3 class="text-font-bold">{{ $t(`description_${locale as ProjectLang}`) }}</h3>
+              <p>{{ project[`description_${locale as ProjectLang}`] }}</p>
+            </section>
+          </div>
+
+          <!-- grid-about-donor -->
+          <section
             v-if="
-              props.project.distance_km ||
-              (props.project.donor_use?.length ?? 0) > 0 ||
+              project.distance_km ||
+              (project.donor_use?.length ?? 0) > 0 ||
               project_construction_year > 0
             "
-            :sm="12"
-            :md="6"
-            :lg="3"
-            :cols="3"
+            class="grid-section grid-about-donor"
           >
-            <v-row>
-              <v-col>
-                <v-row>
-                  <h3 class="text-font-bold">{{ t('about_the_donor_site') }}</h3>
-                </v-row>
-                <v-row v-if="props.project.distance_km">
-                  <span class="key">{{ $t('distance_km') }}:</span>
-
-                  <i v-if="props.project.distance_uncertainty">
-                    {{ props.project.distance_km }}
-                  </i>
-                  <span v-else>{{ props.project.distance_km }}</span>
-                </v-row>
-                <v-row v-if="(props.project.donor_use?.length ?? 0) > 0">
-                  <span class="key">{{ $t('donor_use') }}:</span>
-                  {{ props.project.donor_use?.join(', ') }}
-                </v-row>
-                <v-row v-if="project_construction_year > 0">
-                  <span class="key">{{ t('construction_year') }}:</span>
-                  <i v-if="props.project.age_uncertainty || props.project.date_uncertainty">
-                    {{ project_construction_year }}
-                  </i>
-                  <span v-else>{{ project_construction_year }}</span>
-                </v-row>
-              </v-col>
-            </v-row>
-          </v-col>
-          <v-col
-            v-if="
-              props.project.quantity_reclaimed ||
-              (props.project.donor_element_type?.length ?? 0) > 0 ||
-              (props.project.receiver_element_type?.length ?? 0) > 0 ||
-              props.project.component_age
-            "
-            :sm="12"
-            :md="6"
-            :lg="3"
-            :cols="3"
-          >
-            <v-row>
-              <h3 class="text-font-bold">{{ t('about_the_reused_concrete') }}</h3>
-            </v-row>
-            <v-row v-if="props.project.quantity_reclaimed">
-              <span class="key">{{ $t('quantity_reclaimed') }}:</span>
-              {{ props.project.quantity_reclaimed }} ({{ props.project.quantity_reclaimed_unit }})
-            </v-row>
-
-            <v-row v-if="(props.project.donor_element_type?.length ?? 0) > 0">
-              <span class="key">{{ $t('donor_element_type') }}:</span>
-              {{ props.project.donor_element_type?.join(', ') }}
-            </v-row>
-            <v-row v-if="(props.project.receiver_element_type?.length ?? 0) > 0">
-              <span class="key">{{ $t('receiver_element_type') }}:</span>
-              {{ props.project.receiver_element_type?.join(', ') }}
-            </v-row>
-            <v-row v-if="props.project.component_age">
-              <span class="key">{{ $t('component_age') }}:</span>
-              <i v-if="props.project.age_uncertainty">
-                {{ props.project.component_age }}
+            <h3 class="text-font-bold">{{ t('about_the_donor_site') }}</h3>
+            <div v-if="project.distance_km" class="detail-row">
+              <span class="key">{{ $t('distance_km') }}:</span>
+              <i v-if="project.distance_uncertainty">
+                {{ project.distance_km }}
               </i>
-              <span v-else>{{ props.project.component_age }}</span>
-            </v-row>
+              <span v-else>{{ project.distance_km }}</span>
+            </div>
+            <div v-if="(project.donor_use?.length ?? 0) > 0" class="detail-row">
+              <span class="key">{{ $t('donor_use') }}:</span>
+              {{ project.donor_use?.join(', ') }}
+            </div>
+            <div v-if="project_construction_year > 0" class="detail-row">
+              <span class="key">{{ t('construction_year') }}:</span>
+              <i v-if="project.age_uncertainty || project.date_uncertainty">
+                {{ project_construction_year }}
+              </i>
+              <span v-else>{{ project_construction_year }}</span>
+            </div>
+          </section>
 
-            <v-row>
-              <!-- TODO: CIP for instance: use equivalent Cast in Place text for i18n-->
+          <!-- grid-about-reused-concrete -->
+          <section
+            v-if="
+              project.quantity_reclaimed ||
+              (project.donor_element_type?.length ?? 0) > 0 ||
+              (project.receiver_element_type?.length ?? 0) > 0 ||
+              project.component_age
+            "
+            class="grid-section grid-about-reused-concrete"
+          >
+            <h3 class="text-font-bold">{{ t('about_the_reused_concrete') }}</h3>
+            <div v-if="project.quantity_reclaimed" class="detail-row">
+              <span class="key">{{ $t('quantity_reclaimed') }}:</span>
+              {{ project.quantity_reclaimed }} ({{ project.quantity_reclaimed_unit }})
+            </div>
+
+            <div v-if="(project.donor_element_type?.length ?? 0) > 0" class="detail-row">
+              <span class="key">{{ $t('donor_element_type') }}:</span>
+              {{ project.donor_element_type?.join(', ') }}
+            </div>
+            <div v-if="(project.receiver_element_type?.length ?? 0) > 0" class="detail-row">
+              <span class="key">{{ $t('receiver_element_type') }}:</span>
+              {{ project.receiver_element_type?.join(', ') }}
+            </div>
+            <div v-if="project.component_age" class="detail-row">
+              <span class="key">{{ $t('component_age') }}:</span>
+              <i v-if="project.age_uncertainty">
+                {{ project.component_age }}
+              </i>
+              <span v-else>{{ project.component_age }}</span>
+            </div>
+
+            <div class="detail-row">
               <span class="key">{{ $t('main_concrete_type') }}:</span>
               <ul class="comma-separated-list">
-                <li v-for="(concrete_type, $key) in props.project.main_concrete_type" :key="$key">
+                <li v-for="(concrete_type, $key) in project.main_concrete_type" :key="$key">
                   <span
                     :class="{
-                      'font-italic': props.project?.main_concrete_type_uncertainty?.[$key],
-                      'text-grey': props.project?.main_concrete_type_uncertainty?.[$key]
+                      'font-italic': project?.main_concrete_type_uncertainty?.[$key],
+                      'text-grey': project?.main_concrete_type_uncertainty?.[$key]
                     }"
                     >{{ $t(concrete_type) }}</span
                   >
                 </li>
               </ul>
-            </v-row>
-          </v-col>
-          <v-col
+            </div>
+          </section>
+
+          <!-- grid-about-new-case-study -->
+          <section
             v-if="
-              props.project.impact_difference ||
-              props.project.cost_difference_max_percent ||
-              props.project?.other
+              project.impact_difference || project.cost_difference_max_percent || project?.other
             "
-            :sm="12"
-            :md="12"
-            :lg="3"
-            :cols="3"
+            class="grid-section grid-about-new-case-study"
           >
-            <v-row>
-              <h3 class="text-font-bold">{{ t('about_the_new_project') }}</h3>
-            </v-row>
-            <v-row v-if="props.project.impact_difference">
+            <h3 class="text-font-bold">{{ t('about_the_new_case_study') }}</h3>
+            <div v-if="project.impact_difference" class="detail-row">
               <span class="key">{{ $t('impact_design_alternative') }}:</span>
-              {{ props.project.impact_difference }}
-              <!-- {{ props.project.impact_unit }} -->
-              {{ t('compared_to') }} {{ props.project.cost_design_alternative }}
-              <v-tooltip v-if="props.project.impact_source" text="Tooltip">
+              {{ project.impact_difference }}
+              {{ t('compared_to') }} {{ project.cost_design_alternative }}
+              <v-tooltip v-if="project.impact_source" text="Tooltip">
                 <template #activator="{ props: activatorProps }">
                   <v-icon v-bind="activatorProps">{{ mdiInformationBoxOutline }} props</v-icon>
                 </template>
-                <span>{{ t('impact_source_tooltip') }}: {{ props.project.impact_source }}</span>
+                <span>{{ t('impact_source_tooltip') }}: {{ project.impact_source }}</span>
               </v-tooltip>
-            </v-row>
+            </div>
 
-            <v-row v-if="props.project.cost_difference_max_percent">
+            <div v-if="project.cost_difference_max_percent" class="detail-row">
               <span class="key">{{ $t('cost_difference_max_percent') }}:</span>
-              {{ props.project.cost_difference_max_percent }} % {{ t('compared_to') }}
-              {{ props.project.cost_design_alternative }}
-              <v-tooltip v-if="props.project.cost_source" text="Tooltip">
+              {{ project.cost_difference_max_percent }} % {{ t('compared_to') }}
+              {{ project.cost_design_alternative }}
+              <v-tooltip v-if="project.cost_source" text="Tooltip">
                 <template #activator="{ props: propsActivator }">
                   <v-icon v-bind="propsActivator">{{ mdiInformationBoxOutline }} props</v-icon>
                 </template>
-                <span>{{ t('cost_source_tooltip') }}: {{ props.project.cost_source }}</span>
+                <span>{{ t('cost_source_tooltip') }}: {{ project.cost_source }}</span>
               </v-tooltip>
-            </v-row>
+            </div>
 
-            <v-row v-if="props.project?.other">
-              <span class="key">{{ $t('other') }}:</span> {{ props.project.other }}
-            </v-row>
+            <div v-if="project?.other" class="detail-row">
+              <span class="key">{{ $t('other') }}:</span> {{ project.other }}
+            </div>
+          </section>
 
-            <v-row v-if="(props.project.actors?.length ?? 0) > 0">
-              <span class="key">{{ t('actors') }}:</span>
-              {{ props.project.actors?.join(',') ?? $t('unknown') }}
-            </v-row>
-          </v-col>
-          <v-col :sm="12" :md="6" :lg="3" :cols="3">
-            <v-row>
-              <h3 class="text-font-bold">{{ t('more_information') }}</h3>
-            </v-row>
-            <v-row>
+          <!-- grid-more-information -->
+          <section class="grid-section grid-more-information">
+            <h3 class="text-font-bold">{{ t('more_information') }}</h3>
+            <div class="detail-row">
               <span class="key">{{ $t('reference') }}:</span>
-              {{ props.project.reference?.join(', ') }}
+              {{ project.reference?.join(', ') }}
               <VDropdown :distance="6" popper-class="popper-class" :placement="'top-end'">
                 <!-- This will be the popover reference (for the events and position) -->
                 <button>
@@ -275,28 +219,54 @@
 
                 <!-- This will be the content of the popover -->
                 <template #popper>
-                  <ReferenceList :item="props.project" />
+                  <ReferenceList :item="project" />
                 </template>
               </VDropdown>
-            </v-row>
-            <v-row v-if="(props.project.actors?.length ?? 0) > 0">
+            </div>
+            <div v-if="(project.actors?.length ?? 0) > 0" class="detail-row">
               <span class="key">{{ t('case_study_actors') }}:</span>
-              {{ props.project.actors?.join(', ') ?? $t('unknown') }}
-            </v-row>
-          </v-col>
-        </v-row>
+              {{ project.actors?.join(', ') ?? $t('unknown') }}
+            </div>
+            <div v-if="(project.fact_sheet_contributors?.length ?? 0) > 0" class="detail-row">
+              <span class="key">{{ t('fact_sheet_contributors') }}:</span>
+              {{ project.fact_sheet_contributors?.join(', ') ?? $t('unknown') }}
+            </div>
+          </section>
+          <!-- grid-receiving-project-section-->
+          <section class="grid-section grid-receiving-project-section">
+            <h3 class="text-font-bold">{{ t('about_the_receiving_project') }}</h3>
+            <div class="detail-row">
+              <span class="key"
+                >{{ t('about_receiving_country') }}
+                <span v-if="project.receiver_city">({{ t('about_receiving_city') }})</span>:
+              </span>
+              <span
+                >{{ $t('countryFn', [project.receiver_country]) }}
+                <span v-if="project.receiver_city"> ({{ project.receiver_city }}) </span>
+              </span>
+            </div>
+            <div class="detail-row">
+              <span class="key">{{ t('about_receiving_date') }}: </span>
+              <span
+                :class="{
+                  'font-italic': project.date_uncertainty,
+                  'text-grey': project.date_uncertainty
+                }"
+              >
+                {{ project.start_date_year }}
+              </span>
+            </div>
+          </section>
+        </div>
       </v-card-text>
     </v-card-item>
     <template #actions>
-      <div
-        v-if="props.project?.fact_sheet_contributors"
-        class="text-grey text-caption text-right mt-4"
-      >
+      <div v-if="project?.fact_sheet_contributors" class="text-grey text-caption text-right mt-4">
         {{ t('project_sheet_contributors') }}:
         {{
-          Array.isArray(props.project.fact_sheet_contributors)
-            ? props.project.fact_sheet_contributors.join(', ')
-            : props.project.fact_sheet_contributors || $t('unknown')
+          Array.isArray(project.fact_sheet_contributors)
+            ? project.fact_sheet_contributors.join(', ')
+            : project.fact_sheet_contributors || $t('unknown')
         }}
       </div>
     </template>
@@ -376,6 +346,173 @@ const project_construction_year = computed(() => {
 .project-detail-card {
   justify-content: space-between;
 }
+.project-detail__title {
+  background-color: oklch(0.95 0.1 270 / 1);
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  flex-shrink: 0;
+  background-color: white;
+}
+
+.project-detail__card {
+  padding: 1rem 2rem 2rem 2rem;
+}
+
+@media screen and (max-width: 600px) {
+  :deep(.v-card-item.project-detail__card) {
+    padding: 0rem !important;
+  }
+}
+
+/*
+grid-image
+grid-description
+grid-about-donor 
+grid-about-reused-concrete 
+grid-about-new-case-study 
+grid-more-information 
+grid-receiving-project-section
+*/
+
+.grid-container {
+  display: grid;
+  gap: 1rem;
+}
+
+/* --- Desktop layout --- */
+@media (min-width: 601px) {
+  .grid-container {
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      'image image'
+      'desc desc'
+      'receiving reused-conc'
+      'donor info'
+      'new-case info';
+  }
+
+  .grid-image {
+    grid-area: image;
+  }
+  .grid-description {
+    grid-area: desc;
+  }
+  .grid-receiving-project-section {
+    grid-area: receiving;
+  }
+  .grid-about-donor {
+    grid-area: donor;
+  }
+  .grid-about-new-case-study {
+    grid-area: new-case;
+  }
+  .grid-about-reused-concrete {
+    grid-area: reused-conc;
+  }
+  .grid-more-information {
+    grid-area: info;
+  }
+}
+
+/* --- Mobile layout --- */
+@media (max-width: 600px) {
+  .grid-container {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      'image'
+      'desc'
+      'receiving'
+      'donor'
+      'reused-conc'
+      'new-case'
+      'info';
+  }
+
+  .grid-description {
+    grid-area: desc;
+  }
+  .grid-receiving-project-section {
+    grid-area: receiving;
+  }
+  .grid-about-donor {
+    grid-area: donor;
+  }
+  .grid-about-new-case-study {
+    grid-area: new-case;
+  }
+  .grid-about-reused-concrete {
+    grid-area: reused-conc;
+  }
+  .grid-more-information {
+    grid-area: info;
+  }
+}
+
+/* .project-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+.grid-container :nth-child(1),
+.grid-container :nth-child(2) {
+  grid-column: 1 / -1;
+}
+
+@media (min-width: 768px) {
+  .grid-container {
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  }
+
+  .grid-container :nth-child(1),
+  .grid-container :nth-child(2) {
+    grid-column: 1 / -1;
+  }
+} */
+
+.grid-full-width {
+  grid-column: 1 / -1;
+}
+
+.grid-section {
+  /* padding: 1rem; */
+  /* border: 1px solid rgba(var(--v-border-color), var(--v-border-opacity)); */
+  border-radius: 4px;
+}
+
+.detail-row {
+  margin-bottom: 0.75rem;
+  display: inline-flex;
+  flex-wrap: wrap;
+}
+
+.detail-row:last-child {
+  margin-bottom: 0;
+}
+
+.grid-receiving-project-section {
+  /* background-color: oklch(0.95 0.1 270 / 1); */
+  /* border: 1px solid rgba(var(--v-border-color), var(--v-border-opacity)); */
+  border-radius: 4px;
+  /* padding: 1rem; */
+}
+
+/* @media screen and (max-width: 1200px) {
+  .project-detail-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .project-detail-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .grid-section {
+    padding-bottom: 0.5rem;
+  }
+} */
 
 .image-title {
   /* text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white; */
@@ -385,6 +522,11 @@ const project_construction_year = computed(() => {
   color: black;
 }
 
+.key {
+  font-weight: 300;
+  font-size: 14px;
+  line-height: normal;
+}
 .key::after {
   content: '\00a0';
   /* Unicode representation of a non-breaking space nbsp */
@@ -412,7 +554,7 @@ const project_construction_year = computed(() => {
     "about_the_receiving_project": "About the receiving project",
     "about_the_donor_site": "About the donor building",
     "about_the_reused_concrete": "About the reused concrete",
-    "about_the_new_project": "About the new case-study",
+    "about_the_new_case_study": "About the new case-study",
     "more_information": "More information",
     "construction_year": "Construction year",
     "status": "Project status",
@@ -422,13 +564,17 @@ const project_construction_year = computed(() => {
     "impact_source_tooltip": "Source",
     "cost_source_tooltip": "Source",
     "compared_to": "compared to",
-    "credits": "credits"
+    "credits": "credits",
+    "about_receiving_country": "Country",
+    "about_receiving_city": "city",
+    "about_receiving_date": "Date of Construction start",
+    "fact_sheet_contributors": "Factsheet contributors"
   },
   "fr": {
     "about_the_receiving_project": "À propos du projet receveur",
     "about_the_donor_site": "À propos du site du donneur",
     "about_the_reused_concrete": "À propos du réemploi du béton",
-    "about_the_new_project": "À propos du nouveau cas d'étude",
+    "about_the_new_case_study": "À propos du nouveau cas d'étude",
     "more_information": "Plus d'information",
     "construction_year": "Année de construction",
     "status": "État du projet",
@@ -438,7 +584,11 @@ const project_construction_year = computed(() => {
     "impact_source_tooltip": "Source",
     "cost_source_tooltip": "Source",
     "compared_to": "comparé à",
-    "credits": "crédits"
+    "credits": "crédits",
+    "about_receiving_country": "Pays",
+    "about_receiving_city": "ville",
+    "about_receiving_date": "Date de début de construction",
+    "fact_sheet_contributors": "Contributeurs de la fiche projet"
   }
 }
 </i18n>

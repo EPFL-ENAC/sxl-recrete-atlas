@@ -9,7 +9,7 @@ import type { Key } from '@/types/Filter'
 
 // const { cookies } = useCookies()
 // const locale = cookies.get('locale')
-const locale = 'en'; // cf issue #60
+const locale = 'en' // cf issue #60
 
 type LangKeys = Record<string, string>
 const enKeys = (keys as Key[]).reduce((acc: LangKeys, filter: Key) => {
@@ -47,8 +47,14 @@ export default createI18n({
       ...en,
       ...enKeys,
       countryFn: (ctx: MessageContext) => {
-        const region = ctx.list?.(0) as string
-        return regionOfEn.of(region)
+        if (ctx.list === undefined || ctx.list.length === 0 || typeof ctx.list?.(0) !== 'string')
+          return ''
+        try {
+          const region = ctx.list?.(0) as string
+          return regionOfEn.of(region)
+        } catch (error) {
+          return ctx.list?.(0) as string // Fallback to the original region code if an error occurs
+        }
       }
     },
     fr: {
@@ -56,6 +62,8 @@ export default createI18n({
       ...fr,
       ...frKeys,
       countryFn: (ctx: MessageContext) => {
+        if (ctx.list === undefined || ctx.list.length === 0 || typeof ctx.list?.(0) !== 'string')
+          return ''
         const region = ctx.list?.(0) as string
         return regionOfFr.of(region)
       }

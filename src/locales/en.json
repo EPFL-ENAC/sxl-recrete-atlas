@@ -1,6 +1,7 @@
 {
-  "app_title": "Atlas of reused concrete",
-  "app_subtitle": "An interactive database on concrete structural reuse in construction",
+  "app_title": "Atlas of Reused Concrete",
+  "app_short_title": "ARC",
+  "app_subtitle": "An interactive database on the structural reuse of concrete in construction",
   "app_wip_title": "Work in progress",
   "app_wip_subtitle": "This application is still under development.",
   "reuse_title": "Reuse of concrete",
@@ -43,5 +44,7 @@
   "legend": "Legend",
   "unknown": "Unknown",
   "receiver_title": "project | projects",
-  "choose-your-lang": "Choose your language"
+  "choose-your-lang": "Choose your language",
+  "zoom_in_for_details": "Zoom in for details",
+  "click_for_details": "Click on marker for details"
 }
