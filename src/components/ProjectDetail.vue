@@ -379,11 +379,11 @@ const project_construction_year = computed(() => {
 }
 .project-detail__title {
   background-color: oklch(0.95 0.1 270 / 1);
-      position: sticky;
-    top: 0;
-    z-index: 1;
-    flex-shrink: 0;
-    background-color: white;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  flex-shrink: 0;
+  background-color: white;
 }
 
 .project-detail__card {

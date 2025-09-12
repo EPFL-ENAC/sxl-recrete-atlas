@@ -83,16 +83,14 @@ const { smAndDown, smAndUp, mdAndUp, lgAndUp, xlAndUp } = useDisplay()
 
 const computedMainStyle = computed(() => {
   if (smAndUp.value) {
-        
-  return `--v-layout-left: ${!drawerRail.value ? '400px' : '64px'};
+    return `--v-layout-left: ${!drawerRail.value ? '400px' : '64px'};
       --v-layout-right: 0px;
       --v-layout-bottom: 0px;`
   }
-    // no drawer on mobile
-    return `--v-layout-left: 0px;
+  // no drawer on mobile
+  return `--v-layout-left: 0px;
       --v-layout-right: 0px;
       --v-layout-bottom: 0px;`
-
 })
 
 function closeDrawer() {
@@ -241,10 +239,7 @@ function closeDrawer() {
         </a>
       </template>
     </v-app-bar>
-    <v-main
-      class="main-content"
-      :style="computedMainStyle"
-    >
+    <v-main class="main-content" :style="computedMainStyle">
       <RouterView />
       <markdown-dialog
         :button-text="$t('close')"
