@@ -42,15 +42,28 @@ const closeDialog = () => {
 <style scoped>
 :deep(.v-overlay__content) {
   max-height: calc(100vh - 4rem);
-  width: calc(100vw - 4rem);
+  width: 800px;
+  max-width: calc(100% - 4rem);
   overflow-y: auto;
+}
 
-  @media screen and (max-width: 600px) {
+@media screen and (max-width: 600px) {
+  :deep(.v-overlay__content) {
     max-height: 100vh;
     width: 100%;
     margin: 0;
     overflow-y: auto;
     min-width: 100%;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  :deep(.v-dialog__container) {
+    align-items: flex-start;
+    justify-content: center;
+  }
+  :deep(.v-overlay__content) {
+    border-radius: 0;
   }
 }
 </style>

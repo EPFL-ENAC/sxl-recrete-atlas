@@ -48,9 +48,7 @@
                   class="carousel-icon"
                   aria-label="Next image"
                   :icon="mdiChevronRight"
-                  @click.stop="
-                    carouselIndex = (carouselIndex + 1) % (project.images?.length ?? 1)
-                  "
+                  @click.stop="carouselIndex = (carouselIndex + 1) % (project.images?.length ?? 1)"
                 ></v-btn>
               </template>
               <v-carousel-item
@@ -84,7 +82,7 @@
               </v-card-subtitle>
             </v-card-title>
           </div>
-          
+
           <div class="grid-full-width">
             <section>
               <h3 class="text-font-bold">{{ $t(`description_${locale as ProjectLang}`) }}</h3>
@@ -92,7 +90,7 @@
             </section>
           </div>
 
-          <section 
+          <section
             v-if="
               project.distance_km ||
               (project.donor_use?.length ?? 0) > 0 ||
@@ -120,8 +118,8 @@
               <span v-else>{{ project_construction_year }}</span>
             </div>
           </section>
-          
-          <section 
+
+          <section
             v-if="
               project.quantity_reclaimed ||
               (project.donor_element_type?.length ?? 0) > 0 ||
@@ -168,12 +166,10 @@
               </ul>
             </div>
           </section>
-          
-          <section 
+
+          <section
             v-if="
-              project.impact_difference ||
-              project.cost_difference_max_percent ||
-              project?.other
+              project.impact_difference || project.cost_difference_max_percent || project?.other
             "
             class="grid-section"
           >
@@ -206,7 +202,7 @@
               <span class="key">{{ $t('other') }}:</span> {{ project.other }}
             </div>
           </section>
-          
+
           <section class="grid-section">
             <h3 class="text-font-bold">{{ t('more_information') }}</h3>
             <div class="detail-row">
@@ -233,20 +229,17 @@
               {{ project.fact_sheet_contributors?.join(', ') ?? $t('unknown') }}
             </div>
           </section>
-          
-          <section class="grid-full-width receiving-project-section">
+
+          <section class="grid-section receiving-project-section">
             <h3 class="text-font-bold">{{ t('about_the_receiving_project') }}</h3>
             <div class="detail-row">
               <span class="key"
                 >{{ t('about_receiving_country') }}
-                <span v-if="project.receiver_city">({{ t('about_receiving_city') }})</span>
-                :
+                <span v-if="project.receiver_city">({{ t('about_receiving_city') }})</span>:
               </span>
               <span
                 >{{ $t('countryFn', [project.receiver_country]) }}
-                <span v-if="project.receiver_city">
-                  ({{ project.receiver_city }})
-                </span>
+                <span v-if="project.receiver_city"> ({{ project.receiver_city }}) </span>
               </span>
             </div>
             <div class="detail-row">
@@ -265,10 +258,7 @@
       </v-card-text>
     </v-card-item>
     <template #actions>
-      <div
-        v-if="project?.fact_sheet_contributors"
-        class="text-grey text-caption text-right mt-4"
-      >
+      <div v-if="project?.fact_sheet_contributors" class="text-grey text-caption text-right mt-4">
         {{ t('project_sheet_contributors') }}:
         {{
           Array.isArray(project.fact_sheet_contributors)
@@ -373,8 +363,26 @@ const project_construction_year = computed(() => {
 }
 .project-detail-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  /* grid-template-columns: repeat(4, 1fr); */
+  /* grid-auto-flow: row; */
+  grid-template-columns: repeat(2, 1fr);
   gap: 1.5rem;
+}
+
+.grid-container :nth-child(1),
+.grid-container :nth-child(2) {
+  grid-column: 1 / -1;
+}
+
+@media (min-width: 768px) {
+  .grid-container {
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  }
+
+  .grid-container :nth-child(1),
+  .grid-container :nth-child(2) {
+    grid-column: 1 / -1;
+  }
 }
 
 .grid-full-width {
@@ -382,13 +390,15 @@ const project_construction_year = computed(() => {
 }
 
 .grid-section {
-  padding: 1rem;
-  border: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
+  /* padding: 1rem; */
+  /* border: 1px solid rgba(var(--v-border-color), var(--v-border-opacity)); */
   border-radius: 4px;
 }
 
 .detail-row {
   margin-bottom: 0.75rem;
+  display: inline-flex;
+  flex-wrap: wrap;
 }
 
 .detail-row:last-child {
@@ -396,10 +406,10 @@ const project_construction_year = computed(() => {
 }
 
 .receiving-project-section {
-  background-color: oklch(0.95 0.1 270 / 1);
-  border: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
+  /* background-color: oklch(0.95 0.1 270 / 1); */
+  /* border: 1px solid rgba(var(--v-border-color), var(--v-border-opacity)); */
   border-radius: 4px;
-  padding: 1rem;
+  /* padding: 1rem; */
 }
 
 @media screen and (max-width: 1200px) {
@@ -412,9 +422,11 @@ const project_construction_year = computed(() => {
   .project-detail-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .grid-section {
-    padding: 0.75rem;
+    /* padding: 0.75rem; */
+    /* padding-top: 0.5rem;
+    padding-bottom: 0.5rem; */
   }
 }
 
@@ -426,6 +438,11 @@ const project_construction_year = computed(() => {
   color: black;
 }
 
+.key {
+  font-weight: 300;
+  font-size: 14px;
+  line-height: normal;
+}
 .key::after {
   content: '\00a0';
   /* Unicode representation of a non-breaking space nbsp */
