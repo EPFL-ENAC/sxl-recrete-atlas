@@ -151,23 +151,22 @@ const filtersActivated = computed<FilterActivated>(() => {
   )
 })
 
-const drawerStyle = computed(() => {
-  // if < 400px mobile, use 100vw, otherwise use 400px
-  return {
-    width: mobile.value
-      ? !drawerRail.value
-        ? width.value < 400
-          ? '100vw'
-          : '400px'
-        : '64px'
-      : !drawerRail.value
-        ? '400px'
-        : '64px',
-    height: `calc(100vh - ${defaultAppHeaderHeight})`,
-    top: defaultAppHeaderHeight,
-    zIndex: mobile.value ? 1200 : 1000
-  }
-})
+// const drawerStyle = computed(() => {
+//   // if < 400px mobile, use 100vw, otherwise use 400px
+//   return {
+//     width: mdAndDown.value
+//       ? !drawerRail.value
+//         ? '100%'
+//         : '1px'
+//       : !drawerRail.value
+//         ? '400px'
+//         : '64px',
+//     height: `calc(100vh - ${defaultAppHeaderHeight})`,
+//     top: defaultAppHeaderHeight,
+//     transform: mdAndDown.value ? 'none' : 'translateX(0)',
+//     zIndex: mdAndDown.value ? 1200 : 1000
+//   }
+// })
 
 watch(
   filters,
@@ -178,13 +177,18 @@ watch(
     deep: true
   }
 )
+
+const drawer = ref(false)
+
+
+const { smAndUp, mdAndUp, smAndDown, mdAndDown } = useDisplay()
 </script>
 
 <template>
   <v-navigation-drawer
+    v-model="drawer"
     :rail="drawerRail"
-    permanent
-    :style="drawerStyle"
+    :width="drawerRail ? 64 : 400"
     class="permanent-drawer"
     @click="setDrawerRail(false)"
   >
