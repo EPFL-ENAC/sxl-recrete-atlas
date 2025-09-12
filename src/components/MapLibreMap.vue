@@ -82,6 +82,8 @@ const project = defineModel('project', {
   default: undefined
 })
 
+const lastCsvDate = import.meta.env.VITE_LAST_CSV_DATE || 'unknown'
+
 onMounted(() => {
   // Calculate dynamic maxZoom only if not provided via props
   const finalMaxZoom = props.maxZoom !== undefined ? props.maxZoom : getWindowBasedMaxZoom()
@@ -107,10 +109,11 @@ onMounted(() => {
     }
   })
   map.addControl(new NavigationControl({}))
+
   map.addControl(
     new AttributionControl({
       compact: false,
-      customAttribution: '© <a href="https://www.epfl.ch/labs/sxl/" target="_blank">SXL</a>'
+      customAttribution: `🔴 receiving project – Website Last updated : ${lastCsvDate} – © <a href="https://www.epfl.ch/labs/sxl/" target="_blank">SXL</a>`
     })
   )
   const positionControl = new DivControl({ id: 'map-position' })

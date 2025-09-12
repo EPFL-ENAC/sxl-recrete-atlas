@@ -1,6 +1,35 @@
 import csv from 'csvtojson'
-import { writeFileSync } from 'fs'
+import { writeFileSync, statSync, readFileSync } from 'fs'
 import { toWebp1920 } from '../src/utils/image.js'
+
+// Function to update .env file with the last modified date of data.csv
+function updateEnvWithLastCsvDate() {
+  try {
+    // Get the last modified date of the data.csv file
+    const stats = statSync('./src/assets/data/data.csv')
+    const lastModifiedDate = stats.mtime
+    const formattedDate = lastModifiedDate.toISOString().split('T')[0] // Format as YYYY-MM-DD
+
+    // Read the current .env file
+    const envContent = readFileSync('.env', 'utf8')
+
+    // Update the VITE_LAST_CSV_DATE line
+    const updatedEnvContent = envContent.replace(
+      /^VITE_LAST_CSV_DATE=.*$/m,
+      `VITE_LAST_CSV_DATE=${formattedDate}`
+    )
+
+    // Write the updated content back to the .env file
+    writeFileSync('.env', updatedEnvContent)
+
+    console.log(`Updated VITE_LAST_CSV_DATE to ${formattedDate} in .env file`)
+  } catch (error) {
+    console.error('Error updating .env file with last CSV date:', error)
+  }
+}
+
+// Run the function to update the .env file
+updateEnvWithLastCsvDate()
 
 // Helper function to sanitize the value.
 const sanitizeValue = (value) => {
