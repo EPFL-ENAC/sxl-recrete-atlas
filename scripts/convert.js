@@ -1,14 +1,81 @@
 import csv from 'csvtojson'
-import { writeFileSync } from 'fs'
+import { writeFileSync, statSync, readFileSync } from 'fs'
 import { toWebp1920 } from '../src/utils/image.js'
 
+// Function to update .env file with the last modified date of data.csv
+function updateEnvWithLastCsvDate() {
+  try {
+    // Get the last modified date of the data.csv file
+    const stats = statSync('./src/assets/data/data.csv')
+    const lastModifiedDate = stats.mtime
+    const formattedDate = lastModifiedDate.toISOString().split('T')[0] // Format as YYYY-MM-DD
+
+    // Read the current .env file
+    const envContent = readFileSync('.env', 'utf8')
+
+    // Update the VITE_LAST_CSV_DATE line
+    const updatedEnvContent = envContent.replace(
+      /^VITE_LAST_CSV_DATE=.*$/m,
+      `VITE_LAST_CSV_DATE=${formattedDate}`
+    )
+
+    // Write the updated content back to the .env file
+    writeFileSync('.env', updatedEnvContent)
+
+    console.log(`Updated VITE_LAST_CSV_DATE to ${formattedDate} in .env file`)
+  } catch (error) {
+    console.error('Error updating .env file with last CSV date:', error)
+  }
+}
+
+// Run the function to update the .env file
+updateEnvWithLastCsvDate()
+
 // Helper function to sanitize the value.
-const sanitizeValue = (value) => value.replace(/^"+|"+$/g, '')
-// Update the arraySplitter to sanitize the value before splitting.
-const arraySplitter = (item) =>
-  sanitizeValue(item)
+const sanitizeValue = (value) => {
+  // Return non-string values as-is
+  if (typeof value !== 'string') return value
+
+  // Handle null or undefined values
+  if (value === null || value === undefined) return ''
+
+  // Deep sanitize to handle various edge cases
+  let sanitized = value
+
+  // Remove surrounding quotes (both single and double)
+  sanitized = sanitized.replace(/^(["'])+|(["'])+$/g, '')
+
+  // Unescape escaped quotes
+  sanitized = sanitized.replace(/\\"/g, '"')
+  sanitized = sanitized.replace(/\\'/g, "'")
+
+  // Trim whitespace
+  sanitized = sanitized.trim()
+
+  // Handle special case of empty quoted strings
+  if (sanitized === '' && value.length > 0) {
+    sanitized = ''
+  }
+
+  return sanitized
+}
+
+// Improved arraySplitter function to handle edge cases
+const arraySplitter = (item) => {
+  // Handle null, undefined or empty values
+  if (!item || item === '') return []
+
+  const sanitized = sanitizeValue(item)
+
+  // Handle empty sanitized values
+  if (sanitized === '') return []
+
+  // Split by comma and process each item
+  return sanitized
     .split(',')
     .map((type) => type.trim())
+    .filter((type) => type.length > 0) // Remove empty items
+}
 
 csv({ checkType: true })
   .fromFile('./src/assets/data/keys.csv')
@@ -24,9 +91,20 @@ csv({
   trim: true,
   colParser: {
     receiver_coordinates: function (item) {
-      return sanitizeValue(item)
+      const sanitized = sanitizeValue(item)
+      if (!sanitized || sanitized === '') return []
+
+      return sanitized
         .split(',')
-        .map((coordinate) => parseFloat(coordinate.trim()))
+        .map((coordinate) => {
+          const trimmed = coordinate.trim()
+          // Handle empty coordinates
+          if (trimmed === '') return null
+          // Parse float or return 0 if invalid
+          const parsed = parseFloat(trimmed)
+          return isNaN(parsed) ? 0 : parsed
+        })
+        .filter((coord) => coord !== null)
         .reverse()
     },
     main_concrete_type: arraySplitter,
@@ -37,7 +115,7 @@ csv({
     receiver_use: arraySplitter,
     reference: arraySplitter,
     actors: arraySplitter,
-    fact_sheet_contibutors: arraySplitter,
+    fact_sheet_contributors: arraySplitter,
     images: function (item) {
       return sanitizeValue(item)
         .split(',')
@@ -47,6 +125,12 @@ csv({
       return sanitizeValue(item)
         .split(',')
         .map((credit) => credit.trim())
+    },
+    description_en: function (item) {
+      return sanitizeValue(item)
+    },
+    description_fr: function (item) {
+      return sanitizeValue(item)
     }
   }
 })

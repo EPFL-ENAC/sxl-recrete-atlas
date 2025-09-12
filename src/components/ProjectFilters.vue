@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, watch } from 'vue'
+import { computed, watch, ref, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useDisplay } from 'vuetify'
 import { useFiltersStore, stepsHash, valuesHash, newFilter } from '@/stores/filters'
@@ -14,11 +14,25 @@ import keys from '@/assets/data/keys.json'
 import data from '@/assets/data/data.json'
 
 const { t, locale } = useI18n({ useScope: 'global' })
-const { mobile, width } = useDisplay()
+const { mobile } = useDisplay()
 
 const uiStore = useUiStore()
 const { drawerRail } = storeToRefs(uiStore)
 const { setDrawerRail } = uiStore
+
+// Bounce animation for drawer button on app load
+const bounceButton = ref(false)
+
+onMounted(() => {
+  // Trigger the bounce animation after a short delay to ensure app is loaded
+  setTimeout(() => {
+    bounceButton.value = true
+    // Remove the animation class after it completes (1 second)
+    setTimeout(() => {
+      bounceButton.value = false
+    }, 1000)
+  }, 500)
+})
 
 interface FilterSelectValues {
   key: SelectFilterKey
@@ -47,13 +61,15 @@ function getSelectValues(key: ProjectKey): OptionValues[] {
   if (uniqueValuesString.length > 0) {
     uniqueValues = uniqueValuesString
   }
-  return uniqueValues.map((uniqueValue: string) => ({
-    title: key.includes('country') ? t('countryFn', [uniqueValue]) : (t(uniqueValue) as string),
-    value: uniqueValue as string
-  })).sort((a, b) => {
-    // Sort by title, case-insensitive
-    return a.title.localeCompare(b.title, locale.value, { sensitivity: 'base' })
-  })
+  return uniqueValues
+    .map((uniqueValue: string) => ({
+      title: key.includes('country') ? t('countryFn', [uniqueValue]) : (t(uniqueValue) as string),
+      value: uniqueValue as string
+    }))
+    .sort((a, b) => {
+      // Sort by title, case-insensitive
+      return a.title.localeCompare(b.title, locale.value, { sensitivity: 'base' })
+    })
 }
 
 const filterSelectKeys: SelectFilterKey[] = keys
@@ -135,21 +151,22 @@ const filtersActivated = computed<FilterActivated>(() => {
   )
 })
 
-const drawerStyle = computed(() => {
-  // if < 400px mobile, use 100vw, otherwise use max(450px, 25vw)
-  return {
-    width: mobile.value
-      ? !drawerRail.value
-        ? width.value < 450 ? '100vw' : '300px'
-        : '64px'
-      : !drawerRail.value
-        ? 'max(450px,25vw)'
-        : '64px',
-    height: `calc(100vh - ${defaultAppHeaderHeight})`,
-    top: defaultAppHeaderHeight,
-    zIndex: mobile.value ? 1200 : 1000
-  }
-})
+// const drawerStyle = computed(() => {
+//   // if < 400px mobile, use 100vw, otherwise use 400px
+//   return {
+//     width: mdAndDown.value
+//       ? !drawerRail.value
+//         ? '100%'
+//         : '1px'
+//       : !drawerRail.value
+//         ? '400px'
+//         : '64px',
+//     height: `calc(100vh - ${defaultAppHeaderHeight})`,
+//     top: defaultAppHeaderHeight,
+//     transform: mdAndDown.value ? 'none' : 'translateX(0)',
+//     zIndex: mdAndDown.value ? 1200 : 1000
+//   }
+// })
 
 watch(
   filters,
@@ -160,14 +177,28 @@ watch(
     deep: true
   }
 )
+
+const drawer = ref(true)
+
+const { smAndUp } = useDisplay()
 </script>
 
 <template>
+  <!-- !smAndUp -->
   <v-navigation-drawer
-    :rail="drawerRail"
-    permanent
-    :style="drawerStyle"
+    v-model="drawer"
+    :permanent="smAndUp"
+    :temporary="!smAndUp"
+    :style="{
+      width: !smAndUp ? (!drawerRail ? '100%' : '1px') : !drawerRail ? '400px' : '64px',
+      height: `calc(100vh - ${defaultAppHeaderHeight})`,
+      top: defaultAppHeaderHeight,
+      transform: !smAndUp ? 'none' : 'translateX(0)',
+      zIndex: !smAndUp ? 1200 : 1000
+    }"
     class="permanent-drawer"
+    app
+    :rail="drawerRail"
     @click="setDrawerRail(false)"
   >
     <v-list
@@ -203,6 +234,7 @@ watch(
                 v-bind="props"
                 variant="flat"
                 size="smaller"
+                :class="{ bounce: bounceButton }"
                 @click.stop="setDrawerRail(false)"
               />
             </template>
@@ -303,15 +335,11 @@ watch(
         </v-row>
       </v-list-item>
     </v-list>
-    <!-- <v-sheet v-if="!drawerRail" class="pa-0">
-      <BarProjectEchart :projects="data" />
-    </v-sheet> -->
   </v-navigation-drawer>
 </template>
 
 <style scoped lang="scss">
 :root {
-  --v-layout-left: 25vw;
   --v-layout-top: 10vh;
 }
 .v-row.filters > .v-col {
@@ -378,5 +406,34 @@ watch(
   z-index: 1100;
   background: inherit; // or a defined background color if needed
   background-color: #fff;
+}
+
+/* Bounce animation for drawer button */
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-8px);
+  }
+  50% {
+    transform: translateX(0);
+  }
+  75% {
+    transform: translateX(-4px);
+  }
+}
+
+.bounce {
+  animation: bounce 1s ease;
+  /* Add a bit of visual enhancement */
+  box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.1);
+}
+
+.bounce:hover {
+  /* Slight enhancement on hover */
+  transform: scale(1.05);
+  transition: transform 0.2s ease;
 }
 </style>

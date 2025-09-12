@@ -2,10 +2,7 @@
 import MapLibreMap from '@/components/MapLibreMap.vue'
 import ProjectFilters from '@/components/ProjectFilters.vue'
 import type { Parameters } from '@/utils/jsonWebMap'
-import type {
-  SelectableItem,
-  SelectableSingleItem
-} from '@/utils/layerSelector'
+import type { SelectableItem, SelectableSingleItem } from '@/utils/layerSelector'
 import { mdiClose } from '@mdi/js'
 import axios from 'axios'
 import type { StyleSpecification } from 'maplibre-gl'
@@ -14,6 +11,7 @@ import { useI18n } from 'vue-i18n'
 import type { Project } from '@/types/Project'
 import { useUiStore } from '@/stores/ui'
 import { storeToRefs } from 'pinia'
+import { useDisplay } from 'vuetify'
 
 const props = defineProps<{
   styleUrl: string
@@ -76,7 +74,6 @@ const singleItems = computed<SelectableSingleItem[]>(() =>
     .flatMap((item: SelectableItem) => ('children' in item ? item.children : [item]))
 )
 
-
 const selectedItemWithLegend = computed(() =>
   singleItems.value
     .filter((item: SelectableSingleItem) =>
@@ -130,6 +127,7 @@ watch(
   }
 )
 
+// const { smAndUp } = useDisplay()
 </script>
 
 <template>

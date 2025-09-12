@@ -16,6 +16,7 @@ import { useRoute } from 'vue-router'
 import { defaultAppHeaderHeight } from '@/utils/default'
 import type { VDataTable } from 'vuetify/components/VDataTable'
 import { Dropdown as VDropdown } from 'floating-vue'
+import { useDisplay } from 'vuetify'
 
 const route = useRoute()
 const { t, locale } = useI18n({ useScope: 'global' })
@@ -103,17 +104,13 @@ const mouseLeaveRow = () => {
 }
 
 const showRowTooltip = ref(true)
+const { smAndUp } = useDisplay()
 </script>
 
 <template>
   <project-filters />
   <v-container v-if="listMode === 'list'" class="fill-height pa-0 align-baseline" fluid>
-    <v-alert
-      v-if="data.length === 0"
-      type="info"
-      variant="tonal"
-      class="mt-4"
-    >
+    <v-alert v-if="data.length === 0" type="info" variant="tonal" class="mt-4">
       {{ $t('No elements selected') }}
     </v-alert>
     <v-tooltip
@@ -215,7 +212,7 @@ const showRowTooltip = ref(true)
             'text-grey': item?.age_uncertainty
           }"
         >
-          {{ item.actors?.join(', ') }}  
+          {{ item.actors?.join(', ') }}
         </span>
       </template>
       <template #[`item.distance_km`]="{ item }">
@@ -252,13 +249,12 @@ const showRowTooltip = ref(true)
       <template #bottom />
     </v-data-table>
   </v-container>
-  <v-container v-if="listMode === 'grid'" :class="`${data.length !== 0 ? 'pa-0 grid-list': 'pa-0'}`" fluid>
-    <v-alert
-      v-if="data.length === 0"
-      type="info"
-      variant="tonal"
-      class="mt-4"
-    >
+  <v-container
+    v-if="listMode === 'grid'"
+    :class="`${data.length !== 0 ? 'pa-0 grid-list' : 'pa-0'}`"
+    fluid
+  >
+    <v-alert v-if="data.length === 0" type="info" variant="tonal" class="mt-4">
       {{ $t('No elements selected') }}
     </v-alert>
     <project-card
@@ -275,15 +271,21 @@ const showRowTooltip = ref(true)
 </template>
 
 <style scoped lang="scss">
-
 .grid-list {
   --card-size: 350px;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(var(--card-size), 1fr));
-  grid-template-rows: repeat(auto-fill, minmax(var(--card-size), var(--card-size)));
+  grid-auto-rows: var(--card-size); /* or minmax(var(--card-size), auto) */
   gap: 2rem;
-  margin-top: 2rem;
-  margin-bottom: 2rem;
+  margin: 2rem;
+}
+
+@media (max-width: 600px) {
+  .grid-list {
+    --card-size: 350px;
+    margin: 0.5rem;
+    gap: 0.5rem;
+  }
 }
 
 .comma-separated-list {

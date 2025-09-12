@@ -1,0 +1,4 @@
+- move all images to git-lfs / rewrite history to remove all ref to previous images in the git blob
+- in local use git-lfs local images, but in remote / prod use enac-it4r-cdn !
+- stop using images inside the docker
+- Update the documentation and readme regarding the update of images. and explain everything above!
