@@ -12,28 +12,19 @@ export function getImageUrl(imagePath: string): string {
     return imagePath
   }
   
-  // Handle paths that already start with /images/ in development mode
+  // Normalize the path by removing any leading /images/ or images/ prefix
   let cleanPath = imagePath
-  if (import.meta.env.DEV && cleanPath.startsWith('/images/')) {
-    // Remove the leading /images/ since baseUrl is already /images in dev mode
+  if (cleanPath.startsWith('/images/')) {
     cleanPath = cleanPath.substring('/images/'.length)
-  } else if (import.meta.env.DEV && cleanPath.startsWith('images/')) {
-    // Remove the leading images/ since baseUrl is already /images in dev mode
+  } else if (cleanPath.startsWith('images/')) {
     cleanPath = cleanPath.substring('images/'.length)
   } else if (cleanPath.startsWith('/')) {
-    // Remove leading slash to avoid double slashes
     cleanPath = cleanPath.substring(1)
   }
   
-  // Combine base URL with clean path
-  // Ensure we don't create double slashes
-  if (baseUrl.endsWith('/')) {
-    // If baseUrl already ends with '/', don't add another one
-    return `${baseUrl}${cleanPath}`
-  } else {
-    // If baseUrl doesn't end with '/', add a '/' if cleanPath doesn't start with one
-    return `${baseUrl}/${cleanPath}`
-  }
+  // Combine base URL with clean path, ensuring proper formatting
+  const base = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl
+  return `${base}/${cleanPath}`
 }
 
 /**
