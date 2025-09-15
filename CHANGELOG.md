@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.9.2](https://github.com/EPFL-ENAC/sxl-recrete-atlas/compare/v1.9.1...v1.9.2) (2025-09-15)
+
+
+### Bug Fixes
+
+* **images:** use cdn for images and fix touch ([d903986](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/d903986630a72046c26547a4e2d7264b04f57f07))
+* update README for image management and improve URL handling in imageUrl.ts ([079929f](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/079929fce2bbe97061977172623c69240f2c52f7))
+
 ## [1.9.1](https://github.com/EPFL-ENAC/sxl-recrete-atlas/compare/v1.9.0...v1.9.1) (2025-09-15)
 
 
