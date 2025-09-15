@@ -16,7 +16,6 @@ import { useRoute } from 'vue-router'
 import { defaultAppHeaderHeight } from '@/utils/default'
 import type { VDataTable } from 'vuetify/components/VDataTable'
 import { Dropdown as VDropdown } from 'floating-vue'
-import { useDisplay } from 'vuetify'
 
 const route = useRoute()
 const { t, locale } = useI18n({ useScope: 'global' })
@@ -104,7 +103,6 @@ const mouseLeaveRow = () => {
 }
 
 const showRowTooltip = ref(true)
-const { smAndUp } = useDisplay()
 </script>
 
 <template>

@@ -184,7 +184,6 @@ const { smAndUp } = useDisplay()
 </script>
 
 <template>
-  <!-- !smAndUp -->
   <v-navigation-drawer
     v-model="drawer"
     :permanent="smAndUp"
