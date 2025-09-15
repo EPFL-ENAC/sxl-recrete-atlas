@@ -11,7 +11,6 @@ import { useI18n } from 'vue-i18n'
 import type { Project } from '@/types/Project'
 import { useUiStore } from '@/stores/ui'
 import { storeToRefs } from 'pinia'
-import { useDisplay } from 'vuetify'
 
 const props = defineProps<{
   styleUrl: string
@@ -127,7 +126,6 @@ watch(
   }
 )
 
-// const { smAndUp } = useDisplay()
 </script>
 
 <template>
