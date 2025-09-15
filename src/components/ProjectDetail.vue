@@ -54,7 +54,7 @@
               <v-carousel-item
                 v-for="(image, $key) in project.images"
                 :key="$key"
-                :src="image"
+                :src="getWebp1920ImageUrl(image)"
                 content-class="carousel-content"
               >
               </v-carousel-item>
@@ -283,6 +283,7 @@ import {
 } from '@mdi/js'
 import { computed, defineModel, ref } from 'vue'
 import { defaultImage } from '@/utils/default'
+import { getWebp1920ImageUrl } from '@/utils/imageUrl'
 import type { Project, ProjectLang } from '@/types/Project'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'

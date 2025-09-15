@@ -11,7 +11,7 @@
     <v-img
       class="align-end text-white"
       height="200"
-      :src="`${item.images?.[0] ?? defaultImage}`"
+      :src="item.images?.[0] ? getWebp1920ImageUrl(item.images[0]) : defaultImage"
       cover
     >
       <v-card-title>{{ item[`name_${locale as ProjectLang}`] }}</v-card-title>
@@ -46,6 +46,7 @@
 <script setup lang="ts">
 import type { ProjectLang } from '@/types/Project'
 import { defaultImage } from '@/utils/default'
+import { getWebp1920ImageUrl } from '@/utils/imageUrl'
 import { useI18n } from 'vue-i18n'
 defineProps({
   item: {
