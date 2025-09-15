@@ -1,4 +1,4 @@
-import type { MapGeoJSONFeature, Map, GeoJSONSource, MapMouseEvent } from 'maplibre-gl'
+import type { MapGeoJSONFeature, Map, GeoJSONSource } from 'maplibre-gl'
 import type { ProjectLang } from '@/types/Project'
 import { from1920to512 } from './image'
 import { useUiStore } from '@/stores/ui'
@@ -184,13 +184,13 @@ export function closeClusterExplosion(map: Map): boolean {
  * Handles the explosion of a cluster when clicked at max zoom level
  * @param map - The Map instance
  * @param feature - The clicked cluster feature
- * @param event - The MapMouseEvent
+ * @param lngLat - The coordinates where the cluster was clicked
  * @returns The clusterId that was exploded
  */
 export function handleClusterExplosion(
   map: Map,
   feature: MapGeoJSONFeature,
-  event: MapMouseEvent
+  lngLat: maplibregl.LngLat
 ): number {
   // Remove existing exploded layer if it exists
   closeClusterExplosion(map)
@@ -223,7 +223,7 @@ export function handleClusterExplosion(
     const features = result as unknown as MapGeoJSONFeature[]
 
     // Generate and add the exploded layer
-    const explodedGeoJson = generateClusterExplodedLayer(features, event.lngLat)
+    const explodedGeoJson = generateClusterExplodedLayer(features, lngLat)
 
     // Add source and layers to map
     map.addSource('exploded-cluster-source', {

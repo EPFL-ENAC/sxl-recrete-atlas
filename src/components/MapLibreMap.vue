@@ -104,7 +104,7 @@ const project = defineModel('project', {
 })
 
 // Existing event bindings remain unchanged.
-function onFeatureClick(e: (MapMouseEvent|MapTouchEvent) & { features?: MapGeoJSONFeature[] }) {
+function onFeatureClick(e: (MapMouseEvent | MapTouchEvent) & { features?: MapGeoJSONFeature[] }) {
   const feature = e.features?.[0]
   if (!feature) {
     console.error('Feature is undefined')
@@ -129,7 +129,7 @@ function onFeatureClick(e: (MapMouseEvent|MapTouchEvent) & { features?: MapGeoJS
         // Proceed to explode the new cluster
         const currentZoom = map!.getZoom()
         if (currentZoom >= (props.maxZoom || getWindowBasedMaxZoom())) {
-          const newClusterId = handleClusterExplosion(map!, feature, e)
+          const newClusterId = handleClusterExplosion(map!, feature, e.lngLat)
           currentlyExplodedClusterId = newClusterId
           return
         }
@@ -145,7 +145,7 @@ function onFeatureClick(e: (MapMouseEvent|MapTouchEvent) & { features?: MapGeoJS
     // If no cluster is currently exploded, explode the clicked cluster
     const currentZoom = map!.getZoom()
     if (currentZoom >= (props.maxZoom || getWindowBasedMaxZoom())) {
-      const newClusterId = handleClusterExplosion(map!, feature, e)
+      const newClusterId = handleClusterExplosion(map!, feature, e.lngLat)
       currentlyExplodedClusterId = newClusterId
       return
     }
@@ -542,10 +542,6 @@ function addProjects() {
     map.on('click', 'buildings-layer', onFeatureClick)
 
     map.on('click', 'exploded-cluster-layer', onFeatureClick)
-
-    // Touch event handlers for mobile support
-    map.on('touchend', 'buildings-layer', onFeatureClick)
-    map.on('touchend', 'exploded-cluster-layer', onFeatureClick)
 
     map.on('mouseenter', 'buildings-layer', async function (e) {
       const property = e.features?.[0].properties
