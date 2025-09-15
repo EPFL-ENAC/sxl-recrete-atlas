@@ -5,6 +5,7 @@ import { markedEmoji } from 'marked-emoji'
 import type { EmojiToken } from 'marked-emoji'
 import DOMPurify from 'dompurify'
 import { useDisplay } from 'vuetify'
+import { getImageUrl } from '@/utils/imageUrl'
 
 // import LocaleSelector from '../components/LocaleSelector.vue'
 
@@ -59,6 +60,17 @@ const options = {
 
 marked.use(markedEmoji(options))
 
+// Custom renderer to handle image URLs
+const renderer = new marked.Renderer()
+const originalImageRenderer = renderer.image
+renderer.image = function(href, title, text) {
+  // Convert relative image paths to full URLs with appropriate base
+  if (href && href.startsWith('/images/')) {
+    href = getImageUrl(href)
+  }
+  return originalImageRenderer.call(this, href, title, text)
+}
+
 watch(
   () => props.contentUrl,
   (contentUrl) => {
@@ -67,7 +79,7 @@ watch(
       .then((response) => response.data)
       .then((data) => {
         contentHtml.value = DOMPurify.sanitize(
-          marked.parse(data, { headerIds: false, mangle: false })
+          marked.parse(data, { headerIds: false, mangle: false, renderer })
         )
       })
   }
@@ -82,7 +94,7 @@ onMounted(() => {
     .then((response) => response.data)
     .then((data) => {
       contentHtml.value = DOMPurify.sanitize(
-        marked.parse(data, { headerIds: false, mangle: false })
+        marked.parse(data, { headerIds: false, mangle: false, renderer })
       )
     })
 })
