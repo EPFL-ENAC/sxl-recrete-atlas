@@ -18,7 +18,7 @@ COPY *.json ./
 COPY index.html ./index.html
 COPY .env ./
 # Run image optimization before build
-RUN npm run optimize-images
+# RUN npm run optimize-images
 RUN npm run build
 
 FROM nginx:stable-alpine AS production-stage

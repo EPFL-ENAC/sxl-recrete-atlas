@@ -6,6 +6,7 @@ An interactive database on the structural reuse of concrete in construction
 - The main data is comming from [this file](https://github.com/EPFL-ENAC/sxl-recrete-atlas/blob/main/src/assets/data/data.csv) (which is directly used by the app for the table, map)
    - You can replace it directly on github by uploading a new data.csv file in [this directory](https://github.com/EPFL-ENAC/sxl-recrete-atlas/blob/main/src/assets/data)
 - The images defined in the data.csv should be placed in [this directory](https://github.com/EPFL-ENAC/sxl-recrete-atlas/blob/main/public/images)
+   - **Important**: Images are managed using Git LFS. Please read the [image management guidelines](public/images/README.md) before making any changes.
 - The filters and their behavior is define here in [this file](https://github.com/EPFL-ENAC/sxl-recrete-atlas/blob/main/src/assets/data/keys.csv)
 - The references is define here in  [this file](https://github.com/EPFL-ENAC/sxl-recrete-atlas/blob/main/src/assets/data/references.csv)
 
