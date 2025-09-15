@@ -26,7 +26,14 @@ export function getImageUrl(imagePath: string): string {
   }
   
   // Combine base URL with clean path
-  return `${baseUrl}/${cleanPath}`
+  // Ensure we don't create double slashes
+  if (baseUrl.endsWith('/')) {
+    // If baseUrl already ends with '/', don't add another one
+    return `${baseUrl}${cleanPath}`
+  } else {
+    // If baseUrl doesn't end with '/', add a '/' if cleanPath doesn't start with one
+    return `${baseUrl}/${cleanPath}`
+  }
 }
 
 /**
