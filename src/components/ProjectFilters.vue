@@ -178,9 +178,12 @@ watch(
   }
 )
 
+const { smAndUp } = useDisplay()
 const drawer = ref(true)
 
-const { smAndUp } = useDisplay()
+// For mobile devices, we want the drawer to be closed by default
+const initialDrawerState = smAndUp.value ? true : false
+drawer.value = initialDrawerState
 </script>
 
 <template>
