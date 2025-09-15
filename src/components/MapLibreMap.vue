@@ -543,6 +543,9 @@ function addProjects() {
 
     map.on('click', 'exploded-cluster-layer', onFeatureClick)
 
+    map.on('touchend', 'buildings-layer', onFeatureClick)
+    map.on('touchend', 'exploded-cluster-layer', onFeatureClick)
+
     map.on('mouseenter', 'buildings-layer', async function (e) {
       const property = e.features?.[0].properties
       if (property?.cluster && map) {
