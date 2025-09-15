@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.9.1](https://github.com/EPFL-ENAC/sxl-recrete-atlas/compare/v1.9.0...v1.9.1) (2025-09-15)
+
+
+### Bug Fixes
+
+* **lint:** corret lint errors ([8094623](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/8094623981270e570c2bfebfbdbf0e0f24f49713))
+
 ## [1.9.0](https://github.com/EPFL-ENAC/sxl-recrete-atlas/compare/v1.8.0...v1.9.0) (2025-09-12)
 
 
