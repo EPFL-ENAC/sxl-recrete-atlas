@@ -1,6 +1,7 @@
 import type { MapGeoJSONFeature, Map, GeoJSONSource } from 'maplibre-gl'
 import type { ProjectLang } from '@/types/Project'
-import { from1920to512 } from './image'
+import { get1920to512ImageUrl } from '@/utils/imageUrl'
+import { defaultImage } from '@/utils/default'
 import { useUiStore } from '@/stores/ui'
 
 /**
@@ -11,6 +12,14 @@ import { useUiStore } from '@/stores/ui'
  * @returns HTML string for the popup content
  */
 const uiStore = useUiStore()
+
+function getImage(imagePath: string | null | undefined): string {
+    if (!imagePath) {
+      return defaultImage;
+    }
+    // Use the 1920 version for popup display
+    return get1920to512ImageUrl(imagePath)
+}
 export function generatePopupHTML(
   features: MapGeoJSONFeature[],
   locale: ProjectLang,
@@ -50,7 +59,7 @@ export function generatePopupHTML(
       return result
     }
     if (prop.image !== '') {
-      result += `<img src="${from1920to512(prop.image)}" alt="${prop.image_credit}" style="width:100%;height:auto;"/>`
+      result += `<img src="${getImage(prop.image)}" alt="${prop.image_credit}" style="width:100%;height:auto;"/>`
     }
     if (prop[`description_${locale}`]) {
       result += `<p>${prop[`description_${locale}`]}</p>`
