@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.10.0](https://github.com/EPFL-ENAC/sxl-recrete-atlas/compare/v1.9.2...v1.10.0) (2025-09-17)
+
+
+### Features
+
+* **images:** add proper .gitattributes ([0a21a99](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/0a21a997b2531de16ceffa14a11fb684adc41d66))
+* **map:** add back touch event ([29ef9bf](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/29ef9bffe4ffd6e7e8a833ddd67a09e44d9f2877))
+
+
+### Bug Fixes
+
+* **images:** correct images path ([21358eb](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/21358eb28c179fdc74bf51fb2434198e996e6d75))
+* **images:** update images ([94551cf](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/94551cf7bbd3521c2d410fdb2e67079d78ed7c2c))
+* **lfs:** remove README.md from LFS tracking ([d3cbfd9](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/d3cbfd92df949e4570f65a7fa6563d80e7efa7a2))
+* **lfs:** temporarily add README.md to fix LFS references ([f00982b](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/f00982b9d36cfffb270c197dca86a1114b2a90c9))
+* **readme:** add lfs readme ([b09bdb1](https://github.com/EPFL-ENAC/sxl-recrete-atlas/commit/b09bdb10e980cb311f791ba4967d35109aecea20))
+
 ## [1.9.2](https://github.com/EPFL-ENAC/sxl-recrete-atlas/compare/v1.9.1...v1.9.2) (2025-09-15)
 
 
