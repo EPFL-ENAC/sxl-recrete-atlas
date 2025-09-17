@@ -1,11 +1,8 @@
 <script setup lang="ts">
 import axios from 'axios'
-import { marked } from 'marked'
-import { markedEmoji } from 'marked-emoji'
-import type { EmojiToken } from 'marked-emoji'
 import DOMPurify from 'dompurify'
 import { useDisplay } from 'vuetify'
-import { getImageUrl } from '@/utils/imageUrl'
+import { parseMarkdown } from '@/utils/markdownRenderer'
 
 // import LocaleSelector from '../components/LocaleSelector.vue'
 
@@ -41,35 +38,7 @@ watch(
     dialog.value = open
   }
 )
-const options = {
-  emojis: {
-    heart: 'fa-heart',
-    tada: 'fa-tada',
-    'mdi-plus-box': 'mdi-plus-box',
-    'mdi-list-box': 'mdi-list-box',
-    'mdi-grid': 'mdi-grid',
-    'mdi-map-outline': 'mdi-map-outline',
-    'mdi-crane': 'mdi-crane',
-    'mdi-email': 'mdi-email',
-    'mdi-information': 'mdi-information'
-  },
-  renderer: (token: EmojiToken) => {
-    return `<span class="mdi ${token.emoji}"></span>`
-  }
-}
 
-marked.use(markedEmoji(options))
-
-// Custom renderer to handle image URLs
-const renderer = new marked.Renderer()
-const originalImageRenderer = renderer.image
-renderer.image = function(href, title, text) {
-  // Convert relative image paths to full URLs with appropriate base
-  if (href && href.startsWith('/images/')) {
-    href = getImageUrl(href)
-  }
-  return originalImageRenderer.call(this, href, title, text)
-}
 
 watch(
   () => props.contentUrl,
@@ -78,9 +47,7 @@ watch(
       .get<string>(contentUrl)
       .then((response) => response.data)
       .then((data) => {
-        contentHtml.value = DOMPurify.sanitize(
-          marked.parse(data, { headerIds: false, mangle: false, renderer })
-        )
+        contentHtml.value = DOMPurify.sanitize(parseMarkdown(data))
       })
   }
 )
@@ -93,9 +60,7 @@ onMounted(() => {
     .get<string>(props.contentUrl)
     .then((response) => response.data)
     .then((data) => {
-      contentHtml.value = DOMPurify.sanitize(
-        marked.parse(data, { headerIds: false, mangle: false, renderer })
-      )
+      contentHtml.value = DOMPurify.sanitize(parseMarkdown(data))
     })
 })
 

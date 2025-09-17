@@ -3,4 +3,4 @@ export const baseUrlOptions = {
   dev: '/images'
 }
 
-export const baseUrl = import.meta.env.DEV ? baseUrlOptions.dev : baseUrlOptions.prod
+export const baseUrl = import.meta.env.PROD ? baseUrlOptions.prod : baseUrlOptions.dev

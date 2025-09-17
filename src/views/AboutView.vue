@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import axios from 'axios'
-import { marked } from 'marked'
 import DOMPurify from 'dompurify'
 import { mdiKeyboardBackspace } from '@mdi/js'
 import { onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { parseMarkdown } from '@/utils/markdownRenderer'
 
 const { locale } = useI18n({ useScope: 'global' })
 const contentHtml = ref<string>('')
@@ -22,9 +22,7 @@ function updateAbout() {
     .get<string>(`about_${locale.value}.md`)
     .then((response) => response.data)
     .then((data) => {
-      contentHtml.value = DOMPurify.sanitize(
-        marked.parse(data, { headerIds: false, mangle: false })
-      )
+      contentHtml.value = DOMPurify.sanitize(parseMarkdown(data))
     })
 }
 </script>
