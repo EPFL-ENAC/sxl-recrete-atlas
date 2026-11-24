@@ -13,9 +13,10 @@ jobs:
     permissions:
       contents: read
       packages: write
-    uses: EPFL-ENAC/epfl-enac-build-push-deploy-action/.github/workflows/deploy.yml@v2.4.0
+    uses: EPFL-ENAC/epfl-enac-build-push-deploy-action/.github/workflows/deploy.yml@v4.2.0
     secrets:
       token: ${{ secrets.CD_TOKEN }}
     with:
+      skip_vulnerability_scan: false
       org: epfl-sxl # your org
       repo: sxl-recrete-atlas # your app name, usual convention is name of your repository
